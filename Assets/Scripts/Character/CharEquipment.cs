@@ -41,10 +41,7 @@ public class CharEquipment : MonoBehaviour
 
     private void Awake()
     {
-        weaponSlots = new List<WeaponSlotItem>();
-        armorSlots = new List<ArmorSlotItem>();
-        AddDefaultWeaponSlots();
-        AddDefaultArmorSlots();
+        AddAdditionalSlots();
         UpdateEquipmentAttributes();
     }
 
@@ -53,23 +50,9 @@ public class CharEquipment : MonoBehaviour
         charStats = GetComponent<CharStats>();
     }
 
-    public void AddDefaultWeaponSlots()
+    public void AddAdditionalSlots()
     {
-        weaponSlots.Add(new WeaponSlotItem(WeaponSlot.MAIN_HAND));
-        weaponSlots.Add(new WeaponSlotItem(WeaponSlot.OFF_HAND));
-    }
-
-    public void AddDefaultArmorSlots()
-    {
-        armorSlots.Add(new ArmorSlotItem(ArmorSlot.HEAD));
-        armorSlots.Add(new ArmorSlotItem(ArmorSlot.SHOULDERS));
-        armorSlots.Add(new ArmorSlotItem(ArmorSlot.HANDS));
-        armorSlots.Add(new ArmorSlotItem(ArmorSlot.CHEST));
-        armorSlots.Add(new ArmorSlotItem(ArmorSlot.LEGS));
-        armorSlots.Add(new ArmorSlotItem(ArmorSlot.FEET));
-        armorSlots.Add(new ArmorSlotItem(ArmorSlot.NECK));
-        armorSlots.Add(new ArmorSlotItem(ArmorSlot.FINGER));
-        armorSlots.Add(new ArmorSlotItem(ArmorSlot.FINGER));
+        //TODO: Implement character class specific slots
     }
 
     public void UpdateEquipmentAttributes()

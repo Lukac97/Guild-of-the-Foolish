@@ -9,9 +9,14 @@ public class GlobalInput : MonoBehaviour
 
     [HideInInspector]
     public GameObject selectedEntity;
+    [HideInInspector]
+    public ItemObject selectedItemObject;
 
     public delegate void ChangeSelectedCharacter();
     public ChangeSelectedCharacter changeSelectedEntity;
+
+    public delegate void ChangeSelectedItemObject();
+    public ChangeSelectedItemObject changeSelectedItemObject;
 
     public Location defaultLocation;
 
@@ -62,5 +67,11 @@ public class GlobalInput : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void SetSelectedItemObject(ItemObject item)
+    {
+        selectedItemObject = item;
+        changeSelectedItemObject.Invoke();
     }
 }

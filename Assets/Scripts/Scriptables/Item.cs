@@ -6,4 +6,5 @@ public class Item : ScriptableObject
 {
     public string itemDescription;
     public Sprite itemIcon;
+    public int level;
 }

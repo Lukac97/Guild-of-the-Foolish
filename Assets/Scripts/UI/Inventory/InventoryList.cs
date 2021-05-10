@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,12 @@ public class InventoryList : MonoBehaviour
     public Button nextPage;
     public TextMeshProUGUI pageNumberMesh;
     public Button previousPage;
+
+    [Space(3)]
+    [Header("Sorting")]
+    public GameObject sortingPanel;
+    public InventorySortBy sortBy = InventorySortBy.NAME;
+    public InventorySortOrder sortOrder = InventorySortOrder.ASCENDING;
 
     private int pageNumber;
     private int maxPageNumber;
@@ -33,8 +40,9 @@ public class InventoryList : MonoBehaviour
     public void UpdateInventoryItems()
     {
         List<ItemObject> newItemObjects = GuildInventory.Instance.GetAllItemObjects();
-        //TODO: Sorting functions depending on chosen attribute to sort by
+        //TODO: Filtering functions
         itemObjects = newItemObjects;
+        InsertionSort();
         maxPageNumber = 1 + itemObjects.Count / itemsPerPage;
         pageNumber = 1;
         UpdatePagePanel();
@@ -83,4 +91,63 @@ public class InventoryList : MonoBehaviour
         pageNumber -= 1;
         UpdatePagePanel();
     }
+
+    public void ChangeSorting(InventorySortBy newSortBy)
+    {
+        if (sortBy == newSortBy)
+        {
+            if(sortOrder == InventorySortOrder.ASCENDING)
+                sortOrder = InventorySortOrder.DESCENDING;
+            else
+                sortOrder = InventorySortOrder.ASCENDING;
+        }
+        else
+        {
+            sortOrder = InventorySortOrder.ASCENDING;
+        }
+        sortBy = newSortBy;
+        UpdateInventoryItems();
+    }
+
+    public void InsertionSort()
+    {
+        int n = itemObjects.Count;
+        for (int i = 1; i < n; ++i)
+        {
+            ItemObject key = itemObjects[i];
+            int j = i - 1;
+
+            // Move elements of arr[0..i-1],
+            // that are greater than key,
+            // to one position ahead of
+            // their current position
+            while (j >= 0 && CheckIfShouldBeInFront(itemObjects[j], key))
+            {
+                itemObjects[j + 1] = itemObjects[j];
+                j = j - 1;
+            }
+            itemObjects[j + 1] = key;
+        }
+    }
+
+    public bool CheckIfShouldBeInFront (ItemObject obj1, ItemObject obj2)
+    {
+        bool returnValue = false;
+        if (sortBy == InventorySortBy.LEVEL)
+        {
+            returnValue = obj1.item.level > obj2.item.level;
+        }
+        if (sortBy == InventorySortBy.NAME)
+        {
+            returnValue = String.Compare(obj1.item.name, obj2.item.name, comparisonType: StringComparison.OrdinalIgnoreCase) > 0 ? true : false;
+        }
+        if (sortBy == InventorySortBy.QUANTITY)
+        {
+            returnValue = obj1.quantity > obj2.quantity;
+        }
+        if (sortOrder == InventorySortOrder.DESCENDING)
+            returnValue = !returnValue;
+        return returnValue;
+    }
+
 }

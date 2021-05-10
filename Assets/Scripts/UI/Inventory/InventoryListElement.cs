@@ -23,4 +23,9 @@ public class InventoryListElement : MonoBehaviour
             icon.sprite = iObject.item.itemIcon;
         }
     }
+
+    public void OnItemClick()
+    {
+        GlobalInput.Instance.SetSelectedItemObject(itemObject);
+    }
 }

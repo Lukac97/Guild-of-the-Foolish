@@ -9,14 +9,14 @@ public class CharacterListController : MonoBehaviour
     public GameObject panel;
     public GameObject characterPrefab;
 
-
+    [SerializeField]
     private List<GameObject> lastHighlitedCharacters = new List<GameObject>();
     // Start is called before the first frame update
     private void Start()
     {
-        CharactersController.Instance.CharacterCreated += onCharacterCreated;
+        CharactersController.Instance.CharactersUpdated += OnUpdateCharacters;
         GlobalInput.Instance.changeSelectedEntity += HighlightSelectedCharacter;
-        onCharacterCreated();
+        OnUpdateCharacters();
     }
 
     public void DeHighlightCharacters()
@@ -42,11 +42,11 @@ public class CharacterListController : MonoBehaviour
         DeHighlightCharacters();
         if (!GlobalInput.Instance.CheckIfSelectedCharacter())
             return;
-        lastHighlitedCharacters.Add(GlobalInput.Instance.selectedEntity.GetComponent<CharStats>().linkedCharElement.gameObject);
+        lastHighlitedCharacters.Add(FindCharElement(GlobalInput.Instance.selectedEntity.GetComponent<CharStats>()).gameObject);
         HighlightCharacters();
     }
 
-    private void onCharacterCreated()
+    private void OnUpdateCharacters()
     {
         foreach (Transform child in panel.transform)
         {
@@ -59,5 +59,18 @@ public class CharacterListController : MonoBehaviour
             createdChar.name = newChar.name;
             createdChar.GetComponent<CharListElement>().LinkCharacter(newChar.GetComponent<CharStats>());
         }
+    }
+
+    public CharListElement FindCharElement(CharStats charStats)
+    {
+        foreach(Transform child in panel.transform)
+        {
+            CharListElement charEl = child.GetComponent<CharListElement>();
+            if(charEl.linkedCharacter == charStats)
+            {
+                return charEl;
+            }
+        }
+        return null;
     }
 }

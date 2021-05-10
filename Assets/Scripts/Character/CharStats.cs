@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class CharStats : MonoBehaviour
 {
-    [HideInInspector]
-    public CharListElement linkedCharElement;
-
     public string characterName;
 
     public CharClass characterClass;
@@ -46,7 +43,7 @@ public class CharStats : MonoBehaviour
     public void ChangeLocation(Location loc)
     {
         location = loc;
-        linkedCharElement.UpdateCharText();
+        CharactersController.Instance.CharactersUpdated.Invoke();
     }
 
     public void UpdateTotalAttributes()

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9113591872738922815}
   - component: {fileID: 9113591872738922812}
+  - component: {fileID: 5354441012728706796}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -45,9 +46,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Name
   characterClass: {fileID: 0}
+  location: {fileID: 0}
   level: 1
   experiencePoints: 0
-  attributes:
+  charAttributes:
     strength: 0
     agility: 0
+    luck: 0
+    intellect: 0
+  totalAttributes:
+    strength: 0
+    agility: 0
+    luck: 0
+    intellect: 0
+--- !u!114 &5354441012728706796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9113591872738922814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fea2552891ba83445800aeb4b9390c41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponSlots:
+  - slot: 0
+    item: {fileID: 0}
+  - slot: 1
+    item: {fileID: 0}
+  armorSlots:
+  - slot: 0
+    item: {fileID: 0}
+  - slot: 1
+    item: {fileID: 0}
+  - slot: 2
+    item: {fileID: 0}
+  - slot: 3
+    item: {fileID: 0}
+  - slot: 4
+    item: {fileID: 0}
+  - slot: 5
+    item: {fileID: 0}
+  - slot: 6
+    item: {fileID: 0}
+  - slot: 7
+    item: {fileID: 0}
+  - slot: 7
+    item: {fileID: 0}
+  equipmentAttributes:
+    strength: 0
+    agility: 0
+    luck: 0
     intellect: 0

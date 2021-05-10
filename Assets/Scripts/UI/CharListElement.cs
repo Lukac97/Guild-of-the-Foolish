@@ -20,7 +20,6 @@ public class CharListElement : MonoBehaviour
     public void LinkCharacter(CharStats newChar)
     {
         linkedCharacter = newChar;
-        newChar.linkedCharElement = this;
         UpdateCharText();
     }
 

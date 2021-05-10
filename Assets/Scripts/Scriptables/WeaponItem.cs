@@ -11,7 +11,6 @@ public class WeaponItem : Item
     public WeaponType weaponType;
     [Header("Attributes")]
     public Attributes attributes;
-    public int level;
     public float attackDamageMultiplier;
     public float armorValue;
 

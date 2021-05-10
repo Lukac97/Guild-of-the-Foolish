@@ -7,8 +7,8 @@ public class CharactersController : MonoBehaviour
     private static CharactersController _instance;
     public static CharactersController Instance { get { return _instance; } }
 
-    public delegate void NewCharacterDelegate();
-    public NewCharacterDelegate CharacterCreated;
+    public delegate void UpdateCharactersDelegate();
+    public UpdateCharactersDelegate CharactersUpdated;
 
     public List<GameObject> characters;
 
@@ -54,6 +54,6 @@ public class CharactersController : MonoBehaviour
         GameObject newChar = Instantiate(newCharPrefab, gameObject.transform);
         newChar.GetComponent<CharStats>().InitCharStats(newCharClass, charName);
         characters.Add(newChar);
-        Instance.CharacterCreated.Invoke();
+        Instance.CharactersUpdated.Invoke();
     }
 }

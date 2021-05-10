@@ -2,6 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum InventorySortBy
+{
+    NAME,
+    QUANTITY,
+    LEVEL
+}
+
+public enum InventorySortOrder
+{
+    ASCENDING,
+    DESCENDING
+}
+
 public enum WeaponSlot
 {
     MAIN_HAND,
