@@ -70,15 +70,152 @@ public class CharEquipment : MonoBehaviour
         }
     }
 
-    public void EquipItem(WeaponItem item)
+    public bool EquipItem(ItemObject itemObject)
     {
-
+        CharStats charStats = GetComponent<CharStats>();
+        if (charStats.level < itemObject.item.level)
+            return false;
+        Item equipmentItem = itemObject.item;
+        if (equipmentItem.GetType() != typeof(WeaponItem) & equipmentItem.GetType() != typeof(ArmorItem))
+            return false;
+        GuildInventory.Instance.RemoveItemFromInventory(equipmentItem);
+        if(equipmentItem.GetType() == typeof(ArmorItem))
+            EquipItem((ArmorItem)equipmentItem);
+        else
+            EquipItem((WeaponItem)equipmentItem);
+        CharactersController.Instance.CharactersUpdated.Invoke();
+        GlobalInput.Instance.SetSelectedItemObject(itemObject);
+        return true;
     }
 
-    public void EquipItem(ArmorItem item)
+    public bool EquipItem(ArmorItem armor)
     {
+        List<ArmorSlotItem> occupiedSlots = new List<ArmorSlotItem>();
+        foreach(ArmorSlotItem armorSlot in armorSlots)
+        {
+            if (armorSlot.slot == armor.itemSlot)
+            {
+                if(armorSlot.item == null)
+                {
+                    armorSlot.item = armor;
+                    return true;
+                }
+                else
+                {
+                    occupiedSlots.Add(armorSlot);
+                }
+            }
+        }
+        if(occupiedSlots.Count > 0)
+        {
 
+            if (!UnequipSlot(occupiedSlots[0], true))
+                return false;
+            occupiedSlots[0].item = armor;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
+
+    public bool EquipItem(WeaponItem weapon)
+    {
+        List<WeaponSlotItem> occupiedSlots = new List<WeaponSlotItem>();
+        List<WeaponSlot> requiredSlots = new List<WeaponSlot>();
+        WeaponSlotItem mainHand = null;
+        WeaponSlotItem offHand = null;
+        foreach (WeaponSlotItem weaponSlot in weaponSlots)
+        {
+            if (weaponSlot.slot == WeaponSlot.MAIN_HAND)
+                mainHand = weaponSlot;
+            else if (weaponSlot.slot == WeaponSlot.OFF_HAND)
+                offHand = weaponSlot;
+        }
+
+        if (mainHand == null | offHand == null)
+            return false;
+
+        if (weapon.weaponWielding == WeaponWielding.MAIN_HAND)
+        {
+            if (mainHand.item != null)
+                UnequipSlot(mainHand);
+            mainHand.item = weapon;
+        }
+        else if (weapon.weaponWielding == WeaponWielding.OFF_HAND)
+        {
+            if (offHand.item != null)
+                UnequipSlot(offHand);
+            offHand.item = weapon;
+        }
+        else if (weapon.weaponWielding == WeaponWielding.TWO_HANDED)
+        {
+            if (mainHand.item != null)
+                UnequipSlot(mainHand);
+            mainHand.item = weapon;
+
+            if (offHand.item != null)
+                UnequipSlot(offHand);
+            offHand.item = weapon;
+        }
+        else if (weapon.weaponWielding == WeaponWielding.ONE_HANDED)
+        {
+            if(mainHand.item != null)
+            {
+                if(offHand.item != null)
+                {
+                    UnequipSlot(mainHand);
+                    mainHand.item = weapon;
+                }
+                else
+                {
+                    offHand.item = weapon;
+                }
+            }
+            else
+            {
+                mainHand.item = weapon;
+            }
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public bool UnequipSlot(ArmorSlotItem armorSlot, bool equip=false)
+    {
+        if (armorSlot.item == null)
+            return true;
+        GuildInventory.Instance.AddItemToInventory(armorSlot.item);
+        armorSlot.item = null;
+        if (!equip)
+            CharactersController.Instance.CharactersUpdated.Invoke();
+        return true;
+    }
+
+    public bool UnequipSlot(WeaponSlotItem weaponSlot, bool equip = false)
+    {
+        if (weaponSlot.item == null)
+            return true;
+        GuildInventory.Instance.AddItemToInventory(weaponSlot.item);
+        if(weaponSlot.item.weaponWielding == WeaponWielding.TWO_HANDED)
+        {
+            foreach(WeaponSlotItem si in weaponSlots)
+            {
+                si.item = null;
+            }
+        }
+        else
+            weaponSlot.item = null;
+        if (!equip)
+            CharactersController.Instance.CharactersUpdated.Invoke();
+        return true;
+    }
+
 
     public bool CanWear(WeaponItem item)
     {

@@ -15,6 +15,7 @@ public class GuildInventory : MonoBehaviour
 
     public GameObject inventoryObject;
     public GameObject itemObjectPrefab;
+    public List<ItemObject> itemObjects;
 
     public delegate void InventoryChangedDelegate();
     public InventoryChangedDelegate InventoryChanged;
@@ -27,6 +28,7 @@ public class GuildInventory : MonoBehaviour
         }
     }
 
+
     public void AddItemToInventory(Item item, int quant = 1)
     {
         if (quant <= 0)
@@ -35,7 +37,9 @@ public class GuildInventory : MonoBehaviour
         if (itemObject == null)
         {
             GameObject newItem = Instantiate(itemObjectPrefab, inventoryObject.transform);
-            newItem.GetComponent<ItemObject>().InitItemObject(item, quant);
+            ItemObject newItemObject = newItem.GetComponent<ItemObject>();
+            newItemObject.InitItemObject(item, quant);
+            itemObjects.Add(newItemObject);
         }
         else
         {
@@ -53,6 +57,9 @@ public class GuildInventory : MonoBehaviour
             return;
         if (quant >= itemObject.quantity)
         {
+            if (GlobalInput.Instance.selectedItemObject == itemObject)
+                GlobalInput.Instance.SetSelectedItemObject(null);
+            itemObjects.Remove(itemObject);
             Destroy(itemObject.gameObject);
         }
         else
@@ -64,22 +71,16 @@ public class GuildInventory : MonoBehaviour
 
     public ItemObject FindItem(Item item)
     {
-        foreach(Transform child in inventoryObject.transform)
+        foreach(ItemObject child in itemObjects)
         {
-            ItemObject itemObject = child.GetComponent<ItemObject>();
-            if (item == itemObject.item)
-                return itemObject;
+            if (item == child.item)
+                return child;
         }
         return null;
     }
 
     public List<ItemObject> GetAllItemObjects()
     {
-        List<ItemObject> itemObjList = new List<ItemObject>();
-        foreach(Transform child in inventoryObject.transform)
-        {
-            itemObjList.Add(child.GetComponent<ItemObject>());
-        }
-        return itemObjList;
+        return itemObjects;
     }
 }

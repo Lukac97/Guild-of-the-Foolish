@@ -48,16 +48,31 @@ public class CharacterListController : MonoBehaviour
 
     private void OnUpdateCharacters()
     {
-        foreach (Transform child in panel.transform)
-        {
-            Destroy(child.gameObject);
-        }
-
+        List<CharListElement> charListElements = new List<CharListElement>();
+        charListElements.AddRange(panel.GetComponentsInChildren<CharListElement>());
+        List<CharListElement> leftoutElements = new List<CharListElement>(charListElements);
         foreach (GameObject newChar in CharactersController.Instance.characters)
         {
+            CharStats charStats = newChar.GetComponent<CharStats>();
+            bool foundMatch = false;
+            foreach (CharListElement child in charListElements)
+            {
+                if (child.linkedCharacter == charStats)
+                {
+                    child.UpdateCharText();
+                    leftoutElements.Remove(child);
+                    foundMatch = true;
+                }
+            }
+            if (foundMatch)
+                continue;
             GameObject createdChar = Instantiate(characterPrefab, panel.transform);
             createdChar.name = newChar.name;
-            createdChar.GetComponent<CharListElement>().LinkCharacter(newChar.GetComponent<CharStats>());
+            createdChar.GetComponent<CharListElement>().LinkCharacter(charStats);
+        }
+        foreach(CharListElement charEle in leftoutElements)
+        {
+            Destroy(charEle.gameObject);
         }
     }
 

@@ -42,14 +42,23 @@ public class EquipmentSlotController : MonoBehaviour
             equipmentPanel.SetActive(true);
         currentCharEquipment = GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>();
 
-        List<EquipmentArmorSlot> leftArmorSlots = armorSlots;
+        List<EquipmentArmorSlot> leftArmorSlots = new List<EquipmentArmorSlot>(armorSlots);
         foreach(CharEquipment.ArmorSlotItem armorSlotItem in currentCharEquipment.armorSlots)
         {
-            EquipmentArmorSlot eqSlot = FindEquipmentSlot(armorSlotItem.slot);
-            if(eqSlot != null)
+            List<EquipmentArmorSlot> eqSlots = FindEquipmentSlots(armorSlotItem.slot);
+            EquipmentArmorSlot eqSlot = null;
+            foreach(EquipmentArmorSlot eSlot in eqSlots)
+            {
+                if (leftArmorSlots.Contains(eSlot))
+                {
+                    eqSlot = eSlot;
+                    break;
+                }
+            }
+            if(eqSlot != null & leftArmorSlots.Contains(eqSlot))
             {
                 eqSlot.gameObject.SetActive(true);
-                eqSlot.SetItemSlot(armorSlotItem.item);
+                eqSlot.SetItemSlot(armorSlotItem);
                 leftArmorSlots.Remove(eqSlot);
             }
         }
@@ -58,14 +67,23 @@ public class EquipmentSlotController : MonoBehaviour
             eqSlot.gameObject.SetActive(false);
         }
 
-        List<EquipmentWeaponSlot> leftWeaponSlots = weaponSlots;
+        List<EquipmentWeaponSlot> leftWeaponSlots = new List<EquipmentWeaponSlot>(weaponSlots);
         foreach (CharEquipment.WeaponSlotItem weaponSlotItem in currentCharEquipment.weaponSlots)
         {
-            EquipmentWeaponSlot eqSlot = FindEquipmentSlot(weaponSlotItem.slot);
+            List<EquipmentWeaponSlot> eqSlots = FindEquipmentSlots(weaponSlotItem.slot);
+            EquipmentWeaponSlot eqSlot = null;
+            foreach(EquipmentWeaponSlot eSlot in eqSlots)
+            {
+                if(leftWeaponSlots.Contains(eSlot))
+                {
+                    eqSlot = eSlot;
+                    break;
+                }
+            }
             if (eqSlot != null)
             {
                 eqSlot.gameObject.SetActive(true);
-                eqSlot.SetItemSlot(weaponSlotItem.item);
+                eqSlot.SetItemSlot(weaponSlotItem);
                 leftWeaponSlots.Remove(eqSlot);
             }
         }
@@ -75,27 +93,29 @@ public class EquipmentSlotController : MonoBehaviour
         }
     }
 
-    private EquipmentArmorSlot FindEquipmentSlot(ArmorSlot slot)
+    private List<EquipmentArmorSlot> FindEquipmentSlots(ArmorSlot slot)
     {
-        foreach(EquipmentArmorSlot eqSlot in armorSlots)
+        List<EquipmentArmorSlot> listOfSlots = new List<EquipmentArmorSlot>();
+        foreach (EquipmentArmorSlot eqSlot in armorSlots)
         {
             if(eqSlot.armorSlot == slot)
             {
-                return eqSlot;
+                listOfSlots.Add(eqSlot);
             }
         }
-        return null;
+        return listOfSlots;
     }
 
-    private EquipmentWeaponSlot FindEquipmentSlot(WeaponSlot slot)
+    private List<EquipmentWeaponSlot> FindEquipmentSlots(WeaponSlot slot)
     {
+        List<EquipmentWeaponSlot> listOfSlots = new List<EquipmentWeaponSlot>();
         foreach (EquipmentWeaponSlot eqSlot in weaponSlots)
         {
             if (eqSlot.weaponSlot == slot)
             {
-                return eqSlot;
+                listOfSlots.Add(eqSlot);
             }
         }
-        return null;
+        return listOfSlots;
     }
 }

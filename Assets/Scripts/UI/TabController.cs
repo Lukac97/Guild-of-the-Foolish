@@ -1,42 +1,66 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TabController : MonoBehaviour
 {
     public Vector3 defaultPosition;
     [Space(4)]
     public List<GameObject> panels;
+    public List<GameObject> tabs;
     public GameObject activePanel;
+    public GameObject activeTab;
+
+    [Space(6)]
+    public Color activeTabColor;
+    public Color inactiveTabColor;
+    public bool localPosition;
     void Awake()
     {
         activePanel = panels[0];
-        activePanel.transform.position = defaultPosition;
-        foreach(GameObject panel in panels)
+        activePanel.GetComponent<CanvasGroup>().alpha = 1;
+        activePanel.GetComponent<CanvasGroup>().interactable = true;
+        activePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+        activeTab = tabs[0];
+        activeTab.GetComponent<Image>().color = activeTabColor;
+        for(int i=0; i < panels.Count; i++)
         {
+            GameObject panel = panels[i];
+            GameObject tab = tabs[i];
             if(panel != activePanel)
             {
-                panel.transform.position = new Vector3(defaultPosition.x - 100,
-                    defaultPosition.y - 100, defaultPosition.z);
+                panel.GetComponent<CanvasGroup>().alpha = 0;
+                panel.GetComponent<CanvasGroup>().interactable = false;
+                panel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+                tab.GetComponent<Image>().color = inactiveTabColor;
             }
         }
     }
 
-    public void ChangeTab(GameObject panel)
+    public void ChangeTab(GameObject newTab)
     {
+        GameObject panel = panels[tabs.IndexOf(newTab)];
         if(panel == activePanel)
         {
             return;
         }
         activePanel = panel;
-
-        activePanel.transform.position = defaultPosition;
-        foreach (GameObject panelle in panels)
+        panel.GetComponent<CanvasGroup>().alpha = 1;
+        panel.GetComponent<CanvasGroup>().interactable = true;
+        panel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+        activeTab = tabs[panels.IndexOf(panel)];
+        activeTab.GetComponent<Image>().color = activeTabColor;
+        for (int i = 0; i < panels.Count; i++)
         {
+            GameObject panelle = panels[i];
+            GameObject tab = tabs[i];
             if (panelle != activePanel)
             {
-                panelle.transform.position = new Vector3(defaultPosition.x - 100,
-                    defaultPosition.y - 100, defaultPosition.z);
+                panelle.GetComponent<CanvasGroup>().alpha = 0;
+                panelle.GetComponent<CanvasGroup>().interactable = false;
+                panelle.GetComponent<CanvasGroup>().blocksRaycasts = false;
+                tab.GetComponent<Image>().color = inactiveTabColor;
             }
         }
     }
