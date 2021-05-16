@@ -21,6 +21,16 @@ public class Attributes
 
         return res;
     }
+    public static Attributes operator -(Attributes a, Attributes b)
+    {
+        Attributes res = new Attributes(a);
+        res.strength -= b.strength;
+        res.agility -= b.agility;
+        res.luck -= b.luck;
+        res.intellect -= b.intellect;
+
+        return res;
+    }
 
     public Attributes()
     {

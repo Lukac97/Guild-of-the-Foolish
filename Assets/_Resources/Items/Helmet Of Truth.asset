@@ -17,7 +17,7 @@ MonoBehaviour:
   level: 3
   itemSlot: 0
   attributes:
-    strength: 0
+    strength: 4
     agility: 0
     luck: 0
     intellect: 0

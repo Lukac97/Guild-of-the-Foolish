@@ -9,11 +9,13 @@ public class CharEquipment : MonoBehaviour
     {
         public WeaponSlot slot;
         public WeaponItem item;
+        public bool isFakeEquipped;
 
         public WeaponSlotItem(WeaponSlot _slot)
         {
             slot = _slot;
             item = null;
+            isFakeEquipped = false;
         }
     }
 
@@ -84,7 +86,6 @@ public class CharEquipment : MonoBehaviour
         else
             EquipItem((WeaponItem)equipmentItem);
         CharactersController.Instance.CharactersUpdated.Invoke();
-        GlobalInput.Instance.SetSelectedItemObject(itemObject);
         return true;
     }
 
@@ -142,22 +143,26 @@ public class CharEquipment : MonoBehaviour
             if (mainHand.item != null)
                 UnequipSlot(mainHand);
             mainHand.item = weapon;
+            mainHand.isFakeEquipped = false;
         }
         else if (weapon.weaponWielding == WeaponWielding.OFF_HAND)
         {
             if (offHand.item != null)
                 UnequipSlot(offHand);
             offHand.item = weapon;
+            offHand.isFakeEquipped = false;
         }
         else if (weapon.weaponWielding == WeaponWielding.TWO_HANDED)
         {
             if (mainHand.item != null)
                 UnequipSlot(mainHand);
             mainHand.item = weapon;
+            mainHand.isFakeEquipped = false;
 
             if (offHand.item != null)
                 UnequipSlot(offHand);
             offHand.item = weapon;
+            offHand.isFakeEquipped = true;
         }
         else if (weapon.weaponWielding == WeaponWielding.ONE_HANDED)
         {
@@ -167,15 +172,18 @@ public class CharEquipment : MonoBehaviour
                 {
                     UnequipSlot(mainHand);
                     mainHand.item = weapon;
+                    mainHand.isFakeEquipped = false;
                 }
                 else
                 {
                     offHand.item = weapon;
+                    offHand.isFakeEquipped = false;
                 }
             }
             else
             {
                 mainHand.item = weapon;
+                mainHand.isFakeEquipped = false;
             }
         }
         else

@@ -23,6 +23,12 @@ public class GlobalInput : MonoBehaviour
     [Space(6)]
     public List<CharClass> possibleClasses;
 
+    [Space(3)]
+    [Header("Universal colors")]
+    [Space(3)]
+    public Color goodColor;
+    public Color badColor;
+
     private void Awake()
     {
         if (Instance == null)

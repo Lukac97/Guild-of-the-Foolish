@@ -47,6 +47,7 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler
             item = slotItem.item;
             weaponSlotItem = slotItem;
         }
+
         if (item == null)
         {
             slotName.gameObject.SetActive(true);
@@ -55,6 +56,16 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler
         }
         else
         {
+            if (slotItem.isFakeEquipped)
+            {
+                Color clr = itemIcon.color;
+                itemIcon.color = new Color(clr.r, clr.g, clr.b, 0.4f);
+            }
+            else
+            {
+                Color clr = itemIcon.color;
+                itemIcon.color = new Color(clr.r, clr.g, clr.b, 1f);
+            }
             slotName.gameObject.SetActive(false);
             itemIcon.enabled = true;
             itemIcon.sprite = item.itemIcon;

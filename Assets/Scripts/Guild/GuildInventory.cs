@@ -58,7 +58,9 @@ public class GuildInventory : MonoBehaviour
         if (quant >= itemObject.quantity)
         {
             if (GlobalInput.Instance.selectedItemObject == itemObject)
+            {
                 GlobalInput.Instance.SetSelectedItemObject(null);
+            }
             itemObjects.Remove(itemObject);
             Destroy(itemObject.gameObject);
         }

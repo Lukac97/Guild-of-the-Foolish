@@ -41,7 +41,6 @@ public class InventoryList : MonoBehaviour
     {
         itemObjects = GuildInventory.Instance.GetAllItemObjects();
         //TODO: Filtering functions
-        Debug.Log(GuildInventory.Instance.GetAllItemObjects().Count);
         InsertionSort();
         maxPageNumber = 1 + itemObjects.Count / itemsPerPage;
         pageNumber = 1;

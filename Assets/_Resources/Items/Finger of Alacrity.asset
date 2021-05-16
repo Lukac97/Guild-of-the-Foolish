@@ -18,8 +18,8 @@ MonoBehaviour:
   itemSlot: 7
   attributes:
     strength: 0
-    agility: 0
+    agility: 2
     luck: 0
-    intellect: 0
+    intellect: 2
   armorValue: 0
   armorType: 0
