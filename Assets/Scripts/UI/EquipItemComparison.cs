@@ -72,6 +72,10 @@ public class EquipItemComparison : MonoBehaviour
             c.attributes = a.attributes - b.attributes;
             return c;
         }
+        public float CalculateRating()
+        {
+            return attributes.SumOfAllAttributes() + armorValue / 8 + attackDamagePercent/10;
+        }
     }
 
     [System.Serializable]
@@ -107,6 +111,11 @@ public class EquipItemComparison : MonoBehaviour
             c.attributes = a.attributes - b.attributes;
             return c;
         }
+
+        public float CalculateRating()
+        {
+            return attributes.SumOfAllAttributes() + armorValue/8;
+        }
     }
 
     public ArmorComparison CompareEquipment(ArmorItem armor)
@@ -124,7 +133,7 @@ public class EquipItemComparison : MonoBehaviour
             {
                 if (suitableSlot == null)
                     suitableSlot = slot;
-                else if (suitableSlot.item != null & slot.item == null)
+                else if (GlobalFuncs.Instance.CheckIfWorse(slot.item, suitableSlot.item))
                     suitableSlot = slot;
             }
         }
@@ -188,9 +197,18 @@ public class EquipItemComparison : MonoBehaviour
                 }
                 else
                 {
-                    toRemoveWeapon += new WeaponComparison(mainHand.item);
-                    itemsToRemove.Add(mainHand.item);
-                    targetSlotsWeapon.Add(WeaponSlot.MAIN_HAND);
+                    if (GlobalFuncs.Instance.CheckIfWorse(mainHand.item, offHand.item))
+                    {
+                        toRemoveWeapon += new WeaponComparison(mainHand.item);
+                        itemsToRemove.Add(mainHand.item);
+                        targetSlotsWeapon.Add(WeaponSlot.MAIN_HAND);
+                    }
+                    else
+                    {
+                        toRemoveWeapon += new WeaponComparison(offHand.item);
+                        itemsToRemove.Add(offHand.item);
+                        targetSlotsWeapon.Add(WeaponSlot.OFF_HAND);
+                    }
                 }
             }
         }

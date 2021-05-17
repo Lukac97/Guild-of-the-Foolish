@@ -58,4 +58,9 @@ public class Attributes
         }
         return dictNames;
     }
+
+    public int SumOfAllAttributes()
+    {
+        return strength + agility + intellect + luck;
+    }
 }

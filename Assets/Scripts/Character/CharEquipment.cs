@@ -109,10 +109,18 @@ public class CharEquipment : MonoBehaviour
         }
         if(occupiedSlots.Count > 0)
         {
+            ArmorSlotItem finalSlot = null;
+            foreach(ArmorSlotItem occSlot in occupiedSlots)
+            {
+                if (finalSlot == null)
+                    finalSlot = occSlot;
+                else if (GlobalFuncs.Instance.CheckIfWorse(occSlot.item, finalSlot.item))
+                    finalSlot = occSlot;
+            }
 
-            if (!UnequipSlot(occupiedSlots[0], true))
+            if (!UnequipSlot(finalSlot, true))
                 return false;
-            occupiedSlots[0].item = armor;
+            finalSlot.item = armor;
             return true;
         }
         else
@@ -170,9 +178,18 @@ public class CharEquipment : MonoBehaviour
             {
                 if(offHand.item != null)
                 {
-                    UnequipSlot(mainHand);
-                    mainHand.item = weapon;
-                    mainHand.isFakeEquipped = false;
+                    if (GlobalFuncs.Instance.CheckIfWorse(mainHand.item, offHand.item))
+                    {
+                        UnequipSlot(mainHand);
+                        mainHand.item = weapon;
+                        mainHand.isFakeEquipped = false;
+                    }
+                    else
+                    {
+                        UnequipSlot(offHand);
+                        offHand.item = weapon;
+                        offHand.isFakeEquipped = false;
+                    }
                 }
                 else
                 {
