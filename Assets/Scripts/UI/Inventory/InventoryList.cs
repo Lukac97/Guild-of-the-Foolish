@@ -7,6 +7,7 @@ using TMPro;
 
 public class InventoryList : MonoBehaviour
 {
+    public Color highlightColor;
     [Header("Items")]
     public GameObject itemPanel;
     public List<ItemObject> itemObjects;
@@ -34,7 +35,26 @@ public class InventoryList : MonoBehaviour
     private void Start()
     {
         GuildInventory.Instance.InventoryChanged += UpdateInventoryItems;
+        GlobalInput.Instance.changeSelectedItemObject += HighlightInventorySlot;
         UpdateInventoryItems();
+    }
+
+    public void HighlightInventorySlot()
+    {
+        ItemObject iO = GlobalInput.Instance.selectedItemObject;
+        if (iO == null)
+            return;
+        foreach(InventoryListElement elem in itemPanel.GetComponentsInChildren<InventoryListElement>())
+        {
+            if(elem.itemObject == iO)
+            {
+                elem.SetHighlight(true, highlightColor);
+            }
+            else
+            {
+                elem.SetHighlight(false);
+            }
+        }
     }
 
     public void UpdateInventoryItems()

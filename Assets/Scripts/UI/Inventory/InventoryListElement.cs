@@ -46,6 +46,20 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
             level.text = iObject.item.level.ToString();
         }
     }
+
+    public void SetHighlight(bool doHighlight, Color color = default(Color))
+    {
+        if(doHighlight)
+        {
+            if (color != null)
+            {
+                icon.color = color;
+                return;
+            }
+        }
+        icon.color = Color.white;
+    }
+
     public void OnItemClick()
     {
         GlobalInput.Instance.SetSelectedItemObject(itemObject);

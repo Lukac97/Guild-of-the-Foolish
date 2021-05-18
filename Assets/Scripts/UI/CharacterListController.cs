@@ -11,10 +11,11 @@ public class CharacterListController : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> lastHighlitedCharacters = new List<GameObject>();
-    // Start is called before the first frame update
+
     private void Start()
     {
         CharactersController.Instance.CharactersUpdated += OnUpdateCharacters;
+        CharactersController.Instance.CharactersResourcesUpdated += UpdateCharacterSliders;
         GlobalInput.Instance.changeSelectedEntity += HighlightSelectedCharacter;
         OnUpdateCharacters();
     }
@@ -44,6 +45,14 @@ public class CharacterListController : MonoBehaviour
             return;
         lastHighlitedCharacters.Add(FindCharElement(GlobalInput.Instance.selectedEntity.GetComponent<CharStats>()).gameObject);
         HighlightCharacters();
+    }
+
+    private void UpdateCharacterSliders()
+    {
+        foreach(CharListElement child in panel.GetComponentsInChildren<CharListElement>())
+        {
+            child.UpdateSliders();
+        }
     }
 
     private void OnUpdateCharacters()

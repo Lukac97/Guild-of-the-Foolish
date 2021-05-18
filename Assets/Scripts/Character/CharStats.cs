@@ -19,12 +19,14 @@ public class CharStats : MonoBehaviour
     public Attributes totalAttributes;
 
     private CharEquipment charEquipment;
+    private CharCombat charCombat;
 
     private void Start()
     {
         charEquipment = GetComponent<CharEquipment>();
+        charCombat = GetComponent<CharCombat>();
         //Placeholder until serialization happens
-        if(charAttributes == null)
+        if (charAttributes == null)
         {
             charAttributes = new Attributes();
         }

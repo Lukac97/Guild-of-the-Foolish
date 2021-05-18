@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class TabController : MonoBehaviour
 {
-    public Vector3 defaultPosition;
     [Space(4)]
     public List<GameObject> panels;
     public List<GameObject> tabs;
+    [HideInInspector]
     public GameObject activePanel;
+    [HideInInspector]
     public GameObject activeTab;
 
     [Space(6)]
     public Color activeTabColor;
     public Color inactiveTabColor;
-    public bool localPosition;
     void Awake()
     {
         activePanel = panels[0];

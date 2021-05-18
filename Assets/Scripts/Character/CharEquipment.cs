@@ -40,6 +40,7 @@ public class CharEquipment : MonoBehaviour
     public Attributes equipmentAttributes;
 
     private CharStats charStats;
+    private CharCombat charCombat;
 
     private void Awake()
     {
@@ -50,11 +51,18 @@ public class CharEquipment : MonoBehaviour
     private void Start()
     {
         charStats = GetComponent<CharStats>();
+        charCombat = GetComponent<CharCombat>();
     }
 
     public void AddAdditionalSlots()
     {
         //TODO: Implement character class specific slots
+    }
+
+    public void NotifyAfterEquipping()
+    {
+        GetComponent<CharCombat>().UpdateCharCombat();
+        CharactersController.Instance.CharactersUpdated.Invoke();
     }
 
     public void UpdateEquipmentAttributes()
@@ -85,10 +93,11 @@ public class CharEquipment : MonoBehaviour
             EquipItem((ArmorItem)equipmentItem);
         else
             EquipItem((WeaponItem)equipmentItem);
-        CharactersController.Instance.CharactersUpdated.Invoke();
+        NotifyAfterEquipping();
         return true;
     }
 
+    #region Specific Equips
     public bool EquipItem(ArmorItem armor)
     {
         List<ArmorSlotItem> occupiedSlots = new List<ArmorSlotItem>();
@@ -210,6 +219,7 @@ public class CharEquipment : MonoBehaviour
 
         return true;
     }
+    #endregion Specific Equips
 
     public bool UnequipSlot(ArmorSlotItem armorSlot, bool equip=false)
     {
@@ -218,7 +228,7 @@ public class CharEquipment : MonoBehaviour
         GuildInventory.Instance.AddItemToInventory(armorSlot.item);
         armorSlot.item = null;
         if (!equip)
-            CharactersController.Instance.CharactersUpdated.Invoke();
+            NotifyAfterEquipping();
         return true;
     }
 
@@ -237,10 +247,9 @@ public class CharEquipment : MonoBehaviour
         else
             weaponSlot.item = null;
         if (!equip)
-            CharactersController.Instance.CharactersUpdated.Invoke();
+            NotifyAfterEquipping();
         return true;
     }
-
 
     public bool CanWear(WeaponItem item)
     {
