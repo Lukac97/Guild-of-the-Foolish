@@ -59,10 +59,10 @@ public class CharListElement : MonoBehaviour
     {
         if (hpSlider != null)
         {
-            hpSlider.value = 1.0f * linkedCharacterCombat.currentHealth / linkedCharacterCombat.maxHealth;
+            hpSlider.value = linkedCharacterCombat.combatStats.currentHealth / linkedCharacterCombat.combatStats.maxHealth;
         }
         if (srSlider != null)
-            srSlider.value = 1.0f * linkedCharacterCombat.currentSpellResource / linkedCharacterCombat.maxSpellResource;
+            srSlider.value = linkedCharacterCombat.combatStats.currentSpellResource / linkedCharacterCombat.combatStats.maxSpellResource;
     }
 
     public void CallChangeSelectedCharacter()

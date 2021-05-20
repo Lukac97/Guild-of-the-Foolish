@@ -1447,7 +1447,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 102.5, y: 71.162}
+  m_AnchoredPosition: {x: 102.5, y: 71.16199}
   m_SizeDelta: {x: -235, y: -172.32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &100425683
@@ -12059,6 +12059,7 @@ GameObject:
   - component: {fileID: 1438783701}
   - component: {fileID: 1438783700}
   - component: {fileID: 1438783702}
+  - component: {fileID: 1438783703}
   m_Layer: 0
   m_Name: _Global_Input
   m_TagString: Untagged
@@ -12113,6 +12114,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9b6529614604a647a946567ce749f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1438783703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438783699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c9c46e31e33fd34195f2e5193c5b901, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attributePointsPerLevel: 0
 --- !u!1 &1439871939
 GameObject:
   m_ObjectHideFlags: 0
@@ -13911,6 +13925,16 @@ PrefabInstance:
     - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
         type: 3}
       propertyPath: currentSpellResource
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
+        type: 3}
+      propertyPath: combatStats.maxHealth
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
+        type: 3}
+      propertyPath: combatStats.currentHealth
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 9113591872738922812, guid: 6f202eced77221a45a044d4656c594b6,
@@ -19910,6 +19934,26 @@ PrefabInstance:
         type: 3}
       propertyPath: currentSpellResource
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
+        type: 3}
+      propertyPath: combatStats.maxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
+        type: 3}
+      propertyPath: combatStats.currentHealth
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
+        type: 3}
+      propertyPath: combatStats.maxSpellResource
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
+        type: 3}
+      propertyPath: combatStats.currentSpellResource
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 9113591872738922812, guid: 6f202eced77221a45a044d4656c594b6,
         type: 3}

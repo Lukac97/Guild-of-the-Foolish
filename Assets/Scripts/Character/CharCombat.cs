@@ -5,12 +5,6 @@ using UnityEngine.UI;
 
 public class CharCombat : MonoBehaviour
 {
-    [Header("Resources")]
-    public int maxHealth;
-    public int currentHealth;
-    public int maxSpellResource;
-    public int currentSpellResource;
-
     [Header("Combat stats")]
     public CombatStats combatStats;
 
@@ -45,47 +39,25 @@ public class CharCombat : MonoBehaviour
     #region Resource Management
     public void RaiseHealth(int amount)
     {
-        if (currentHealth + amount >= maxHealth)
-            currentHealth = maxHealth;
-        else
-            currentHealth += amount;
+        combatStats.RaiseHealth(amount);
         CharactersController.Instance.CharactersResourcesUpdated.Invoke();
     }
 
     public void LowerHealth(int amount)
     {
-        if(currentHealth - amount <= 0)
-        {
-            currentHealth = 0;
-            isInjured = true;
-        }
-        else
-        {
-            currentHealth -= amount;
-        }
+        combatStats.LowerHealth(amount);
         CharactersController.Instance.CharactersResourcesUpdated.Invoke();
     }
 
     public void RaiseSpellResource(int amount)
     {
-        if (currentSpellResource + amount >= maxSpellResource)
-            currentSpellResource = maxSpellResource;
-        else
-            currentSpellResource += amount;
+        combatStats.RaiseSpellResource(amount);
         CharactersController.Instance.CharactersResourcesUpdated.Invoke();
     }
 
     public void LowerSpellResource(int amount)
     {
-        if (currentSpellResource - amount <= 0)
-        {
-            currentSpellResource = 0;
-            isInjured = true;
-        }
-        else
-        {
-            currentSpellResource -= amount;
-        }
+        combatStats.LowerSpellResource(amount);
         CharactersController.Instance.CharactersResourcesUpdated.Invoke();
     }
     #endregion Resource Management

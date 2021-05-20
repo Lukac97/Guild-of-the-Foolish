@@ -72,3 +72,10 @@ public enum ArmorType
     MAIL,
     PLATE
 }
+
+public enum CreatureType
+{
+    HUMANOID,
+    BEAST,
+    VOID
+}
