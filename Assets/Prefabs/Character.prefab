@@ -115,7 +115,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 549c01a7b4b0eb44aa66b990e579c883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 100
-  maxSpellResource: 50
-  currentSpellResource: 50
+  isEnemy: 0
+  combatStats:
+    maxHealth: 0
+    currentHealth: 0
+    maxSpellResource: 0
+    currentSpellResource: 0
+    physicalDamage: 0
+    magicalDamage: 0
+    physicalReduction: 0
+    magicalReduction: 0
+    avoidChance: 0
+  isInjured: 0

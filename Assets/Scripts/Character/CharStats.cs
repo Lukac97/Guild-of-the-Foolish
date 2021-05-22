@@ -30,6 +30,7 @@ public class CharStats : MonoBehaviour
         {
             charAttributes = new Attributes();
         }
+        UpdateTotalAttributes();
     }
 
     public void InitCharStats(CharClass newCharClass, string newCharName)
@@ -51,5 +52,6 @@ public class CharStats : MonoBehaviour
     public void UpdateTotalAttributes()
     {
         totalAttributes = charAttributes + charEquipment.equipmentAttributes;
+        charCombat.UpdateCharCombat();
     }
 }

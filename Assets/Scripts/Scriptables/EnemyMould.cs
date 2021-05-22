@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "New Enemy", menuName = "Enemy/Enemy Mould")]
 public class EnemyMould : ScriptableObject
 {
     public CreatureType creatureType;
     public Attributes attributesProportion;
+    public List<CombatSpell> combatSpells;
 
     public Attributes CalculateAttributesByLevel(int level, int attributesPerLevel)
     {

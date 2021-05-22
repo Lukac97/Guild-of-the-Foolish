@@ -126,6 +126,7 @@ public class EquipItemComparison : MonoBehaviour
         ArmorComparison toRemoveArmor = new ArmorComparison();
 
         CharEquipment.ArmorSlotItem suitableSlot = null;
+        itemsToRemove = new List<Item>();
 
         foreach(CharEquipment.ArmorSlotItem slot in charEquipment.armorSlots)
         {
@@ -139,9 +140,11 @@ public class EquipItemComparison : MonoBehaviour
         }
         if (suitableSlot == null)
             return null;
-        if(suitableSlot.item != null)
+        if (suitableSlot.item != null)
+        {
             toRemoveArmor += new ArmorComparison(suitableSlot.item);
-
+            itemsToRemove.Add(suitableSlot.item);
+        }
         return toEquipArmor - toRemoveArmor;
     }
 
@@ -245,9 +248,8 @@ public class EquipItemComparison : MonoBehaviour
             ArmorComparison armorComparison = null;
             if (itemObject.item.GetType() == typeof(WeaponItem))
                 weaponComparison = CompareEquipment((WeaponItem)itemObject.item);
-            if (itemObject.item.GetType() == typeof(ArmorItem))
+            else if (itemObject.item.GetType() == typeof(ArmorItem))
                 armorComparison = CompareEquipment((ArmorItem)itemObject.item);
-
             if (weaponComparison == null & armorComparison == null)
             {
                 mainPanel.SetActive(false);

@@ -22,9 +22,9 @@ public class CombatStats
     public void CalculateCombatStats(Attributes attributes)
     {
         //maxHealth
-        maxHealth = attributes.strength * 1.0f;
-        maxHealth += attributes.agility * 0.6f;
-        maxHealth += attributes.intellect * 0.3f;
+        maxHealth = attributes.strength * 10.0f;
+        maxHealth += attributes.agility * 6.0f;
+        maxHealth += attributes.intellect * 4.0f;
 
         //----------------------------------------
         //physicalDmg
@@ -43,9 +43,15 @@ public class CombatStats
         //avoidChance
         avoidChance = attributes.agility * 0.3f;
         avoidChance = attributes.luck * 0.7f;
+
+        ////IntegrityCheck
+        //if (currentHealth > maxHealth)
+        //    currentHealth = maxHealth;
+        //if (currentSpellResource > maxSpellResource)
+        //    currentSpellResource = maxSpellResource;
     }
     #region Resource Management
-    public void RaiseHealth(int amount)
+    public void RaiseHealth(float amount)
     {
         if (currentHealth + amount >= maxHealth)
             currentHealth = maxHealth;
@@ -53,19 +59,21 @@ public class CombatStats
             currentHealth += amount;
     }
 
-    public void LowerHealth(int amount)
+    public bool LowerHealth(float amount)
     {
         if (currentHealth - amount <= 0)
         {
             currentHealth = 0;
+            return true;
         }
         else
         {
             currentHealth -= amount;
+            return false;
         }
     }
 
-    public void RaiseSpellResource(int amount)
+    public void RaiseSpellResource(float amount)
     {
         if (currentSpellResource + amount >= maxSpellResource)
             currentSpellResource = maxSpellResource;
@@ -73,7 +81,7 @@ public class CombatStats
             currentSpellResource += amount;
     }
 
-    public void LowerSpellResource(int amount)
+    public void LowerSpellResource(float amount)
     {
         if (currentSpellResource - amount <= 0)
         {
@@ -83,6 +91,12 @@ public class CombatStats
         {
             currentSpellResource -= amount;
         }
+    }
+
+    public void FillResources()
+    {
+        currentHealth = maxHealth;
+        currentSpellResource = maxSpellResource;
     }
     #endregion Resource Management
 }

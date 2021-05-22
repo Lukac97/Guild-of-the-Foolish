@@ -29,6 +29,23 @@ public class GlobalInput : MonoBehaviour
     public Color goodColor;
     public Color badColor;
 
+    [Space(4)]
+    [Header("Combat logging")]
+    public Color damageColor;
+    public Color healColor;
+    [Space(4)]
+    public Color enemyTurnColor;
+    public Color characterTurnColor;
+    [Space(4)]
+    public Color enemyNameColor;
+    public Color charNameColor;
+    [Space(4)]
+    public Color spellColor;
+    [Space(4)]
+    public Color battleWonColor;
+    public Color battleLostColor;
+    public Color battleTiedColor;
+
     private void Awake()
     {
         if (Instance == null)

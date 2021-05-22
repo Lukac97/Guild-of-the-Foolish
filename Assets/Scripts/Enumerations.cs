@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+#region Equipment and Inventory
 public enum InventorySortBy
 {
     NAME,
@@ -72,10 +74,16 @@ public enum ArmorType
     MAIL,
     PLATE
 }
-
+#endregion
 public enum CreatureType
 {
     HUMANOID,
     BEAST,
     VOID
+}
+
+public enum CombatSpellType
+{
+    BENEFICIAL,
+    HARMFUL
 }

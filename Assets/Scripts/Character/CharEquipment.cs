@@ -59,10 +59,12 @@ public class CharEquipment : MonoBehaviour
         //TODO: Implement character class specific slots
     }
 
-    public void NotifyAfterEquipping()
+    public void NotifyAfterEquipping(bool invoke)
     {
-        GetComponent<CharCombat>().UpdateCharCombat();
-        CharactersController.Instance.CharactersUpdated.Invoke();
+        UpdateEquipmentAttributes();
+        charStats.UpdateTotalAttributes();
+        if(invoke)
+            CharactersController.Instance.CharactersUpdated.Invoke();
     }
 
     public void UpdateEquipmentAttributes()
@@ -78,6 +80,7 @@ public class CharEquipment : MonoBehaviour
             if(armor.item != null)
                 eqAttr += armor.item.attributes;
         }
+        equipmentAttributes = eqAttr;
     }
 
     public bool EquipItem(ItemObject itemObject)
@@ -93,7 +96,7 @@ public class CharEquipment : MonoBehaviour
             EquipItem((ArmorItem)equipmentItem);
         else
             EquipItem((WeaponItem)equipmentItem);
-        NotifyAfterEquipping();
+        NotifyAfterEquipping(true);
         return true;
     }
 
@@ -227,8 +230,7 @@ public class CharEquipment : MonoBehaviour
             return true;
         GuildInventory.Instance.AddItemToInventory(armorSlot.item);
         armorSlot.item = null;
-        if (!equip)
-            NotifyAfterEquipping();
+        NotifyAfterEquipping(!equip);
         return true;
     }
 
@@ -246,8 +248,7 @@ public class CharEquipment : MonoBehaviour
         }
         else
             weaponSlot.item = null;
-        if (!equip)
-            NotifyAfterEquipping();
+        NotifyAfterEquipping(!equip);
         return true;
     }
 
