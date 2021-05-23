@@ -18,10 +18,12 @@ public class CharCombat : CombatHandler
     public void UpdateCharCombat()
     {
         combatStats.CalculateCombatStats(charStats.totalAttributes);
+        NotifyResourcesUpdated();
     }
 
     protected override void NotifyResourcesUpdated()
     {
-        CharactersController.Instance.CharactersResourcesUpdated.Invoke();
+        CharactersController.CharactersUpdated.Invoke();
+        CharactersController.CharactersResourcesUpdated.Invoke();
     }
 }

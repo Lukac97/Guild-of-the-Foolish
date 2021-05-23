@@ -13,7 +13,7 @@ public class EquipmentSlotController : MonoBehaviour
     void Start()
     {
         GlobalInput.Instance.changeSelectedEntity += OnEntityChanged;
-        CharactersController.Instance.CharactersUpdated += OnEntityChanged;
+        CharactersController.CharactersUpdated += OnEntityChanged;
         armorSlots = new List<EquipmentArmorSlot>();
         armorSlots.AddRange(equipmentPanel.GetComponentsInChildren<EquipmentArmorSlot>());
         weaponSlots = new List<EquipmentWeaponSlot>();

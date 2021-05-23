@@ -82,8 +82,17 @@ public enum CreatureType
     VOID
 }
 
-public enum CombatSpellType
+#region Spells
+public enum HarmfulStatusEffectType
 {
-    BENEFICIAL,
-    HARMFUL
+    STUN,
+    DAMAGE_OVER_TIME
 }
+
+public enum BeneficialStatusEffectType
+{
+    HEALING_OVER_TIME,
+    ANTI_CC
+}
+
+#endregion Spells

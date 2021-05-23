@@ -57,12 +57,22 @@ public class CharListElement : MonoBehaviour
 
     public void UpdateSliders()
     {
+        if (linkedCharacter == null | linkedCharacterCombat == null)
+            return;
         if (hpSlider != null)
         {
-            hpSlider.value = linkedCharacterCombat.combatStats.currentHealth / linkedCharacterCombat.combatStats.maxHealth;
+            if (linkedCharacterCombat.combatStats.maxHealth == 0)
+                hpSlider.value = 0;
+            else
+                hpSlider.value = linkedCharacterCombat.combatStats.currentHealth / linkedCharacterCombat.combatStats.maxHealth;
         }
         if (srSlider != null)
-            srSlider.value = linkedCharacterCombat.combatStats.currentSpellResource / linkedCharacterCombat.combatStats.maxSpellResource;
+        {
+            if (linkedCharacterCombat.combatStats.maxSpellResource == 0)
+                srSlider.value = 0;
+            else
+                srSlider.value = linkedCharacterCombat.combatStats.currentSpellResource / linkedCharacterCombat.combatStats.maxSpellResource;
+        }
     }
 
     public void CallChangeSelectedCharacter()

@@ -12,10 +12,14 @@ public class CharacterListController : MonoBehaviour
     [SerializeField]
     private List<GameObject> lastHighlitedCharacters = new List<GameObject>();
 
+    private void Awake()
+    {
+        CharactersController.CharactersUpdated += OnUpdateCharacters;
+        CharactersController.CharactersResourcesUpdated += UpdateCharacterSliders;
+    }
+
     private void Start()
     {
-        CharactersController.Instance.CharactersUpdated += OnUpdateCharacters;
-        CharactersController.Instance.CharactersResourcesUpdated += UpdateCharacterSliders;
         GlobalInput.Instance.changeSelectedEntity += HighlightSelectedCharacter;
         OnUpdateCharacters();
     }

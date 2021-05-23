@@ -21,10 +21,21 @@ public class CombatStats
 
     public void CalculateCombatStats(Attributes attributes)
     {
+        float healthChangeRatio = currentHealth > 0 ? maxHealth/currentHealth : 0;
+        if (currentHealth == 0 & maxHealth == 0)
+            healthChangeRatio = 1;
+
+        float spellResourceChangeRation = currentSpellResource > 0 ? maxSpellResource/currentSpellResource : 0;
+        if (currentSpellResource == 0 & maxSpellResource == 0)
+            spellResourceChangeRation = 1;
         //maxHealth
         maxHealth = attributes.strength * 10.0f;
         maxHealth += attributes.agility * 6.0f;
         maxHealth += attributes.intellect * 4.0f;
+
+        //maxSpellResource
+        maxSpellResource = attributes.intellect * 20.0f;
+
 
         //----------------------------------------
         //physicalDmg
@@ -44,11 +55,16 @@ public class CombatStats
         avoidChance = attributes.agility * 0.3f;
         avoidChance = attributes.luck * 0.7f;
 
-        ////IntegrityCheck
-        //if (currentHealth > maxHealth)
-        //    currentHealth = maxHealth;
-        //if (currentSpellResource > maxSpellResource)
-        //    currentSpellResource = maxSpellResource;
+        if (maxHealth > 0 & currentHealth > maxHealth)
+            currentHealth = maxHealth;
+        else
+            currentHealth = maxHealth / healthChangeRatio;
+
+        if (maxSpellResource > 0 & currentSpellResource > maxSpellResource)
+            currentSpellResource = maxSpellResource;
+        else
+            currentSpellResource = maxSpellResource / spellResourceChangeRation;
+
     }
     #region Resource Management
     public void RaiseHealth(float amount)

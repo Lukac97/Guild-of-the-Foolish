@@ -45,19 +45,54 @@ public class CombatLogger : MonoBehaviour
         return newLog;
     }
 
-    public void AddLog(string casterName, string targetName, CombatSpell spell, float intensity, bool isEnemyTurn)
+    public void AddTurnNumberLog(int turnNumber)
+    {
+        GameObject newLog = InstantiateCombatLog();
+        TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
+        tmp.text = turnNumber + ". turn:\n";
+    }
+
+    public void AddLog(string casterName, string targetName, UsedSpellResult spellResult, bool isEnemyTurn)
+    {
+        GameObject newLog = InstantiateCombatLog();
+        TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
+        if (spellResult == null)
+        {
+            tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor) + " passed the turn.";
+        }
+        else
+        {
+            tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
+                + " used " + ColorText(spellResult.spellUsed.name, GlobalInput.Instance.spellColor)
+                + " on " + ColorText(targetName, GlobalInput.Instance.enemyNameColor);
+            if(spellResult.damageToTarget > 0)
+                tmp.text += ", dealt "
+                    + ColorText(spellResult.damageToTarget.ToString(), GlobalInput.Instance.damageColor)
+                    + " damage to " + ColorText(targetName, GlobalInput.Instance.enemyNameColor);
+            if(spellResult.damageToSelf > 0)
+                tmp.text += ", dealt "
+                    + ColorText(spellResult.damageToSelf.ToString(), GlobalInput.Instance.damageColor)
+                    + " damage to " + ColorText(casterName, GlobalInput.Instance.charNameColor);
+            if(spellResult.healingToTarget > 0)
+                tmp.text += ", did "
+                    + ColorText(spellResult.healingToTarget.ToString(), GlobalInput.Instance.healColor)
+                    + " healing to " + ColorText(targetName, GlobalInput.Instance.charNameColor);
+            if(spellResult.healingToSelf > 0)
+                tmp.text += ", did "
+                    + ColorText(spellResult.healingToSelf.ToString(), GlobalInput.Instance.healColor)
+                    + " healing to " + ColorText(targetName, GlobalInput.Instance.charNameColor);
+            tmp.text += ".";
+        }
+
+        ColorLogBackground(newLog, isEnemyTurn);
+    }
+
+    public void AddCasterStateLog(string casterName, string stateName)
     {
         GameObject newLog = InstantiateCombatLog();
         TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
         tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
-            + " used " + ColorText(spell.name, GlobalInput.Instance.spellColor)
-            + " on " + ColorText(targetName, GlobalInput.Instance.enemyNameColor);
-        if (spell.combatSpellType == CombatSpellType.HARMFUL)
-            tmp.text += ", dealt " + ColorText(intensity.ToString(), GlobalInput.Instance.damageColor) + " damage.";
-        else if (spell.combatSpellType == CombatSpellType.BENEFICIAL)
-            tmp.text += ", healed " + ColorText(intensity.ToString(), GlobalInput.Instance.healColor) + " health.";
-
-        ColorLogBackground(newLog, isEnemyTurn);
+            + " is " + stateName + ".";
     }
 
     public void AddFinishLog(string casterName, string targetName, int outcome)
@@ -95,6 +130,12 @@ public class CombatLogger : MonoBehaviour
             image.color = GlobalInput.Instance.battleLostColor;
         else
             image.color = GlobalInput.Instance.battleTiedColor;
+    }
+
+    private void ColorLogDefault(GameObject logObj)
+    {
+        Image image = logObj.GetComponent<Image>();
+        image.color = GlobalInput.Instance.defaultLogColor;
     }
 
     private string ColorText(string text, Color clr)

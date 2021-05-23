@@ -46,7 +46,7 @@ public class CharStats : MonoBehaviour
     public void ChangeLocation(Location loc)
     {
         location = loc;
-        CharactersController.Instance.CharactersUpdated.Invoke();
+        CharactersController.CharactersUpdated.Invoke();
     }
 
     public void UpdateTotalAttributes()

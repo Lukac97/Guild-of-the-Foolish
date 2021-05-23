@@ -8,6 +8,7 @@ public class GlobalRules : MonoBehaviour
     public static GlobalRules Instance { get { return _instance; } }
 
     public int attributePointsPerLevel;
+    public int maxCombatTurns;
 
     private void Start()
     {

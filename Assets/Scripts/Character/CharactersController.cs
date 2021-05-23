@@ -8,10 +8,10 @@ public class CharactersController : MonoBehaviour
     public static CharactersController Instance { get { return _instance; } }
 
     public delegate void UpdateCharactersDelegate();
-    public UpdateCharactersDelegate CharactersUpdated;
+    public static UpdateCharactersDelegate CharactersUpdated;
 
     public delegate void UpdateCharactersResourcesDelegate();
-    public UpdateCharactersResourcesDelegate CharactersResourcesUpdated;
+    public static UpdateCharactersResourcesDelegate CharactersResourcesUpdated;
 
     public List<GameObject> characters;
 
@@ -19,31 +19,10 @@ public class CharactersController : MonoBehaviour
 
     public void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
+        if (Instance == null)
         {
             _instance = this;
         }
-        foreach (Transform child in gameObject.transform)
-        {
-            if (!characters.Contains(child.gameObject))
-            {
-                characters.Add(child.gameObject);
-            }
-        }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 
     public void CreateNewCharater(CharClass newCharClass, string charName, int price)
@@ -57,6 +36,6 @@ public class CharactersController : MonoBehaviour
         GameObject newChar = Instantiate(newCharPrefab, gameObject.transform);
         newChar.GetComponent<CharStats>().InitCharStats(newCharClass, charName);
         characters.Add(newChar);
-        Instance.CharactersUpdated.Invoke();
+        CharactersUpdated.Invoke();
     }
 }

@@ -134,7 +134,7 @@ public class EquipItemComparison : MonoBehaviour
             {
                 if (suitableSlot == null)
                     suitableSlot = slot;
-                else if (GlobalFuncs.Instance.CheckIfWorse(slot.item, suitableSlot.item))
+                else if (GlobalFuncs.CheckIfWorse(slot.item, suitableSlot.item))
                     suitableSlot = slot;
             }
         }
@@ -200,7 +200,7 @@ public class EquipItemComparison : MonoBehaviour
                 }
                 else
                 {
-                    if (GlobalFuncs.Instance.CheckIfWorse(mainHand.item, offHand.item))
+                    if (GlobalFuncs.CheckIfWorse(mainHand.item, offHand.item))
                     {
                         toRemoveWeapon += new WeaponComparison(mainHand.item);
                         itemsToRemove.Add(mainHand.item);

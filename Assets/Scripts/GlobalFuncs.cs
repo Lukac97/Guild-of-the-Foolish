@@ -19,7 +19,7 @@ public class GlobalFuncs : MonoBehaviour
             _instance = this;
     }
 
-    public bool CheckIfWorse(ArmorItem armor1, ArmorItem armor2)
+    public static bool CheckIfWorse(ArmorItem armor1, ArmorItem armor2)
     {
         if (armor1 == null)
             return true;
@@ -32,7 +32,7 @@ public class GlobalFuncs : MonoBehaviour
         else
             return false;
     }
-    public bool CheckIfWorse(WeaponItem weapon1, WeaponItem weapon2)
+    public static bool CheckIfWorse(WeaponItem weapon1, WeaponItem weapon2)
     {
         if (weapon1 == null)
             return true;

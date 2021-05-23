@@ -61,10 +61,11 @@ public class CharEquipment : MonoBehaviour
 
     public void NotifyAfterEquipping(bool invoke)
     {
-        UpdateEquipmentAttributes();
-        charStats.UpdateTotalAttributes();
-        if(invoke)
-            CharactersController.Instance.CharactersUpdated.Invoke();
+        if (invoke)
+        {
+            UpdateEquipmentAttributes();
+            charStats.UpdateTotalAttributes();
+        }
     }
 
     public void UpdateEquipmentAttributes()
@@ -126,7 +127,7 @@ public class CharEquipment : MonoBehaviour
             {
                 if (finalSlot == null)
                     finalSlot = occSlot;
-                else if (GlobalFuncs.Instance.CheckIfWorse(occSlot.item, finalSlot.item))
+                else if (GlobalFuncs.CheckIfWorse(occSlot.item, finalSlot.item))
                     finalSlot = occSlot;
             }
 
@@ -161,26 +162,26 @@ public class CharEquipment : MonoBehaviour
         if (weapon.weaponWielding == WeaponWielding.MAIN_HAND)
         {
             if (mainHand.item != null)
-                UnequipSlot(mainHand);
+                UnequipSlot(mainHand, true);
             mainHand.item = weapon;
             mainHand.isFakeEquipped = false;
         }
         else if (weapon.weaponWielding == WeaponWielding.OFF_HAND)
         {
             if (offHand.item != null)
-                UnequipSlot(offHand);
+                UnequipSlot(offHand, true);
             offHand.item = weapon;
             offHand.isFakeEquipped = false;
         }
         else if (weapon.weaponWielding == WeaponWielding.TWO_HANDED)
         {
             if (mainHand.item != null)
-                UnequipSlot(mainHand);
+                UnequipSlot(mainHand, true);
             mainHand.item = weapon;
             mainHand.isFakeEquipped = false;
 
             if (offHand.item != null)
-                UnequipSlot(offHand);
+                UnequipSlot(offHand, true);
             offHand.item = weapon;
             offHand.isFakeEquipped = true;
         }
@@ -190,15 +191,15 @@ public class CharEquipment : MonoBehaviour
             {
                 if(offHand.item != null)
                 {
-                    if (GlobalFuncs.Instance.CheckIfWorse(mainHand.item, offHand.item))
+                    if (GlobalFuncs.CheckIfWorse(mainHand.item, offHand.item))
                     {
-                        UnequipSlot(mainHand);
+                        UnequipSlot(mainHand, true);
                         mainHand.item = weapon;
                         mainHand.isFakeEquipped = false;
                     }
                     else
                     {
-                        UnequipSlot(offHand);
+                        UnequipSlot(offHand, true);
                         offHand.item = weapon;
                         offHand.isFakeEquipped = false;
                     }

@@ -45,6 +45,8 @@ public class GlobalInput : MonoBehaviour
     public Color battleWonColor;
     public Color battleLostColor;
     public Color battleTiedColor;
+    [Space(4)]
+    public Color defaultLogColor;
 
     private void Awake()
     {

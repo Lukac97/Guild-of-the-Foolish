@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96791f70a1c753a43adc19d0d8a64801, type: 3}
-  m_Name: BasicAttack
+  m_Name: StrongAttack
   m_EditorClassIdentifier: 
-  spellDescription: Basic attack
+  spellDescription: 
   spellLevel: 1
-  turnCooldown: 0
+  turnCooldown: 3
   damageToTarget:
     flatIntensity: 0
     scaleToMagicIntensity: 0
-    scaleToPhysicalIntensity: 0.8
+    scaleToPhysicalIntensity: 1.3
   damageToSelf:
     flatIntensity: 0
     scaleToMagicIntensity: 0
@@ -31,7 +31,13 @@ MonoBehaviour:
     flatIntensity: 0
     scaleToMagicIntensity: 0
     scaleToPhysicalIntensity: 0
-  harmfulEffectsToTarget: []
+  harmfulEffectsToTarget:
+  - turnDuration: 1
+    intensity:
+      flatIntensity: 0
+      scaleToMagicIntensity: 0
+      scaleToPhysicalIntensity: 0
+    statusEffectType: 0
   harmfulEffectsToSelf: []
   beneficialEffectsToTarget: []
   beneficialEffectsToSelf: []

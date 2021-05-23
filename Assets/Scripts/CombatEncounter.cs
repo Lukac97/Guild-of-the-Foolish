@@ -4,14 +4,25 @@ using UnityEngine;
 
 public class CombatEncounter : MonoBehaviour
 {
+    public class CombatParticipant
+    {
+        public CombatHandler combatHandler;
+        public string participantName;
+        public bool isFriendly;
+
+        public CombatParticipant(CombatHandler cbh, string partName, bool friendly)
+        {
+            combatHandler = cbh;
+            participantName = partName;
+            isFriendly = friendly;
+        }
+    }
+
     public GameObject enemyPrefab;
 
     public List<GameObject> activeEnemies;
-    public CombatHandler character;
-    public CombatHandler enemy;
-
-    private string characterName;
-    private string enemyName;
+    public CombatParticipant character;
+    public CombatParticipant enemy;
 
     public void InitiateCombat(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc)
     {
@@ -23,65 +34,69 @@ public class CombatEncounter : MonoBehaviour
         EnemyCombat eCombat = gO.GetComponent<EnemyCombat>();
         eStats.InitEnemyStats(enemyFromLoc.enemyMould, selectedLvl, loc);
         eCombat.InitEnemyCombat(enemyFromLoc.enemyMould, selectedLvl, this);
-        character = charStats.GetComponent<CombatHandler>();
-        enemy = gO.GetComponent<CombatHandler>();
-        characterName = charStats.characterName;
-        enemyName = eStats.enemyName;
+
+        character = new CombatParticipant(charStats.GetComponent<CombatHandler>(), charStats.characterName, true);
+        enemy = new CombatParticipant(gO.GetComponent<CombatHandler>(), eStats.enemyName, false);
+
         ScreensController.Instance.ActivateCombatScreen(true);
     }
 
     public int SimulateCombat()
     {
-        bool keepFighting = true;
-        int turnNumber = 1;
         int outcome = 2; // 0 - defeat, 1 - victory, 2 - tie
 
-        CombatSpell chosenSpell;
-        float intensity;
+        UsedSpellResult intensity = null;
 
         CombatLogger.Instance.ClearLog();
 
-        while (keepFighting)
+        for (int turnNumber = 1; turnNumber <= GlobalRules.Instance.maxCombatTurns; turnNumber++)
         {
             //TODO: Apply status effects to character
-
+            character.combatHandler.TurnStart();
             //Check if character dead
-            if(character.isInjured)
+            if (character.combatHandler.isInjured)
             {
                 outcome = 0;
                 break;
             }
-            chosenSpell = character.combatSpells[0];
-            intensity = chosenSpell.UseSpell(character, enemy);
-            CombatLogger.Instance.AddLog(characterName, enemyName, chosenSpell, intensity, false);
-            if(character.isInjured)
+
+            if (character.combatHandler.isStunned)
+                CombatLogger.Instance.AddCasterStateLog(character.participantName, "stunned");
+            else
+            {
+                intensity = character.combatHandler.ChooseSpell(enemy.combatHandler);
+                CombatLogger.Instance.AddLog(character.participantName, enemy.participantName, intensity, false);
+            }
+            if (character.combatHandler.isInjured)
             {
                 outcome = 0;
                 break;
             }
+
             //--------------------------Enemy turn--------------------------------------
             //TODO: Apply status effects to character
-
+            enemy.combatHandler.TurnStart();
             //Check if character dead
-            if (enemy.isInjured)
-            {
-                outcome = 1;
-                break;
-            }
-            chosenSpell = enemy.combatSpells[0];
-            intensity = chosenSpell.UseSpell(enemy, character);
-            CombatLogger.Instance.AddLog(enemyName, characterName, chosenSpell, intensity, true);
-            if (enemy.isInjured)
+            if (enemy.combatHandler.isInjured)
             {
                 outcome = 1;
                 break;
             }
 
-            turnNumber += 1;
-            if (turnNumber == 40)
-                keepFighting = false;
+            if (enemy.combatHandler.isStunned)
+                CombatLogger.Instance.AddCasterStateLog(enemy.participantName, "stunned");
+            else
+            {
+                intensity = enemy.combatHandler.ChooseSpell(character.combatHandler);
+                CombatLogger.Instance.AddLog(enemy.participantName, character.participantName, intensity, true);
+            }
+            if (enemy.combatHandler.isInjured)
+            {
+                outcome = 1;
+                break;
+            }
         }
-        CombatLogger.Instance.AddFinishLog(characterName, enemyName, outcome);
+        CombatLogger.Instance.AddFinishLog(character.participantName, enemy.participantName, outcome);
 
         //TODO: Log to file when finished calculating combat, then read when necessary...
         UninitiateCombat();
@@ -92,4 +107,5 @@ public class CombatEncounter : MonoBehaviour
     {
         GetComponentInParent<CombatEncounterController>().DestroyEncounter(this);
     }
+
 }
