@@ -53,6 +53,7 @@ public class CombatEncounter : MonoBehaviour
 
         for (int turnNumber = 1; turnNumber <= GlobalRules.Instance.maxCombatTurns; turnNumber++)
         {
+            CombatLogger.Instance.AddTurnNumberLog(turnNumber);
             //TODO: Apply status effects to character
             startSE = character.combatHandler.TurnStart();
             //Check if character dead

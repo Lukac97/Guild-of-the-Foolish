@@ -21059,7 +21059,7 @@ PrefabInstance:
     - target: {fileID: 6000641808849799161, guid: 21b05e8a99987d44ea0bb1831fa6253b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 6000641808849799161, guid: 21b05e8a99987d44ea0bb1831fa6253b,
         type: 3}
@@ -21099,7 +21099,7 @@ PrefabInstance:
     - target: {fileID: 9185889461836010469, guid: 21b05e8a99987d44ea0bb1831fa6253b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 9185889461836010469, guid: 21b05e8a99987d44ea0bb1831fa6253b,
         type: 3}
@@ -21990,7 +21990,7 @@ PrefabInstance:
     - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
         type: 3}
       propertyPath: combatSpells.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
         type: 3}
@@ -22017,11 +22017,17 @@ PrefabInstance:
         type: 3}
       propertyPath: combatSpells.Array.data[0].combatSpell
       value: 
-      objectReference: {fileID: 11400000, guid: 536f17a365ae46347ac47039d828ea2f,
+      objectReference: {fileID: 11400000, guid: e249e09355059f448b3ae9556bdefd47,
         type: 2}
     - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
         type: 3}
       propertyPath: combatSpells.Array.data[1].combatSpell
+      value: 
+      objectReference: {fileID: 11400000, guid: 536f17a365ae46347ac47039d828ea2f,
+        type: 2}
+    - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
+        type: 3}
+      propertyPath: combatSpells.Array.data[2].combatSpell
       value: 
       objectReference: {fileID: 11400000, guid: cf26cdc197160784fa2bc8d7b33348c3,
         type: 2}

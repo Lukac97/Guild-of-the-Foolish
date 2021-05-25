@@ -130,9 +130,8 @@ public class CombatHandler : MonoBehaviour
                 if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.HEALING_OVER_TIME)
                 {
                     AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
-                    inflictedSE.intensityToReceive = CalculateDamageReceived(appliedStatusEffect.intensityToReceive);
+                    inflictedSE.intensityToReceive = CalculateHealingReceived(appliedStatusEffect.intensityToReceive);
                     inflictedStatusEffects.Add(inflictedSE);
-                    isImmuneToCC = true;
                 }
             }
 
@@ -143,6 +142,12 @@ public class CombatHandler : MonoBehaviour
                     AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
                     inflictedStatusEffects.Add(inflictedSE);
                     isStunned = true;
+                }
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DAMAGE_OVER_TIME)
+                {
+                    AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
+                    inflictedSE.intensityToReceive = CalculateDamageReceived(appliedStatusEffect.intensityToReceive);
+                    inflictedStatusEffects.Add(inflictedSE);
                 }
             }
 
