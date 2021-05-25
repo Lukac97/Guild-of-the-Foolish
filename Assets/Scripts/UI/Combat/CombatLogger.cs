@@ -52,6 +52,22 @@ public class CombatLogger : MonoBehaviour
         tmp.text = turnNumber + ". turn:\n";
     }
 
+    public void AddStatusEffectsLog(string casterName, List<AppliedStatusEffect> appliedSE, bool isEnemyTurn)
+    {
+        //TODO: Implement better logging for status effects
+        GameObject newLog = InstantiateCombatLog();
+        TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
+        tmp.text = "";
+        foreach (AppliedStatusEffect appliedStatusEffect in appliedSE)
+        {
+            tmp.text += ColorText(casterName, GlobalInput.Instance.charNameColor)
+                + GetStatusEffectSpecificString(appliedStatusEffect.statusEffect) +
+                " ++++.";
+        }
+
+        ColorLogBackground(newLog, isEnemyTurn);
+    }
+
     public void AddLog(string casterName, string targetName, UsedSpellResult spellResult, bool isEnemyTurn)
     {
         GameObject newLog = InstantiateCombatLog();
@@ -65,6 +81,32 @@ public class CombatLogger : MonoBehaviour
             tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
                 + " used " + ColorText(spellResult.spellUsed.name, GlobalInput.Instance.spellColor)
                 + " on " + ColorText(targetName, GlobalInput.Instance.enemyNameColor);
+
+            foreach(AppliedStatusEffect appliedStatusEffect in spellResult.harmfulStatusEffectsToTarget)
+            {
+                tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect.statusEffect)
+                    + ColorText(targetName, GlobalInput.Instance.enemyNameColor)
+                    + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
+            }
+            foreach(AppliedStatusEffect appliedStatusEffect in spellResult.harmfulStatusEffectsToSelf)
+            {
+                tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect.statusEffect)
+                    + ColorText(casterName, GlobalInput.Instance.charNameColor)
+                    + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
+            }
+            foreach(AppliedStatusEffect appliedStatusEffect in spellResult.beneficialStatusEffectsToTarget)
+            {
+                tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect.statusEffect)
+                    + ColorText(targetName, GlobalInput.Instance.enemyNameColor)
+                    + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
+            }
+            foreach(AppliedStatusEffect appliedStatusEffect in spellResult.beneficialStatusEffectsToSelf)
+            {
+                tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect.statusEffect)
+                    + ColorText(casterName, GlobalInput.Instance.charNameColor)
+                    + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
+            }
+
             if(spellResult.damageToTarget > 0)
                 tmp.text += ", dealt "
                     + ColorText(spellResult.damageToTarget.ToString(), GlobalInput.Instance.damageColor)
@@ -85,6 +127,38 @@ public class CombatLogger : MonoBehaviour
         }
 
         ColorLogBackground(newLog, isEnemyTurn);
+    }
+
+    private string GetStatusEffectSpecificString(StatusEffect statusEffect)
+    {
+        if(statusEffect.GetType() == typeof(HarmfulStatusEffect))
+        {
+            HarmfulStatusEffect newStatusEffect = (HarmfulStatusEffect)statusEffect;
+            switch(newStatusEffect.statusEffectType)
+            {
+                case HarmfulStatusEffectType.DAMAGE_OVER_TIME:
+                    return " inflicted damage over time ("
+                        + ColorText(statusEffect.intensity.ToString(), GlobalInput.Instance.damageColor)
+                        + ") to ";
+                case HarmfulStatusEffectType.STUN:
+                    return " stunned ";
+            }
+        }
+        else if (statusEffect.GetType() == typeof(BeneficialStatusEffect))
+        {
+            BeneficialStatusEffect newStatusEffect = (BeneficialStatusEffect)statusEffect;
+            switch (newStatusEffect.statusEffectType)
+            {
+                case BeneficialStatusEffectType.ANTI_CC:
+                    return " put anti-cc blessing on ";
+                case BeneficialStatusEffectType.HEALING_OVER_TIME:
+                    return " put healing over time ("
+                        + ColorText(statusEffect.intensity.ToString(), GlobalInput.Instance.healColor)
+                        + ") on ";
+            }
+        }
+
+        return "";
     }
 
     public void AddCasterStateLog(string casterName, string stateName)

@@ -49,10 +49,12 @@ public class CombatEncounter : MonoBehaviour
 
         CombatLogger.Instance.ClearLog();
 
+        List<AppliedStatusEffect> startSE = new List<AppliedStatusEffect>();
+
         for (int turnNumber = 1; turnNumber <= GlobalRules.Instance.maxCombatTurns; turnNumber++)
         {
             //TODO: Apply status effects to character
-            character.combatHandler.TurnStart();
+            startSE = character.combatHandler.TurnStart();
             //Check if character dead
             if (character.combatHandler.isInjured)
             {
@@ -60,9 +62,8 @@ public class CombatEncounter : MonoBehaviour
                 break;
             }
 
-            if (character.combatHandler.isStunned)
-                CombatLogger.Instance.AddCasterStateLog(character.participantName, "stunned");
-            else
+            CombatLogger.Instance.AddStatusEffectsLog(character.participantName, startSE, false);
+            if (!character.combatHandler.isStunned)
             {
                 intensity = character.combatHandler.ChooseSpell(enemy.combatHandler);
                 CombatLogger.Instance.AddLog(character.participantName, enemy.participantName, intensity, false);
@@ -75,7 +76,7 @@ public class CombatEncounter : MonoBehaviour
 
             //--------------------------Enemy turn--------------------------------------
             //TODO: Apply status effects to character
-            enemy.combatHandler.TurnStart();
+            startSE = enemy.combatHandler.TurnStart();
             //Check if character dead
             if (enemy.combatHandler.isInjured)
             {
@@ -83,13 +84,13 @@ public class CombatEncounter : MonoBehaviour
                 break;
             }
 
-            if (enemy.combatHandler.isStunned)
-                CombatLogger.Instance.AddCasterStateLog(enemy.participantName, "stunned");
-            else
+            CombatLogger.Instance.AddStatusEffectsLog(enemy.participantName, startSE, true);
+            if (!enemy.combatHandler.isStunned)
             {
                 intensity = enemy.combatHandler.ChooseSpell(character.combatHandler);
                 CombatLogger.Instance.AddLog(enemy.participantName, character.participantName, intensity, true);
             }
+
             if (enemy.combatHandler.isInjured)
             {
                 outcome = 1;

@@ -39,29 +39,45 @@ public class CombatSpell : Spell
         _healingToTarget = target.CalculateHealingReceived(_healingToTarget);
         _healingToSelf = caster.CalculateHealingReceived(_healingToSelf);
         
-        List<HarmfulStatusEffect> _harmfulEffectsToTarget = new List<HarmfulStatusEffect>();
-        List<HarmfulStatusEffect> _harmfulEffectsToSelf = new List<HarmfulStatusEffect>();
-        List<BeneficialStatusEffect> _beneficialEffectsToTarget = new List<BeneficialStatusEffect>();
-        List<BeneficialStatusEffect> _beneficialEffectsToSelf = new List<BeneficialStatusEffect>();
+        List<AppliedStatusEffect> _harmfulEffectsToTarget = new List<AppliedStatusEffect>();
+        List<AppliedStatusEffect> _harmfulEffectsToSelf = new List<AppliedStatusEffect>();
+        List<AppliedStatusEffect> _beneficialEffectsToTarget = new List<AppliedStatusEffect>();
+        List<AppliedStatusEffect> _beneficialEffectsToSelf = new List<AppliedStatusEffect>();
         foreach(HarmfulStatusEffect hse in harmfulEffectsToTarget)
         {
-            if (target.TryInflictHarmfulStatusEffect(hse))
-                _harmfulEffectsToTarget.Add(hse);
+            AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(hse);
+            newAppliedSE.intensityToReceive = hse.intensity.flatIntensity
+                + hse.intensity.scaleToMagicIntensity * caster.combatStats.magicalDamage
+                + hse.intensity.scaleToPhysicalIntensity * caster.combatStats.physicalDamage;
+            if (target.TryInflictHarmfulStatusEffect(newAppliedSE))
+                _harmfulEffectsToTarget.Add(newAppliedSE);
         }
         foreach(HarmfulStatusEffect hse in harmfulEffectsToSelf)
         {
-            if (caster.TryInflictHarmfulStatusEffect(hse))
-                _harmfulEffectsToSelf.Add(hse);
+            AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(hse);
+            newAppliedSE.intensityToReceive = hse.intensity.flatIntensity
+                + hse.intensity.scaleToMagicIntensity * caster.combatStats.magicalDamage
+                + hse.intensity.scaleToPhysicalIntensity * caster.combatStats.physicalDamage;
+            if (caster.TryInflictHarmfulStatusEffect(newAppliedSE))
+                _harmfulEffectsToSelf.Add(newAppliedSE);
         }
         foreach(BeneficialStatusEffect bse in beneficialEffectsToTarget)
         {
-            if (target.TryInflictBeneficialStatusEffect(bse))
-                _beneficialEffectsToTarget.Add(bse);
+            AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(bse);
+            newAppliedSE.intensityToReceive = bse.intensity.flatIntensity
+                + bse.intensity.scaleToMagicIntensity * caster.combatStats.magicalDamage
+                + bse.intensity.scaleToPhysicalIntensity * caster.combatStats.physicalDamage;
+            if (target.TryInflictBeneficialStatusEffect(newAppliedSE))
+                _beneficialEffectsToTarget.Add(newAppliedSE);
         }
         foreach(BeneficialStatusEffect bse in beneficialEffectsToSelf)
         {
-            if (caster.TryInflictBeneficialStatusEffect(bse))
-                _beneficialEffectsToSelf.Add(bse);
+            AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(bse);
+            newAppliedSE.intensityToReceive = bse.intensity.flatIntensity
+                + bse.intensity.scaleToMagicIntensity * caster.combatStats.magicalDamage
+                + bse.intensity.scaleToPhysicalIntensity * caster.combatStats.physicalDamage;
+            if (caster.TryInflictBeneficialStatusEffect(newAppliedSE))
+                _beneficialEffectsToSelf.Add(newAppliedSE);
         }
 
         UsedSpellResult usedSpellResult =

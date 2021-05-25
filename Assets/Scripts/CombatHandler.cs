@@ -44,7 +44,7 @@ public class CombatHandler : MonoBehaviour
     public bool isInjured = false;
     public bool isStunned = false;
     public bool isImmuneToCC = false;
-    public List<StatusEffect> statusEffects = new List<StatusEffect>();
+    public List<AppliedStatusEffect> statusEffects = new List<AppliedStatusEffect>();
 
     [Header("Spells")]
     public List<EquippedCombatSpell> combatSpells = new List<EquippedCombatSpell>();
@@ -99,10 +99,10 @@ public class CombatHandler : MonoBehaviour
         }
     }
 
-    public void TurnStart()
+    public List<AppliedStatusEffect> TurnStart()
     {
         LowerAllCooldowns(1);
-        InvokeStatusEffects();
+        return InvokeStatusEffects();
     }
 
     public void SetAllStatesToFalse()
@@ -112,40 +112,61 @@ public class CombatHandler : MonoBehaviour
         isImmuneToCC = false;
     }
 
-    public void InvokeStatusEffects()
+    public List<AppliedStatusEffect> InvokeStatusEffects()
     {
         SetAllStatesToFalse();
-        List<StatusEffect> newStatusEffects = new List<StatusEffect>();
-        foreach (StatusEffect statusEffect in statusEffects)
+        List<AppliedStatusEffect> newStatusEffects = new List<AppliedStatusEffect>();
+        List<AppliedStatusEffect> inflictedStatusEffects = new List<AppliedStatusEffect>();
+        foreach (AppliedStatusEffect appliedStatusEffect in statusEffects)
         {
-            if (statusEffect.GetType() == typeof(BeneficialStatusEffect))
-                if (((BeneficialStatusEffect)statusEffect).statusEffectType == BeneficialStatusEffectType.ANTI_CC)
+            if (appliedStatusEffect.statusEffect.GetType() == typeof(BeneficialStatusEffect))
+            {
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.ANTI_CC)
+                {
+                    AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
+                    inflictedStatusEffects.Add(inflictedSE);
                     isImmuneToCC = true;
+                }
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.HEALING_OVER_TIME)
+                {
+                    AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
+                    inflictedSE.intensityToReceive = CalculateDamageReceived(appliedStatusEffect.intensityToReceive);
+                    inflictedStatusEffects.Add(inflictedSE);
+                    isImmuneToCC = true;
+                }
+            }
 
-            if (statusEffect.GetType() == typeof(HarmfulStatusEffect))
-                if (((HarmfulStatusEffect)statusEffect).statusEffectType == HarmfulStatusEffectType.STUN)
+            if (appliedStatusEffect.statusEffect.GetType() == typeof(HarmfulStatusEffect))
+            {
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.STUN)
+                {
+                    AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
+                    inflictedStatusEffects.Add(inflictedSE);
                     isStunned = true;
-            statusEffect.turnDuration -= 1;
-            Debug.Log(statusEffect.turnDuration);
-            if (statusEffect.turnDuration > 0)
-                newStatusEffects.Add(statusEffect);
+                }
+            }
+
+            appliedStatusEffect.statusEffect.turnDuration -= 1;
+            if (appliedStatusEffect.statusEffect.turnDuration > 0)
+                newStatusEffects.Add(appliedStatusEffect);
         }
         statusEffects = newStatusEffects;
+        return inflictedStatusEffects;
     }
 
-    public bool TryInflictHarmfulStatusEffect(HarmfulStatusEffect statusEffect)
+    public bool TryInflictHarmfulStatusEffect(AppliedStatusEffect statusEffect)
     {
         //TODO: Roll chance based on combatStats on whether or not to inflict status effect
         if (isImmuneToCC)
             return false;
-        statusEffects.Add(new HarmfulStatusEffect(statusEffect));
+        statusEffects.Add(new AppliedStatusEffect(statusEffect));
         return true;
     }
 
-    public bool TryInflictBeneficialStatusEffect(BeneficialStatusEffect statusEffect)
+    public bool TryInflictBeneficialStatusEffect(AppliedStatusEffect statusEffect)
     {
         //TODO: Roll chance based on combatStats on whether or not to inflict status effect
-        statusEffects.Add(new BeneficialStatusEffect(statusEffect));
+        statusEffects.Add(new AppliedStatusEffect(statusEffect));
         return true;
     }
 
