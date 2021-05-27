@@ -7,7 +7,6 @@ public class GlobalInput : MonoBehaviour
     private static GlobalInput _instance;
     public static GlobalInput Instance { get { return _instance; } }
 
-    [HideInInspector]
     public GameObject selectedEntity;
     [HideInInspector]
     public ItemObject selectedItemObject;
@@ -66,7 +65,7 @@ public class GlobalInput : MonoBehaviour
         changeSelectedEntity.Invoke();
     }
 
-    public bool CheckIfSelectedCharacter()
+    public static bool CheckIfSelectedCharacter()
     {
         if (GlobalInput.Instance.selectedEntity == null)
         {
@@ -80,7 +79,7 @@ public class GlobalInput : MonoBehaviour
         return false;
     }
 
-    public bool CheckIfSelectedLocation()
+    public static bool CheckIfSelectedLocation()
     {
         if (GlobalInput.Instance.selectedEntity == null)
         {

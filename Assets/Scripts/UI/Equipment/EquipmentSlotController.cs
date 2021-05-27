@@ -33,7 +33,7 @@ public class EquipmentSlotController : MonoBehaviour
 
     private void OnEntityChanged()
     {
-        if (!GlobalInput.Instance.CheckIfSelectedCharacter())
+        if (!GlobalInput.CheckIfSelectedCharacter())
         {
             equipmentPanel.SetActive(false);
             return;

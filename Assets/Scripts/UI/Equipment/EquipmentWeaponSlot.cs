@@ -29,7 +29,7 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler
 
     public void OnItemDoubleClick()
     {
-        if (!GlobalInput.Instance.CheckIfSelectedCharacter())
+        if (!GlobalInput.CheckIfSelectedCharacter())
             return;
 
         GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().UnequipSlot(weaponSlotItem);

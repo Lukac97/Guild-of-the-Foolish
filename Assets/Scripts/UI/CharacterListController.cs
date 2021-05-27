@@ -9,7 +9,9 @@ public class CharacterListController : MonoBehaviour
     public GameObject panel;
     public GameObject characterPrefab;
 
-    [SerializeField]
+    [Space(10)]
+    public Location onlyOnThisLoc = null;
+
     private List<GameObject> lastHighlitedCharacters = new List<GameObject>();
 
     private void Awake()
@@ -34,7 +36,6 @@ public class CharacterListController : MonoBehaviour
     }
     private void HighlightCharacters()
     {
-
         foreach (GameObject highlightChar in lastHighlitedCharacters)
         {
             Outline outline = highlightChar.GetComponent<Outline>();
@@ -45,9 +46,13 @@ public class CharacterListController : MonoBehaviour
     public void HighlightSelectedCharacter()
     {
         DeHighlightCharacters();
-        if (!GlobalInput.Instance.CheckIfSelectedCharacter())
+        if (!GlobalInput.CheckIfSelectedCharacter())
             return;
-        lastHighlitedCharacters.Add(FindCharElement(GlobalInput.Instance.selectedEntity.GetComponent<CharStats>()).gameObject);
+        CharListElement foundElement = FindCharElement(GlobalInput.Instance.selectedEntity.GetComponent<CharStats>());
+        if (foundElement != null)
+        {
+            lastHighlitedCharacters.Add(foundElement.gameObject);
+        }
         HighlightCharacters();
     }
 
@@ -68,6 +73,14 @@ public class CharacterListController : MonoBehaviour
         {
             CharStats charStats = newChar.GetComponent<CharStats>();
             bool foundMatch = false;
+
+            //Filtering by location if set
+            if (onlyOnThisLoc != null)
+            {
+                if (charStats.location != onlyOnThisLoc)
+                    continue;
+            }
+
             foreach (CharListElement child in charListElements)
             {
                 if (child.linkedCharacter == charStats)
@@ -85,6 +98,7 @@ public class CharacterListController : MonoBehaviour
         }
         foreach(CharListElement charEle in leftoutElements)
         {
+            lastHighlitedCharacters.Remove(charEle.gameObject);
             Destroy(charEle.gameObject);
         }
     }
@@ -100,5 +114,11 @@ public class CharacterListController : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void ChangeLocationFilter(Location loc)
+    {
+        onlyOnThisLoc = loc;
+        OnUpdateCharacters();
     }
 }

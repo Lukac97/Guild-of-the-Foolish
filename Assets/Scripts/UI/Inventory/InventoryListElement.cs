@@ -67,7 +67,7 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
 
     public void OnItemDoubleClick()
     {
-        if(GlobalInput.Instance.CheckIfSelectedCharacter())
+        if(GlobalInput.CheckIfSelectedCharacter())
         {
             GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().EquipItem(itemObject);
         }

@@ -239,7 +239,7 @@ public class EquipItemComparison : MonoBehaviour
 
     public void UpdateComparison()
     {
-        if (GlobalInput.Instance.CheckIfSelectedCharacter() & GlobalInput.Instance.selectedItemObject != null)
+        if (GlobalInput.CheckIfSelectedCharacter() & GlobalInput.Instance.selectedItemObject != null)
         {
             
             charEquipment = GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>();

@@ -26,15 +26,14 @@ public class CharStats : MonoBehaviour
         charEquipment = GetComponent<CharEquipment>();
         charCombat = GetComponent<CharCombat>();
         //Placeholder until serialization happens
-        if (charAttributes == null)
-        {
-            charAttributes = new Attributes();
-        }
+        if(charAttributes.SumOfAllAttributes() == 0)
+            charAttributes = new Attributes(characterClass.startingAttributes);
         UpdateTotalAttributes();
     }
 
     public void InitCharStats(CharClass newCharClass, string newCharName)
     {
+        gameObject.name = newCharName;
         characterName = newCharName;
         characterClass = newCharClass;
         location = GlobalInput.Instance.defaultLocation;

@@ -56,7 +56,7 @@ public class MapMain : MonoBehaviour
 
     public void HighlightLocationOfSelectedChar()
     {
-        if (!GlobalInput.Instance.CheckIfSelectedCharacter())
+        if (!GlobalInput.CheckIfSelectedCharacter())
             return;
         currentlyUsedColor = characterLocationColor;
         DeHighlightAllLocations();
@@ -80,7 +80,7 @@ public class MapMain : MonoBehaviour
 
     public void HighlightSelectedLocation()
     {
-        if (!GlobalInput.Instance.CheckIfSelectedLocation())
+        if (!GlobalInput.CheckIfSelectedLocation())
             return;
         currentlyUsedColor = selectedLocationColor;
         DeHighlightAllLocations();
@@ -109,7 +109,7 @@ public class MapMain : MonoBehaviour
 
     public void EnableMoveButton()
     {
-        if(GlobalInput.Instance.CheckIfSelectedCharacter())
+        if(GlobalInput.CheckIfSelectedCharacter())
         {
             moveButtonPanel.SetActive(true);
         }

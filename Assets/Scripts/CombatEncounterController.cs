@@ -30,10 +30,13 @@ public class CombatEncounterController : MonoBehaviour
         ClearEncounters();
     }
 
-    public void CreateEncounter(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc)
+    public bool CreateEncounter(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc)
     {
+        if (charStats.location != loc)
+            return false;
         GameObject gO = Instantiate(combatEncounterPrefab, combatEncountersPanel.transform);
         gO.GetComponent<CombatEncounter>().InitiateCombat(charStats, enemyFromLoc, loc);
+        return true;
     }
 
     public void DestroyEncounter(CombatEncounter cbEnc)

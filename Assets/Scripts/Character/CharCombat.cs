@@ -17,6 +17,8 @@ public class CharCombat : CombatHandler
 
     public void UpdateCharCombat()
     {
+        if (charStats == null)
+            return;
         combatStats.CalculateCombatStats(charStats.totalAttributes);
         NotifyResourcesUpdated();
     }

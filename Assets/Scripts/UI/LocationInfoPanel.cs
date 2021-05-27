@@ -12,6 +12,8 @@ public class LocationInfoPanel : MonoBehaviour
     public GameObject sectionEnemies;
     [Header("Text")]
     public TextMeshProUGUI locationName;
+    [Header("PopUp")]
+    public AttackPopUp attackPopUp;
 
     private Location currentLocation;
     // Start is called before the first frame update
@@ -24,7 +26,7 @@ public class LocationInfoPanel : MonoBehaviour
     public void newLocationInfoPanel()
     {
         CanvasGroup cg = container.GetComponent<CanvasGroup>();
-        if (GlobalInput.Instance.CheckIfSelectedLocation())
+        if (GlobalInput.CheckIfSelectedLocation())
         {
             if (currentLocation == GlobalInput.Instance.selectedEntity.GetComponent<Location>())
                 return;
