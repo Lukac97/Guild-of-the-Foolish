@@ -14,29 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spellDescription: 
   spellLevel: 1
-  turnCooldown: 2
-  damageToTarget:
-    flatIntensity: 0
-    scaleToMagicIntensity: 0
-    scaleToPhysicalIntensity: 0
-  damageToSelf:
-    flatIntensity: 0
-    scaleToMagicIntensity: 0
-    scaleToPhysicalIntensity: 0
-  healingToTarget:
-    flatIntensity: 0
-    scaleToMagicIntensity: 0
-    scaleToPhysicalIntensity: 0
-  healingToSelf:
-    flatIntensity: 0
-    scaleToMagicIntensity: 0
-    scaleToPhysicalIntensity: 0
+  turnCooldown: 5
+  intensityInstances:
+  - onSelf: 0
+    intensityPurpose: 0
+    primaryIntensityType: 1
+    secondaryIntensityType: 6
+    intensityDescription:
+      flatIntensity: 0
+      scaleToMagicIntensity: 0
+      scaleToPhysicalIntensity: 0
   harmfulEffectsToTarget:
   - turnDuration: 2
     intensity:
-      flatIntensity: 1
-      scaleToMagicIntensity: 2
-      scaleToPhysicalIntensity: 0
+      onSelf: 0
+      intensityPurpose: 0
+      primaryIntensityType: 1
+      secondaryIntensityType: 6
+      intensityDescription:
+        flatIntensity: 2
+        scaleToMagicIntensity: 0.1
+        scaleToPhysicalIntensity: 0
     statusEffectType: 1
   harmfulEffectsToSelf: []
   beneficialEffectsToTarget: []

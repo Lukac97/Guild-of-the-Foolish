@@ -11,8 +11,8 @@ public class GlobalInput : MonoBehaviour
     [HideInInspector]
     public ItemObject selectedItemObject;
 
-    public delegate void ChangeSelectedCharacter();
-    public ChangeSelectedCharacter changeSelectedEntity;
+    public delegate void ChangeSelectedEntity();
+    public ChangeSelectedEntity onChangedSelectedEntity;
 
     public delegate void ChangeSelectedItemObject();
     public ChangeSelectedItemObject changeSelectedItemObject;
@@ -62,7 +62,7 @@ public class GlobalInput : MonoBehaviour
     public void setSelectedEntity(GameObject entity)
     {
         selectedEntity = entity;
-        changeSelectedEntity.Invoke();
+        onChangedSelectedEntity.Invoke();
     }
 
     public static bool CheckIfSelectedCharacter()

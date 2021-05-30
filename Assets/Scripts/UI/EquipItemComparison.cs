@@ -30,7 +30,7 @@ public class EquipItemComparison : MonoBehaviour
 
     public void Start()
     {
-        GlobalInput.Instance.changeSelectedEntity += UpdateComparison;
+        GlobalInput.Instance.onChangedSelectedEntity += UpdateComparison;
         GlobalInput.Instance.changeSelectedItemObject += UpdateComparison;
         UpdateComparison();
     }

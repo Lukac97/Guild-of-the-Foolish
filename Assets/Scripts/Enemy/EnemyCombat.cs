@@ -36,6 +36,11 @@ public class EnemyCombat : CombatHandler
         combatEncounter = originEncounter;
     }
 
+    public override int GetLevel()
+    {
+        return enemyStats.level;
+    }
+
     //public override EquippedCombatSpell ChooseSpell()
     //{
     //    CombatSpellType optimalType = CombatSpellType.HARMFUL;

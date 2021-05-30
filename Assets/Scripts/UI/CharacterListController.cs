@@ -22,7 +22,7 @@ public class CharacterListController : MonoBehaviour
 
     private void Start()
     {
-        GlobalInput.Instance.changeSelectedEntity += HighlightSelectedCharacter;
+        GlobalInput.Instance.onChangedSelectedEntity += HighlightSelectedCharacter;
         OnUpdateCharacters();
     }
 

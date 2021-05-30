@@ -95,4 +95,28 @@ public enum BeneficialStatusEffectType
     ANTI_CC
 }
 
+public enum IntensityPurpose
+{
+    DAMAGE,
+    HEAL
+}
+
+public enum PrimaryIntensityType
+{
+    PHYSICAL,
+    MAGICAL
+}
+
+public enum SecondaryIntensityType
+{
+    BLUNT,
+    PIERCING,
+    SLASHING,
+    FIRE,
+    WATER,
+    LIGHTNING,
+    EARTH,
+    LIGHT,
+    DARK
+}
 #endregion Spells

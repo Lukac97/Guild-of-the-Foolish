@@ -54,13 +54,14 @@ public class CombatLogger : MonoBehaviour
 
     public void AddStatusEffectsLog(string casterName, List<AppliedStatusEffect> appliedSE, bool isEnemyTurn)
     {
+        string newCasterName = isEnemyTurn ? ColorText(casterName, GlobalInput.Instance.enemyNameColor) : ColorText(casterName, GlobalInput.Instance.charNameColor);
         //TODO: Implement better logging for status effects
         GameObject newLog = InstantiateCombatLog();
         TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
         tmp.text = "";
         foreach (AppliedStatusEffect appliedStatusEffect in appliedSE)
         {
-            tmp.text += ColorText(casterName, GlobalInput.Instance.charNameColor)
+            tmp.text += newCasterName
                 + GetStatusEffectSpecificString(appliedStatusEffect) +
                 " ++++.";
         }
@@ -70,6 +71,8 @@ public class CombatLogger : MonoBehaviour
 
     public void AddLog(string casterName, string targetName, UsedSpellResult spellResult, bool isEnemyTurn)
     {
+        string newCasterName = isEnemyTurn ? ColorText(casterName, GlobalInput.Instance.enemyNameColor) : ColorText(casterName, GlobalInput.Instance.charNameColor);
+        string newTargetName = isEnemyTurn ? ColorText(targetName, GlobalInput.Instance.charNameColor) : ColorText(targetName, GlobalInput.Instance.enemyNameColor);
         GameObject newLog = InstantiateCombatLog();
         TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
         if (spellResult == null)
@@ -78,52 +81,68 @@ public class CombatLogger : MonoBehaviour
         }
         else
         {
-            tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
+            tmp.text = newCasterName
                 + " used " + ColorText(spellResult.spellUsed.name, GlobalInput.Instance.spellColor)
-                + " on " + ColorText(targetName, GlobalInput.Instance.enemyNameColor);
+                + " on " + newTargetName;
 
             foreach(AppliedStatusEffect appliedStatusEffect in spellResult.harmfulStatusEffectsToTarget)
             {
                 tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
-                    + ColorText(targetName, GlobalInput.Instance.enemyNameColor)
+                    + newTargetName
                     + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
             }
             foreach(AppliedStatusEffect appliedStatusEffect in spellResult.harmfulStatusEffectsToSelf)
             {
                 tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
-                    + ColorText(casterName, GlobalInput.Instance.charNameColor)
+                    + newCasterName
                     + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
             }
             foreach(AppliedStatusEffect appliedStatusEffect in spellResult.beneficialStatusEffectsToTarget)
             {
                 tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
-                    + ColorText(targetName, GlobalInput.Instance.enemyNameColor)
+                    + newTargetName
                     + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
             }
             foreach(AppliedStatusEffect appliedStatusEffect in spellResult.beneficialStatusEffectsToSelf)
             {
                 tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
-                    + ColorText(casterName, GlobalInput.Instance.charNameColor)
+                    + newCasterName
                     + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
             }
 
-            if(spellResult.damageToTarget > 0)
-                tmp.text += ", dealt "
-                    + ColorText(spellResult.damageToTarget.ToString(), GlobalInput.Instance.damageColor)
-                    + " damage to " + ColorText(targetName, GlobalInput.Instance.enemyNameColor);
-            if(spellResult.damageToSelf > 0)
-                tmp.text += ", dealt "
-                    + ColorText(spellResult.damageToSelf.ToString(), GlobalInput.Instance.damageColor)
-                    + " damage to " + ColorText(casterName, GlobalInput.Instance.charNameColor);
-            if(spellResult.healingToTarget > 0)
-                tmp.text += ", did "
-                    + ColorText(spellResult.healingToTarget.ToString(), GlobalInput.Instance.healColor)
-                    + " healing to " + ColorText(targetName, GlobalInput.Instance.charNameColor);
-            if(spellResult.healingToSelf > 0)
-                tmp.text += ", did "
-                    + ColorText(spellResult.healingToSelf.ToString(), GlobalInput.Instance.healColor)
-                    + " healing to " + ColorText(targetName, GlobalInput.Instance.charNameColor);
-            tmp.text += ".";
+            foreach(AppliedIntensityInstance appliedInstance in spellResult.appliedIntensityInstances)
+            {
+                if(appliedInstance.intensityPurpose == IntensityPurpose.HEAL)
+                {
+                    if(appliedInstance.onSelf)
+                    {
+                        tmp.text += ", did "
+                            + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.healColor)
+                            + " healing to " + newCasterName;
+                    }
+                    else
+                    {
+                        tmp.text += ", did "
+                            + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.healColor)
+                            + " healing to " + newTargetName;
+                    }
+                }
+                else if(appliedInstance.intensityPurpose == IntensityPurpose.DAMAGE)
+                {
+                    if (appliedInstance.onSelf)
+                    {
+                        tmp.text += ", dealt "
+                            + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.damageColor)
+                            + " damage to " + newCasterName;
+                    }
+                    else
+                    {
+                        tmp.text += ", dealt "
+                            + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.damageColor)
+                            + " damage to " + newTargetName;
+                    }
+                }
+            }
         }
 
         ColorLogBackground(newLog, isEnemyTurn);
@@ -138,7 +157,7 @@ public class CombatLogger : MonoBehaviour
             {
                 case HarmfulStatusEffectType.DAMAGE_OVER_TIME:
                     return " inflicted damage over time ("
-                        + ColorText(appliedStatusEffect.intensityToReceive.ToString(), GlobalInput.Instance.damageColor)
+                        + ColorText(appliedStatusEffect.intensityToReceive.intensity.ToString("0.00"), GlobalInput.Instance.damageColor)
                         + ") to ";
                 case HarmfulStatusEffectType.STUN:
                     return " stunned ";
@@ -153,7 +172,7 @@ public class CombatLogger : MonoBehaviour
                     return " put anti-cc blessing on ";
                 case BeneficialStatusEffectType.HEALING_OVER_TIME:
                     return " put healing over time ("
-                        + ColorText(appliedStatusEffect.intensityToReceive.ToString(), GlobalInput.Instance.healColor)
+                        + ColorText(appliedStatusEffect.intensityToReceive.intensity.ToString("0.00"), GlobalInput.Instance.healColor)
                         + ") on ";
             }
         }

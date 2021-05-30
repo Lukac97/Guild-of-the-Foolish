@@ -22,9 +22,9 @@ public class MapMain : MonoBehaviour
     public bool moveActivated = false;
     void Start()
     {
-        GlobalInput.Instance.changeSelectedEntity += HighlightSelectedLocation;
-        GlobalInput.Instance.changeSelectedEntity += HighlightLocationOfSelectedChar;
-        GlobalInput.Instance.changeSelectedEntity += EnableMoveButton;
+        GlobalInput.Instance.onChangedSelectedEntity += HighlightSelectedLocation;
+        GlobalInput.Instance.onChangedSelectedEntity += HighlightLocationOfSelectedChar;
+        GlobalInput.Instance.onChangedSelectedEntity += EnableMoveButton;
 
         EnableMoveButton();
     }

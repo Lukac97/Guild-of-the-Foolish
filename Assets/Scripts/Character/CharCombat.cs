@@ -28,4 +28,9 @@ public class CharCombat : CombatHandler
         CharactersController.CharactersUpdated.Invoke();
         CharactersController.CharactersResourcesUpdated.Invoke();
     }
+
+    public override int GetLevel()
+    {
+        return charStats.level;
+    }
 }

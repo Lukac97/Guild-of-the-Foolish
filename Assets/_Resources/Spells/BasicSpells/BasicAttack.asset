@@ -15,22 +15,15 @@ MonoBehaviour:
   spellDescription: Basic attack
   spellLevel: 1
   turnCooldown: 0
-  damageToTarget:
-    flatIntensity: 0
-    scaleToMagicIntensity: 0
-    scaleToPhysicalIntensity: 0.8
-  damageToSelf:
-    flatIntensity: 0
-    scaleToMagicIntensity: 0
-    scaleToPhysicalIntensity: 0
-  healingToTarget:
-    flatIntensity: 0
-    scaleToMagicIntensity: 0
-    scaleToPhysicalIntensity: 0
-  healingToSelf:
-    flatIntensity: 0
-    scaleToMagicIntensity: 0
-    scaleToPhysicalIntensity: 0
+  intensityInstances:
+  - onSelf: 0
+    intensityPurpose: 0
+    primaryIntensityType: 0
+    secondaryIntensityType: 2
+    intensityDescription:
+      flatIntensity: 0
+      scaleToMagicIntensity: 0
+      scaleToPhysicalIntensity: 0.8
   harmfulEffectsToTarget: []
   harmfulEffectsToSelf: []
   beneficialEffectsToTarget: []

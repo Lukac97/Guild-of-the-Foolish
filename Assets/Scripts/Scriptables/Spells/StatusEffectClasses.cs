@@ -7,12 +7,12 @@ public class StatusEffect
 {
     public int turnDuration;
     [Tooltip("Values for percantages are between 0-1")]
-    public IntensityDescription intensity;
+    public IntensityInstance intensity;
 
     public StatusEffect()
     {
         turnDuration = 0;
-        intensity = new IntensityDescription();
+        intensity = new IntensityInstance();
     }
 }
 
@@ -39,21 +39,5 @@ public class BeneficialStatusEffect : StatusEffect
         turnDuration = statusEffect.turnDuration;
         intensity = statusEffect.intensity;
         statusEffectType = statusEffect.statusEffectType;
-    }
-}
-
-
-[System.Serializable]
-public class IntensityDescription
-{
-    public float flatIntensity;
-    public float scaleToMagicIntensity;
-    public float scaleToPhysicalIntensity;
-
-    public IntensityDescription()
-    {
-        flatIntensity = 0;
-        scaleToMagicIntensity = 0;
-        scaleToPhysicalIntensity = 0;
     }
 }

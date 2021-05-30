@@ -175,20 +175,36 @@ public class CombatHandler : MonoBehaviour
         return true;
     }
 
-    public float CalculateDamageReceived(float dmg)
+    public AppliedIntensityInstance CalculateDamageReceived(AppliedIntensityInstance dmg)
     {
-        float finalDmg = dmg;
-        //TODO: Calculate damage reduction based on combatStats
+        AppliedIntensityInstance finalDmg = new AppliedIntensityInstance(dmg);
 
-        LowerHealth(finalDmg);
+        float maxRes = 100 + (dmg.originLevel - 1) * 20;
+        //TODO: Calculate damage reduction based on combatStats
+        if(dmg.primaryIntensityType == PrimaryIntensityType.PHYSICAL)
+        {
+            float finalRes = combatStats.physicalResistance / maxRes;
+            if (finalRes > 0.9f)
+                finalRes = 0.9f;
+            finalDmg.intensity = dmg.intensity * (1 - finalRes);
+        }
+        else if(dmg.primaryIntensityType == PrimaryIntensityType.MAGICAL)
+        {
+            float finalRes = combatStats.magicalResistance / maxRes;
+            if (finalRes > 0.9f)
+                finalRes = 0.9f;
+            finalDmg.intensity = dmg.intensity * (1 - finalRes);
+        }
+
+        LowerHealth(finalDmg.intensity);
         return finalDmg;
     }
 
-    public float CalculateHealingReceived(float heal)
+    public AppliedIntensityInstance CalculateHealingReceived(AppliedIntensityInstance heal)
     {
-        float finalHeal = heal;
+        AppliedIntensityInstance finalHeal = new AppliedIntensityInstance(heal);
         //TODO: Calculate heal amplification based on combatStats
-        RaiseHealth(finalHeal);
+        RaiseHealth(finalHeal.intensity);
         return finalHeal;
     }
 
@@ -226,5 +242,10 @@ public class CombatHandler : MonoBehaviour
         NotifyResourcesUpdated();
     }
     #endregion Resource Management
+
+    public virtual int GetLevel()
+    {
+        return 0;
+    }
 
 }

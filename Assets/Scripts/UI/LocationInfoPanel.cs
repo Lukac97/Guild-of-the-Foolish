@@ -19,7 +19,7 @@ public class LocationInfoPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GlobalInput.Instance.changeSelectedEntity += newLocationInfoPanel;
+        GlobalInput.Instance.onChangedSelectedEntity += newLocationInfoPanel;
         newLocationInfoPanel();
     }
 

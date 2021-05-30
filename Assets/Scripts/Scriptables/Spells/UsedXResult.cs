@@ -6,10 +6,7 @@ public class UsedSpellResult
 {
     public CombatSpell spellUsed;
 
-    public float damageToTarget;
-    public float damageToSelf;
-    public float healingToTarget;
-    public float healingToSelf;
+    public List<AppliedIntensityInstance> appliedIntensityInstances;
 
     public List<AppliedStatusEffect> harmfulStatusEffectsToTarget;
     public List<AppliedStatusEffect> harmfulStatusEffectsToSelf;
@@ -19,10 +16,7 @@ public class UsedSpellResult
     public UsedSpellResult()
     {
         spellUsed = null;
-        damageToTarget = 0;
-        damageToSelf = 0;
-        healingToTarget = 0;
-        healingToSelf = 0;
+        appliedIntensityInstances = new List<AppliedIntensityInstance>();
         harmfulStatusEffectsToTarget = new List<AppliedStatusEffect>();
         harmfulStatusEffectsToSelf = new List<AppliedStatusEffect>();
         beneficialStatusEffectsToTarget = new List<AppliedStatusEffect>();
@@ -30,18 +24,14 @@ public class UsedSpellResult
     }
 
     public UsedSpellResult(CombatSpell _spellUsed
-                            , float _damageToTarget, float _damageToSelf
-                            , float _healingToTarget, float _healingToSelf
+                            , List<AppliedIntensityInstance> _appliedIntensityInstances
                             , List<AppliedStatusEffect> _harmfulStatusEffectsToTarget
                             , List<AppliedStatusEffect> _harmfulStatusEffectsToSelf
                             , List<AppliedStatusEffect> _beneficialStatusEffectsToTarget
                             , List<AppliedStatusEffect> _beneficialStatusEffectsToSelf)
     {
         spellUsed = _spellUsed;
-        damageToTarget = _damageToTarget;
-        damageToSelf = _damageToSelf;
-        healingToTarget = _healingToTarget;
-        healingToSelf = _healingToSelf;
+        appliedIntensityInstances = _appliedIntensityInstances;
         harmfulStatusEffectsToTarget = _harmfulStatusEffectsToTarget;
         harmfulStatusEffectsToSelf = _harmfulStatusEffectsToSelf;
         beneficialStatusEffectsToTarget = _beneficialStatusEffectsToTarget;
@@ -52,13 +42,13 @@ public class UsedSpellResult
 public class AppliedStatusEffect
 {
     public StatusEffect statusEffect;
-    public float intensityToReceive;
+    public AppliedIntensityInstance intensityToReceive;
     public int turnsLeft;
 
     public AppliedStatusEffect()
     {
         statusEffect = null;
-        intensityToReceive = 0;
+        intensityToReceive = null;
         turnsLeft = 0;
     }
 
@@ -70,11 +60,11 @@ public class AppliedStatusEffect
             statusEffect = new HarmfulStatusEffect((HarmfulStatusEffect)_statusEffect);
         else
             statusEffect = null;
-        intensityToReceive = 0;
+        intensityToReceive = null;
         turnsLeft = _statusEffect.turnDuration;
     }
 
-    public AppliedStatusEffect(StatusEffect _statusEffect, float _intensityToReceive)
+    public AppliedStatusEffect(StatusEffect _statusEffect, AppliedIntensityInstance _intensityToReceive)
     {
         if (_statusEffect.GetType() == typeof(BeneficialStatusEffect))
             statusEffect = new BeneficialStatusEffect((BeneficialStatusEffect)_statusEffect);

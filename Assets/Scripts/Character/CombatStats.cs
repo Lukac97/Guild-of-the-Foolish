@@ -15,8 +15,8 @@ public class CombatStats
     [Header("Stats")]
     public float physicalDamage;
     public float magicalDamage;
-    public float physicalReduction;
-    public float magicalReduction;
+    public float physicalResistance;
+    public float magicalResistance;
     public float avoidChance;
 
     public void CalculateCombatStats(Attributes attributes)
@@ -46,10 +46,10 @@ public class CombatStats
         magicalDamage = attributes.intellect * 1.1f;
 
         //physicalRed
-        physicalReduction = attributes.strength * 1.5f;
+        physicalResistance = attributes.strength * 1.5f;
 
         //magicalRed
-        magicalReduction = attributes.intellect * 0.5f;
+        magicalResistance = attributes.intellect * 0.5f;
 
         //avoidChance
         avoidChance = attributes.agility * 0.3f;
