@@ -31,20 +31,17 @@ public class CmbStatsView : MonoBehaviour
             canvasGroup.blocksRaycasts = false;
             return;
         }
-        else
-        {
-            canvasGroup.alpha = 1;
-            canvasGroup.interactable = true;
-            canvasGroup.blocksRaycasts = true;
-        }
+        canvasGroup.alpha = 1;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
         CharCombat charCombat = GlobalInput.Instance.selectedEntity.GetComponent<CharCombat>();
-        healthValue.text = charCombat.combatStats.currentHealth.ToString()
-            + " / " + charCombat.combatStats.maxHealth.ToString();
-        spellResourceValue.text = charCombat.combatStats.currentSpellResource.ToString()
-            + " / " + charCombat.combatStats.maxSpellResource.ToString();
-        physicalDamageValue.text = charCombat.combatStats.physicalDamage.ToString();
-        magicalDamageValue.text = charCombat.combatStats.magicalDamage.ToString();
-        physicalResistanceValue.text = charCombat.combatStats.physicalResistance.ToString();
-        magicalResistanceValue.text = charCombat.combatStats.magicalResistance.ToString();
+        healthValue.text = charCombat.combatStats.currentHealth.ToString("0")
+            + " / " + charCombat.combatStats.maxHealth.ToString("0");
+        spellResourceValue.text = charCombat.combatStats.currentSpellResource.ToString("0")
+            + " / " + charCombat.combatStats.maxSpellResource.ToString("0");
+        physicalDamageValue.text = charCombat.combatStats.physicalDamage.ToString("0.0");
+        magicalDamageValue.text = charCombat.combatStats.magicalDamage.ToString("0.0");
+        physicalResistanceValue.text = charCombat.combatStats.physicalResistance.ToString("0.0");
+        magicalResistanceValue.text = charCombat.combatStats.magicalResistance.ToString("0.0");
     }
 }

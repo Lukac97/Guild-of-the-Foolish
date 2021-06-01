@@ -2,6 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public enum AttributesEnum
+{
+    STRENGTH,
+    AGILITY,
+    INTELLECT,
+    LUCK
+}
 
 #region Equipment and Inventory
 public enum InventorySortBy
