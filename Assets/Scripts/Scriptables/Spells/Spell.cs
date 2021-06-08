@@ -6,4 +6,5 @@ public class Spell : ScriptableObject
 {
     public string spellDescription;
     public int spellLevel;
+    public Sprite spellIcon;
 }

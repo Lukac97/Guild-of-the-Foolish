@@ -13,6 +13,9 @@ public class CharactersController : MonoBehaviour
     public delegate void UpdateCharactersResourcesDelegate();
     public static UpdateCharactersResourcesDelegate CharactersResourcesUpdated;
 
+    public delegate void ChosenSpellsUpdatedDelegate();
+    public static ChosenSpellsUpdatedDelegate ChangedChosenSpells;
+
     public List<GameObject> characters;
 
     public GameObject newCharPrefab;

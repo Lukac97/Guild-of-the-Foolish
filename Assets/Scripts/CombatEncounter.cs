@@ -51,7 +51,7 @@ public class CombatEncounter : MonoBehaviour
 
         List<AppliedStatusEffect> startSE = new List<AppliedStatusEffect>();
 
-        for (int turnNumber = 1; turnNumber <= GlobalRules.Instance.maxCombatTurns; turnNumber++)
+        for (int turnNumber = 1; turnNumber <= GlobalRules.maxCombatTurns; turnNumber++)
         {
             CombatLogger.Instance.AddTurnNumberLog(turnNumber);
             //TODO: Apply status effects to character

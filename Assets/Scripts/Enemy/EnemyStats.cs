@@ -23,6 +23,6 @@ public class EnemyStats : MonoBehaviour
         location = loc;
         creatureType = enemyMould.creatureType;
         level = lvl;
-        enemyAttributes = enemyMould.CalculateAttributesByLevel(lvl, GlobalRules.Instance.attributePointsPerLevel);
+        enemyAttributes = enemyMould.CalculateAttributesByLevel(lvl, GlobalRules.attributePointsPerLevel);
     }
 }

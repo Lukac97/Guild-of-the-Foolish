@@ -21,3 +21,7 @@ MonoBehaviour:
     intellect: 1
   viableWeaponTypes: 
   viableArmorTypes: 
+  combatSpells:
+  - {fileID: 11400000, guid: cf26cdc197160784fa2bc8d7b33348c3, type: 2}
+  - {fileID: 11400000, guid: 536f17a365ae46347ac47039d828ea2f, type: 2}
+  - {fileID: 11400000, guid: e249e09355059f448b3ae9556bdefd47, type: 2}

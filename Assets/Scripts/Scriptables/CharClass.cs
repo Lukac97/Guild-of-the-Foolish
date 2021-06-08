@@ -12,5 +12,7 @@ public class CharClass : ScriptableObject
     [Header("Usable Weapons/Armor")]
     public List<WeaponType> viableWeaponTypes;
     public List<ArmorType> viableArmorTypes;
+    [Header("Available Spells")]
+    public List<CombatSpell> combatSpells;
 
 }
