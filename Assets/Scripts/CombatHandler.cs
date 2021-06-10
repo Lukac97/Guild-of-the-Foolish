@@ -107,7 +107,6 @@ public class CombatHandler : MonoBehaviour
 
     public void SetAllStatesToFalse()
     {
-        isInjured = false;
         isStunned = false;
         isImmuneToCC = false;
     }
@@ -211,9 +210,9 @@ public class CombatHandler : MonoBehaviour
     #region Resource Management
     public void RaiseHealth(float amount)
     {
+        if (isInjured)
+            return;
         combatStats.RaiseHealth(amount);
-        if (isInjured & combatStats.currentHealth > 0)
-            isInjured = false;
         NotifyResourcesUpdated();
     }
 
