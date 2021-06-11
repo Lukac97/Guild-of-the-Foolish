@@ -20,3 +20,6 @@ MonoBehaviour:
     intellect: 0
   combatSpells:
   - {fileID: 11400000, guid: cf26cdc197160784fa2bc8d7b33348c3, type: 2}
+  possibleItemYields:
+  - {fileID: 11400000, guid: 32392287db2cd03479d23a98aedfa90b, type: 2}
+  - {fileID: 11400000, guid: d36f9add5b9e6f944ac96f4cd443d14b, type: 2}

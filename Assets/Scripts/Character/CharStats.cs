@@ -12,7 +12,7 @@ public class CharStats : MonoBehaviour
 
     [Space(5)]
     public int level;
-    public int experiencePoints;
+    public float experiencePoints;
 
     [Space(5)]
     public Attributes charAttributes;
@@ -84,5 +84,11 @@ public class CharStats : MonoBehaviour
             availablePoints -= 1;
         }
         UpdateTotalAttributes();
+    }
+
+    public void AddExperience(float amount)
+    {
+        experiencePoints += amount;
+        //TODO: leveling up
     }
 }

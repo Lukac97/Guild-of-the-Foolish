@@ -6,12 +6,26 @@ using UnityEngine.UI;
 
 public class PopUpController : MonoBehaviour
 {
+    private static PopUpController _instance;
+    public static PopUpController Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
     public GameObject background;
     [Range(0.0f, 100.0f)]
     public float shadeLevel;
     public List<GameObject> allPopUps;
 
     private List<GameObject> activatedPopUps;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            _instance = this;
+    }
 
     private void Start()
     {

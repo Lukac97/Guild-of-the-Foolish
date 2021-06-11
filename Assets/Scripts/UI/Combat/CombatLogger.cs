@@ -4,108 +4,101 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class CombatLogger : MonoBehaviour
+public class CombatLogger
 {
-    private static CombatLogger _instance;
-    public static CombatLogger Instance
+    [System.Serializable]
+    public class SingleLog
     {
-        get
+        public bool turnNumber;
+        public bool enemyTurn;
+        public bool charTurn;
+        public int outcome; // -1 equivalent of false, 0 win, 1 lose, 2 tie
+        public string text;
+
+        public SingleLog()
         {
-            return _instance;
+            turnNumber = false;
+            enemyTurn = false;
+            charTurn = false;
+            outcome = -1;
+            text = "";
         }
     }
 
-    public GameObject parentPanel;
-    public GameObject logPrefab;
-
-    private List<GameObject> listOfLogs;
+    public List<SingleLog> listOfLogs;
 
 
-    private void Start()
+    public void InitCombatLogger()
     {
-        if (Instance == null)
-            _instance = this;
-        listOfLogs = new List<GameObject>();
+        listOfLogs = new List<SingleLog>();
     }
 
-
-    public void ClearLog()
+    public SingleLog InstantiateCombatLog()
     {
-        foreach (Transform log in parentPanel.transform)
-        {
-            Destroy(log.gameObject);
-        }
-        listOfLogs.Clear();
-    }
-
-    public GameObject InstantiateCombatLog()
-    {
-        GameObject newLog = Instantiate(logPrefab, parentPanel.transform);
+        SingleLog newLog = new SingleLog();
         listOfLogs.Add(newLog);
         return newLog;
     }
 
     public void AddTurnNumberLog(int turnNumber)
     {
-        GameObject newLog = InstantiateCombatLog();
-        TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
-        tmp.text = turnNumber + ". turn:\n";
+        SingleLog newLog = InstantiateCombatLog();
+        newLog.text = turnNumber + ". turn:\n";
     }
 
     public void AddStatusEffectsLog(string casterName, List<AppliedStatusEffect> appliedSE, bool isEnemyTurn)
     {
         string newCasterName = isEnemyTurn ? ColorText(casterName, GlobalInput.Instance.enemyNameColor) : ColorText(casterName, GlobalInput.Instance.charNameColor);
         //TODO: Implement better logging for status effects
-        GameObject newLog = InstantiateCombatLog();
-        TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
-        tmp.text = "";
+        SingleLog newLog = InstantiateCombatLog();
         foreach (AppliedStatusEffect appliedStatusEffect in appliedSE)
         {
-            tmp.text += newCasterName
+            newLog.text += newCasterName
                 + GetStatusEffectSpecificString(appliedStatusEffect) +
                 " ++++.";
         }
-
-        ColorLogBackground(newLog, isEnemyTurn);
+        if (isEnemyTurn)
+            newLog.enemyTurn = true;
+        else
+            newLog.charTurn = true;
     }
 
     public void AddLog(string casterName, string targetName, UsedSpellResult spellResult, bool isEnemyTurn)
     {
         string newCasterName = isEnemyTurn ? ColorText(casterName, GlobalInput.Instance.enemyNameColor) : ColorText(casterName, GlobalInput.Instance.charNameColor);
         string newTargetName = isEnemyTurn ? ColorText(targetName, GlobalInput.Instance.charNameColor) : ColorText(targetName, GlobalInput.Instance.enemyNameColor);
-        GameObject newLog = InstantiateCombatLog();
-        TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
+        SingleLog newLog = InstantiateCombatLog();
         if (spellResult == null)
         {
-            tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor) + " passed the turn.";
+            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor) + " passed the turn.";
         }
         else
         {
-            tmp.text = newCasterName
+            newLog.text = newCasterName
                 + " used " + ColorText(spellResult.spellUsed.name, GlobalInput.Instance.spellColor)
                 + " on " + newTargetName;
 
             foreach(AppliedStatusEffect appliedStatusEffect in spellResult.harmfulStatusEffectsToTarget)
             {
-                tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
+                newLog.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
                     + newTargetName
                     + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
             }
             foreach(AppliedStatusEffect appliedStatusEffect in spellResult.harmfulStatusEffectsToSelf)
             {
-                tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
+                newLog.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
                     + newCasterName
                     + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
             }
             foreach(AppliedStatusEffect appliedStatusEffect in spellResult.beneficialStatusEffectsToTarget)
             {
-                tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
+                newLog.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
                     + newTargetName
                     + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
             }
             foreach(AppliedStatusEffect appliedStatusEffect in spellResult.beneficialStatusEffectsToSelf)
             {
-                tmp.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
+                newLog.text += "," + GetStatusEffectSpecificString(appliedStatusEffect)
                     + newCasterName
                     + " for " + appliedStatusEffect.statusEffect.turnDuration.ToString() + " turns";
             }
@@ -116,13 +109,13 @@ public class CombatLogger : MonoBehaviour
                 {
                     if(appliedInstance.onSelf)
                     {
-                        tmp.text += ", did "
+                        newLog.text += ", did "
                             + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.healColor)
                             + " healing to " + newCasterName;
                     }
                     else
                     {
-                        tmp.text += ", did "
+                        newLog.text += ", did "
                             + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.healColor)
                             + " healing to " + newTargetName;
                     }
@@ -131,13 +124,13 @@ public class CombatLogger : MonoBehaviour
                 {
                     if (appliedInstance.onSelf)
                     {
-                        tmp.text += ", dealt "
+                        newLog.text += ", dealt "
                             + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.damageColor)
                             + " damage to " + newCasterName;
                     }
                     else
                     {
-                        tmp.text += ", dealt "
+                        newLog.text += ", dealt "
                             + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.damageColor)
                             + " damage to " + newTargetName;
                     }
@@ -145,7 +138,10 @@ public class CombatLogger : MonoBehaviour
             }
         }
 
-        ColorLogBackground(newLog, isEnemyTurn);
+        if (isEnemyTurn)
+            newLog.enemyTurn = true;
+        else
+            newLog.charTurn = true;
     }
 
     private string GetStatusEffectSpecificString(AppliedStatusEffect appliedStatusEffect)
@@ -180,55 +176,20 @@ public class CombatLogger : MonoBehaviour
         return "";
     }
 
-    public void AddCasterStateLog(string casterName, string stateName)
-    {
-        GameObject newLog = InstantiateCombatLog();
-        TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
-        tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
-            + " is " + stateName + ".";
-    }
-
     public void AddFinishLog(string casterName, string targetName, int outcome)
     {
-        GameObject newLog = InstantiateCombatLog();
-        TextMeshProUGUI tmp = newLog.GetComponentInChildren<TextMeshProUGUI>();
+        SingleLog newLog = InstantiateCombatLog();
         if (outcome == 1)
-            tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
+            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
                 + " won the battle against " + ColorText(targetName, GlobalInput.Instance.enemyNameColor) + ".";
         else if (outcome == 0)
-            tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
+            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
                 + " lost the battle against " + ColorText(targetName, GlobalInput.Instance.enemyNameColor) + ".";
         else
-            tmp.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
+            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
                 + " tied in battle against " + ColorText(targetName, GlobalInput.Instance.enemyNameColor) + ".";
 
-        ColorLogFinishedBackground(newLog, outcome);
-    }
-
-    private void ColorLogBackground(GameObject logObj, bool isEnemyTurn)
-    {
-        Image image = logObj.GetComponent<Image>();
-        if (isEnemyTurn)
-            image.color = GlobalInput.Instance.enemyTurnColor;
-        else
-            image.color = GlobalInput.Instance.characterTurnColor;
-    }
-
-    private void ColorLogFinishedBackground(GameObject logObj, int outcome)
-    {
-        Image image = logObj.GetComponent<Image>();
-        if (outcome == 1)
-            image.color = GlobalInput.Instance.battleWonColor;
-        else if (outcome == 0)
-            image.color = GlobalInput.Instance.battleLostColor;
-        else
-            image.color = GlobalInput.Instance.battleTiedColor;
-    }
-
-    private void ColorLogDefault(GameObject logObj)
-    {
-        Image image = logObj.GetComponent<Image>();
-        image.color = GlobalInput.Instance.defaultLogColor;
+        newLog.outcome = outcome;
     }
 
     private string ColorText(string text, Color clr)

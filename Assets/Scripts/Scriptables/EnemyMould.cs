@@ -8,6 +8,8 @@ public class EnemyMould : ScriptableObject
     public CreatureType creatureType;
     public Attributes attributesProportion;
     public List<CombatSpell> combatSpells;
+    [Header("Possible drops")]
+    public List<Item> possibleItemYields;
 
     public Attributes CalculateAttributesByLevel(int level, int attributesPerLevel)
     {

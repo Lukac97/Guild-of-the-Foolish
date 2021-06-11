@@ -11,6 +11,9 @@ public class EnemyStats : MonoBehaviour
     public int level;
     public Attributes enemyAttributes = new Attributes();
 
+    [HideInInspector]
+    public List<Item> possibleItemYields;
+
     private EnemyCombat enemyCombat;
     private void Start()
     {
@@ -24,5 +27,6 @@ public class EnemyStats : MonoBehaviour
         creatureType = enemyMould.creatureType;
         level = lvl;
         enemyAttributes = enemyMould.CalculateAttributesByLevel(lvl, GlobalRules.attributePointsPerLevel);
+        possibleItemYields = new List<Item>(enemyMould.possibleItemYields);
     }
 }

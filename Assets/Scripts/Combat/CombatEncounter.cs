@@ -24,6 +24,10 @@ public class CombatEncounter : MonoBehaviour
     public CombatParticipant character;
     public CombatParticipant enemy;
 
+    [HideInInspector]
+    public CombatWinReward combatReward;
+    [HideInInspector]
+    public CombatLogger combatLogger;
     public void InitiateCombat(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc)
     {
         GameObject gO = Instantiate(enemyPrefab, transform);
@@ -37,8 +41,6 @@ public class CombatEncounter : MonoBehaviour
 
         character = new CombatParticipant(charStats.GetComponent<CombatHandler>(), charStats.characterName, true);
         enemy = new CombatParticipant(gO.GetComponent<CombatHandler>(), eStats.enemyName, false);
-
-        ScreensController.Instance.ActivateCombatScreen(true);
     }
 
     public int SimulateCombat()
@@ -46,14 +48,14 @@ public class CombatEncounter : MonoBehaviour
         int outcome = 2; // 0 - defeat, 1 - victory, 2 - tie
 
         UsedSpellResult intensity = null;
-
-        CombatLogger.Instance.ClearLog();
+        combatLogger = new CombatLogger();
+        combatLogger.InitCombatLogger();
 
         List<AppliedStatusEffect> startSE = new List<AppliedStatusEffect>();
 
         for (int turnNumber = 1; turnNumber <= GlobalRules.maxCombatTurns; turnNumber++)
         {
-            CombatLogger.Instance.AddTurnNumberLog(turnNumber);
+            combatLogger.AddTurnNumberLog(turnNumber);
             //TODO: Apply status effects to character
             startSE = character.combatHandler.TurnStart();
             //Check if character dead
@@ -63,11 +65,11 @@ public class CombatEncounter : MonoBehaviour
                 break;
             }
 
-            CombatLogger.Instance.AddStatusEffectsLog(character.participantName, startSE, false);
+            combatLogger.AddStatusEffectsLog(character.participantName, startSE, false);
             if (!character.combatHandler.isStunned)
             {
                 intensity = character.combatHandler.ChooseSpell(enemy.combatHandler);
-                CombatLogger.Instance.AddLog(character.participantName, enemy.participantName, intensity, false);
+                combatLogger.AddLog(character.participantName, enemy.participantName, intensity, false);
             }
             if (character.combatHandler.isInjured)
             {
@@ -85,11 +87,11 @@ public class CombatEncounter : MonoBehaviour
                 break;
             }
 
-            CombatLogger.Instance.AddStatusEffectsLog(enemy.participantName, startSE, true);
+            combatLogger.AddStatusEffectsLog(enemy.participantName, startSE, true);
             if (!enemy.combatHandler.isStunned)
             {
                 intensity = enemy.combatHandler.ChooseSpell(character.combatHandler);
-                CombatLogger.Instance.AddLog(enemy.participantName, character.participantName, intensity, true);
+                combatLogger.AddLog(enemy.participantName, character.participantName, intensity, true);
             }
 
             if (enemy.combatHandler.isInjured)
@@ -98,14 +100,21 @@ public class CombatEncounter : MonoBehaviour
                 break;
             }
         }
-        CombatLogger.Instance.AddFinishLog(character.participantName, enemy.participantName, outcome);
+        combatLogger.AddFinishLog(character.participantName, enemy.participantName, outcome);
 
+        combatReward = new CombatWinReward();
+        combatReward.GenerateYield(enemy.combatHandler, outcome);
         //TODO: Log to file when finished calculating combat, then read when necessary...
         UninitiateCombat();
         return outcome;
     }
 
     public void UninitiateCombat()
+    {
+        CombatWindowController.Instance.ActivateThisPopUp(this);
+    }
+
+    public void DestroyThisCombatEncounter()
     {
         GetComponentInParent<CombatEncounterController>().DestroyEncounter(this);
     }

@@ -16,7 +16,7 @@ public class GuildMain : MonoBehaviour
     public delegate void GuildResourceChangedDelegate();
     public GuildResourceChangedDelegate GuildResourceChanged;
 
-    public int gold;
+    public float gold;
 
     private void Awake()
     {
@@ -26,7 +26,7 @@ public class GuildMain : MonoBehaviour
         }
     }
 
-    public bool SubtractGold(int amount)
+    public bool SubtractGold(float amount)
     {
         if(amount > gold)
         {
@@ -39,7 +39,7 @@ public class GuildMain : MonoBehaviour
             return true;
         }
     }
-    public bool AddGold(int amount)
+    public bool AddGold(float amount)
     {
         if (amount > gold)
         {
