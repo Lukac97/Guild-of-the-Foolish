@@ -86,12 +86,11 @@ public class CharEquipment : MonoBehaviour
 
     public bool EquipItem(ItemObject itemObject)
     {
-        CharStats charStats = GetComponent<CharStats>();
-        if (charStats.level < itemObject.item.level)
-            return false;
+        //Perform checks
         Item equipmentItem = itemObject.item;
-        if (equipmentItem.GetType() != typeof(WeaponItem) & equipmentItem.GetType() != typeof(ArmorItem))
+        if (!CanEquipItem(equipmentItem))
             return false;
+        //
         GuildInventory.Instance.RemoveItemFromInventory(equipmentItem);
         if(equipmentItem.GetType() == typeof(ArmorItem))
             EquipItem((ArmorItem)equipmentItem);
@@ -99,6 +98,32 @@ public class CharEquipment : MonoBehaviour
             EquipItem((WeaponItem)equipmentItem);
         NotifyAfterEquipping(true);
         return true;
+    }
+
+    public bool CanEquipItem(Item itemToCheck)
+    {
+        if (charStats.level < itemToCheck.level)
+            return false;
+        if(itemToCheck.GetType() == typeof(WeaponItem))
+        {
+            if (charStats.characterClass.viableWeaponTypes.Contains(((WeaponItem)itemToCheck).weaponType))
+                return true;
+            else
+                return false;
+        }
+        else if (itemToCheck.GetType() == typeof(ArmorItem))
+        {
+            if (((ArmorItem)itemToCheck).itemSlot == ArmorSlot.FINGER)
+                return true;
+            else if (charStats.characterClass.viableArmorTypes.Contains(((ArmorItem)itemToCheck).armorType))
+                return true;
+            else
+                return false;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     #region Specific Equips

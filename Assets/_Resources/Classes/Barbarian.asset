@@ -19,5 +19,6 @@ MonoBehaviour:
     agility: 2
     luck: 1
     intellect: 1
-  viableWeaponTypes: 
-  viableArmorTypes: 
+  viableWeaponTypes: 020000000300000004000000050000000600000007000000
+  viableArmorTypes: 00000000010000000200000003000000
+  combatSpells: []
