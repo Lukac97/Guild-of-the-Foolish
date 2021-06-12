@@ -18,10 +18,21 @@ public class CombatWindowController : MonoBehaviour
     [Header("Pop up settings")]
     public GameObject activatable;
     [Space(6)]
-    [Header("Content settings")]
+    [Header("Logger")]
     public CanvasGroup loggerCanvasGroup;
     public GameObject loggerPrefab;
     public GameObject loggerPanel;
+    [Space(6)]
+    [Header("Content settings")]
+    public TextMeshProUGUI outcomeTitle;
+    [Space(3)]
+    public GameObject itemRewardPrefab;
+    public GameObject GEPanel;
+    public GameObject ItemPanel;
+    [Space(3)]
+    public GameObject goldExpPrizeSlot;
+    public GameObject itemPrizeSlot;
+
 
     [HideInInspector]
     public CombatEncounter currentEncounter;
@@ -52,8 +63,66 @@ public class CombatWindowController : MonoBehaviour
 
     public void ShowEndOfCombatScreen()
     {
-        //This is gonna be on-click function instead of just being called immediately
-        ShowCombatLog();
+        CloseCombatLog();
+        if(currentEncounter.finalOutcome == 0)
+            outcomeTitle.text = "Defeat...";
+        else if(currentEncounter.finalOutcome == 1)
+            outcomeTitle.text = "Victory!";
+        else if(currentEncounter.finalOutcome == 2)
+            outcomeTitle.text = "Tied.";
+        else
+            outcomeTitle.text = "--Error--";
+        //Clear previous rewards
+        foreach (Transform child in GEPanel.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach(Transform child in ItemPanel.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        //SetActive slots
+        if(currentEncounter.combatReward.goldYield <= 0 & currentEncounter.combatReward.experienceYield <= 0)
+        {
+            goldExpPrizeSlot.SetActive(false);
+        }
+        else
+        {
+            goldExpPrizeSlot.SetActive(true);
+        }
+
+        if(currentEncounter.combatReward.items.Count == 0)
+        {
+            itemPrizeSlot.SetActive(false);
+        }
+        else
+        {
+            itemPrizeSlot.SetActive(true);
+        }
+        //Show current rewards
+        foreach(CombatWinReward.ItemReward itemReward in currentEncounter.combatReward.items)
+        {
+            GameObject newItemReward = Instantiate(itemRewardPrefab, ItemPanel.transform);
+            RewardItemSlot rewItemSlot = newItemReward.GetComponent<RewardItemSlot>();
+            rewItemSlot.AssignItemReward(itemReward);
+        }
+
+        if(currentEncounter.combatReward.goldYield > 0)
+        {
+            GameObject newItemReward = Instantiate(itemRewardPrefab, GEPanel.transform);
+            RewardItemSlot rewItemSlot = newItemReward.GetComponent<RewardItemSlot>();
+            rewItemSlot.AssignGoldReward(currentEncounter.combatReward.goldYield);
+        }
+
+        if(currentEncounter.combatReward.experienceYield > 0)
+        {
+            GameObject newItemReward = Instantiate(itemRewardPrefab, GEPanel.transform);
+            RewardItemSlot rewItemSlot = newItemReward.GetComponent<RewardItemSlot>();
+            rewItemSlot.AssignGoldReward(currentEncounter.combatReward.experienceYield);
+        }
+
+
     }
 
     //On click claim
@@ -62,9 +131,9 @@ public class CombatWindowController : MonoBehaviour
         GuildMain.Instance.AddGold(currentEncounter.combatReward.goldYield);
         currentEncounter.character.combatHandler.GetComponent<CharStats>()
             .AddExperience(currentEncounter.combatReward.experienceYield);
-        foreach (Item itemToAdd in currentEncounter.combatReward.items)
+        foreach (CombatWinReward.ItemReward itemToAdd in currentEncounter.combatReward.items)
         {
-            GuildInventory.Instance.AddItemToInventory(itemToAdd);
+            GuildInventory.Instance.AddItemToInventory(itemToAdd.item, itemToAdd.quantity);
         }
         ClosePopUp();
     }
@@ -84,8 +153,6 @@ public class CombatWindowController : MonoBehaviour
         loggerCanvasGroup.blocksRaycasts = false;
         loggerCanvasGroup.interactable = false;
         ClearCombatLog();
-        //TODO: FIX FOR NOW!
-        ClaimRewards();
     }
 
     public void ClearCombatLog()

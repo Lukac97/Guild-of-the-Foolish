@@ -88,7 +88,25 @@ public class CharStats : MonoBehaviour
 
     public void AddExperience(float amount)
     {
-        experiencePoints += amount;
-        //TODO: leveling up
+        float maxExperiencePoints = GlobalRules.maxExperienceForLevel(level);
+        if (experiencePoints + amount >= maxExperiencePoints)
+        {
+            float tempExpPoints = experiencePoints;
+            LevelUpCharacter();
+            experiencePoints = tempExpPoints + amount - maxExperiencePoints;
+        }
+        else
+        {
+            experiencePoints += amount;
+        }
+    }
+
+    public void LevelUpCharacter()
+    {
+        experiencePoints = 0;
+        level += 1;
+        availablePoints += GlobalRules.attributePointsPerLevel;
+
+        CharactersController.CharactersUpdated.Invoke();
     }
 }

@@ -28,6 +28,7 @@ public class CombatEncounter : MonoBehaviour
     public CombatWinReward combatReward;
     [HideInInspector]
     public CombatLogger combatLogger;
+    public int finalOutcome = -1;
     public void InitiateCombat(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc)
     {
         GameObject gO = Instantiate(enemyPrefab, transform);
@@ -105,6 +106,7 @@ public class CombatEncounter : MonoBehaviour
         combatReward = new CombatWinReward();
         combatReward.GenerateYield(enemy.combatHandler, outcome);
         //TODO: Log to file when finished calculating combat, then read when necessary...
+        finalOutcome = outcome;
         UninitiateCombat();
         return outcome;
     }
