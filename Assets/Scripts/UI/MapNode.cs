@@ -24,7 +24,7 @@ public class MapNode : MonoBehaviour
             //If MOVE button is activated and this node is in possible locations - move the selected character to it
             if(mapMain.GetHighlitedNodes().Contains(gameObject))
             {
-                GlobalInput.Instance.selectedEntity.GetComponent<CharStats>().ChangeLocation(location);
+                GlobalInput.Instance.selectedEntity.GetComponent<CharStats>().MoveCharacter(location);
                 mapMain.OnClickMoveButton();
             }
         }

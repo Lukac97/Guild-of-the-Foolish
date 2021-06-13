@@ -101,6 +101,7 @@ public class CharacterListController : MonoBehaviour
             lastHighlitedCharacters.Remove(charEle.gameObject);
             Destroy(charEle.gameObject);
         }
+        MapMain.Instance.UpdateMapMain();
     }
 
     public CharListElement FindCharElement(CharStats charStats)

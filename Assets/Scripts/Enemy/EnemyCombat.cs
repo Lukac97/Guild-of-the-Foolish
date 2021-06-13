@@ -14,9 +14,13 @@ public class EnemyCombat : CombatHandler
         enemyStats = GetComponent<EnemyStats>();
         UpdateEnemyCombat();
         FillResources();
-        if (isCreatedForBattle)
-            combatEncounter.SimulateCombat();
     }
+
+    public bool CheckIfReadyForBattle()
+    {
+        return isCreatedForBattle;
+    }
+
     public void UpdateEnemyCombat()
     {
         combatStats.CalculateCombatStats(enemyStats.enemyAttributes);

@@ -20,6 +20,9 @@ public class CharStats : MonoBehaviour
 
     [Space(5)]
     public int availablePoints;
+    [Header("Global states")]
+    public bool isMoving;
+    public bool isBattling;
 
     private CharEquipment charEquipment;
     private CharCombat charCombat;
@@ -47,8 +50,16 @@ public class CharStats : MonoBehaviour
         charAttributes = new Attributes(newCharClass.startingAttributes);
     }
 
+    public void MoveCharacter(Location loc)
+    {
+        isMoving = true;
+        GlobalTime.CreateCharacterMoveAction(this, loc);
+        CharactersController.CharactersUpdated.Invoke();
+    }
+
     public void ChangeLocation(Location loc)
     {
+        isMoving = false;
         location = loc;
         CharactersController.CharactersUpdated.Invoke();
     }

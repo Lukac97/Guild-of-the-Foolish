@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class MapMain : MonoBehaviour
 {
+    private static MapMain _instance;
+    public static MapMain Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
 
     public GameObject nodes;
     public World world;
@@ -20,19 +28,69 @@ public class MapMain : MonoBehaviour
     private List<GameObject> lastHighlitedNodes = new List<GameObject>();
     [HideInInspector]
     public bool moveActivated = false;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            _instance = this;
+    }
+
     void Start()
     {
-        GlobalInput.Instance.onChangedSelectedEntity += HighlightSelectedLocation;
-        GlobalInput.Instance.onChangedSelectedEntity += HighlightLocationOfSelectedChar;
-        GlobalInput.Instance.onChangedSelectedEntity += EnableMoveButton;
+        GlobalInput.Instance.onChangedSelectedEntity += UpdateMapMain;
 
         EnableMoveButton();
     }
 
-    void Update()
+
+    public void UpdateMapMain()
     {
-        
+        if(GlobalInput.CheckIfSelectedCharacter())
+        {
+            HighlightLocationOfSelectedChar();
+        }
+        else if(GlobalInput.CheckIfSelectedLocation())
+        {
+            HighlightSelectedLocation();
+        }
+        EnableMoveButton();
     }
+
+    public void HighlightLocationOfSelectedChar()
+    {
+        if (!GlobalInput.CheckIfSelectedCharacter())
+            return;
+        currentlyUsedColor = characterLocationColor;
+        DeHighlightAllLocations();
+        GameObject selectedChar = GlobalInput.Instance.selectedEntity;
+        GameObject highlightNode = selectedChar.GetComponent<CharStats>().location.connectedNode.gameObject;
+        lastHighlitedNodes.Add(highlightNode);
+        HighlightLocations();
+    }
+
+    public void HighlightSelectedLocation()
+    {
+        if (!GlobalInput.CheckIfSelectedLocation())
+            return;
+        currentlyUsedColor = selectedLocationColor;
+        DeHighlightAllLocations();
+        lastHighlitedNodes.Add(GlobalInput.Instance.selectedEntity.GetComponent<Location>().connectedNode.gameObject);
+        HighlightLocations();
+    }
+
+    public void EnableMoveButton()
+    {
+        if (GlobalInput.CheckIfSelectedCharacter())
+        {
+            moveButtonPanel.SetActive(true);
+        }
+        else
+        {
+            moveButtonPanel.SetActive(false);
+        }
+    }
+
+    //-------------------------------------------------------------------------------------
 
     private void HighlightLocations()
     {
@@ -54,18 +112,6 @@ public class MapMain : MonoBehaviour
         lastHighlitedNodes.Clear();
     }
 
-    public void HighlightLocationOfSelectedChar()
-    {
-        if (!GlobalInput.CheckIfSelectedCharacter())
-            return;
-        currentlyUsedColor = characterLocationColor;
-        DeHighlightAllLocations();
-        GameObject selectedChar = GlobalInput.Instance.selectedEntity;
-        GameObject highlightNode = selectedChar.GetComponent<CharStats>().location.connectedNode.gameObject;
-        lastHighlitedNodes.Add(highlightNode);
-        HighlightLocations();
-    }
-
     public void HighlightConnectedLocations(Location loc)
     {
         currentlyUsedColor = possibleMovementColor;
@@ -75,16 +121,6 @@ public class MapMain : MonoBehaviour
         {
             lastHighlitedNodes.Add(iloc.connectedNode.gameObject);
         }
-        HighlightLocations();
-    }
-
-    public void HighlightSelectedLocation()
-    {
-        if (!GlobalInput.CheckIfSelectedLocation())
-            return;
-        currentlyUsedColor = selectedLocationColor;
-        DeHighlightAllLocations();
-        lastHighlitedNodes.Add(GlobalInput.Instance.selectedEntity.GetComponent<Location>().connectedNode.gameObject);
         HighlightLocations();
     }
 
@@ -104,18 +140,6 @@ public class MapMain : MonoBehaviour
         {
             moveActivated = true;
             HighlightConnectedLocations(GlobalInput.Instance.selectedEntity.GetComponent<CharStats>().location);
-        }
-    }
-
-    public void EnableMoveButton()
-    {
-        if(GlobalInput.CheckIfSelectedCharacter())
-        {
-            moveButtonPanel.SetActive(true);
-        }
-        else
-        {
-            moveButtonPanel.SetActive(false);
         }
     }
 

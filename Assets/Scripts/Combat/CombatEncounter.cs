@@ -42,6 +42,9 @@ public class CombatEncounter : MonoBehaviour
 
         character = new CombatParticipant(charStats.GetComponent<CombatHandler>(), charStats.characterName, true);
         enemy = new CombatParticipant(gO.GetComponent<CombatHandler>(), eStats.enemyName, false);
+
+        //Global action
+        GlobalTime.CreateCombatEncounterAction(this);
     }
 
     public int SimulateCombat()
