@@ -30,6 +30,7 @@ public class AttributesView : MonoBehaviour
     {
         GlobalInput.Instance.onChangedSelectedEntity += UpdateAttributesView;
         CharactersController.CharactersUpdated += UpdateAttributesView;
+        UpdateAttributesView();
     }
 
     public void UpdateAttributesView()

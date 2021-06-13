@@ -30,7 +30,6 @@ public class EquipmentSlotController : MonoBehaviour
     }
 
 
-
     private void OnEntityChanged()
     {
         if (!GlobalInput.CheckIfSelectedCharacter())
@@ -64,7 +63,9 @@ public class EquipmentSlotController : MonoBehaviour
         }
         foreach (EquipmentArmorSlot eqSlot in leftArmorSlots)
         {
-            eqSlot.gameObject.SetActive(false);
+            //BUG: sometimes is null
+            if (eqSlot != null)
+                eqSlot.gameObject.SetActive(false);
         }
 
         List<EquipmentWeaponSlot> leftWeaponSlots = new List<EquipmentWeaponSlot>(weaponSlots);
@@ -89,7 +90,9 @@ public class EquipmentSlotController : MonoBehaviour
         }
         foreach (EquipmentWeaponSlot eqSlot in leftWeaponSlots)
         {
-            eqSlot.gameObject.SetActive(false);
+            //BUG: sometimes is null
+            if(eqSlot != null)
+                eqSlot.gameObject.SetActive(false);
         }
     }
 

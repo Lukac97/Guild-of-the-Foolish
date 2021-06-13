@@ -17,7 +17,9 @@ public class CombatStats
     public float magicalDamage;
     public float physicalResistance;
     public float magicalResistance;
-    public float avoidChance;
+
+    public float avoidPotency;
+    public float criticalPotency;
 
     public void CalculateCombatStats(Attributes attributes)
     {
@@ -28,32 +30,46 @@ public class CombatStats
         float spellResourceChangeRation = currentSpellResource > 0 ? maxSpellResource/currentSpellResource : 0;
         if (currentSpellResource == 0 & maxSpellResource == 0)
             spellResourceChangeRation = 1;
+
+        //Initialize
+        maxHealth = 0;
+        maxSpellResource = 0;
+
+        physicalDamage = 0;
+        magicalDamage = 0;
+        physicalResistance = 0;
+        magicalResistance = 0;
+        avoidPotency = 0;
         //maxHealth
-        maxHealth = attributes.strength * 10.0f;
+        maxHealth += attributes.strength * 10.0f;
         maxHealth += attributes.agility * 6.0f;
         maxHealth += attributes.intellect * 4.0f;
 
         //maxSpellResource
-        maxSpellResource = attributes.intellect * 20.0f;
+        maxSpellResource += attributes.intellect * 20.0f;
 
 
         //----------------------------------------
         //physicalDmg
-        physicalDamage = attributes.strength * 0.8f;
+        physicalDamage += attributes.strength * 0.8f;
         physicalDamage += attributes.agility * 0.8f;
 
         //magicalDmg
-        magicalDamage = attributes.intellect * 1.1f;
+        magicalDamage += attributes.intellect * 1.1f;
 
         //physicalRed
-        physicalResistance = attributes.strength * 1.5f;
+        physicalResistance += attributes.strength * 1.5f;
 
         //magicalRed
-        magicalResistance = attributes.intellect * 0.5f;
+        magicalResistance += attributes.intellect * 0.5f;
 
-        //avoidChance
-        avoidChance = attributes.agility * 0.3f;
-        avoidChance = attributes.luck * 0.7f;
+        //avoidPotency
+        avoidPotency += attributes.agility * 0.3f;
+        avoidPotency += attributes.luck * 0.7f;
+
+        //criticalPotency
+        criticalPotency += attributes.agility * 0.7f;
+        criticalPotency += attributes.luck * 0.3f;
 
         if (maxHealth > 0 & currentHealth > maxHealth)
             currentHealth = maxHealth;

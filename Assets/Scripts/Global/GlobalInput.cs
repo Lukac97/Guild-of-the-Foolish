@@ -32,6 +32,7 @@ public class GlobalInput : MonoBehaviour
     [Header("Combat logging")]
     public Color damageColor;
     public Color healColor;
+    public Color neutralIntensityColor;
     [Space(4)]
     public Color enemyTurnColor;
     public Color characterTurnColor;

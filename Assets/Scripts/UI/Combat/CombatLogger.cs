@@ -106,34 +106,45 @@ public class CombatLogger
 
             foreach(AppliedIntensityInstance appliedInstance in spellResult.appliedIntensityInstances)
             {
-                if(appliedInstance.intensityPurpose == IntensityPurpose.HEAL)
+                string stringAppliedIntensity = appliedInstance.intensity.ToString("0.00")
+                    + (appliedInstance.isCritical ? "*" : "");
+                if (appliedInstance.hasBeenAvoided)
                 {
-                    if(appliedInstance.onSelf)
-                    {
-                        newLog.text += ", did "
-                            + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.healColor)
-                            + " healing to " + newCasterName;
-                    }
-                    else
-                    {
-                        newLog.text += ", did "
-                            + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.healColor)
-                            + " healing to " + newTargetName;
-                    }
+                    newLog.text += ", missed ( "
+                        + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.neutralIntensityColor)
+                        + " )";
                 }
-                else if(appliedInstance.intensityPurpose == IntensityPurpose.DAMAGE)
+                else
                 {
-                    if (appliedInstance.onSelf)
+                    if (appliedInstance.intensityPurpose == IntensityPurpose.HEAL)
                     {
-                        newLog.text += ", dealt "
-                            + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.damageColor)
-                            + " damage to " + newCasterName;
+                        if (appliedInstance.onSelf)
+                        {
+                            newLog.text += ", did "
+                                + ColorText(stringAppliedIntensity, GlobalInput.Instance.healColor)
+                                + " healing to " + newCasterName;
+                        }
+                        else
+                        {
+                            newLog.text += ", did "
+                                + ColorText(stringAppliedIntensity, GlobalInput.Instance.healColor)
+                                + " healing to " + newTargetName;
+                        }
                     }
-                    else
+                    else if (appliedInstance.intensityPurpose == IntensityPurpose.DAMAGE)
                     {
-                        newLog.text += ", dealt "
-                            + ColorText(appliedInstance.intensity.ToString("0.00"), GlobalInput.Instance.damageColor)
-                            + " damage to " + newTargetName;
+                        if (appliedInstance.onSelf)
+                        {
+                            newLog.text += ", dealt "
+                                + ColorText(stringAppliedIntensity, GlobalInput.Instance.damageColor)
+                                + " damage to " + newCasterName;
+                        }
+                        else
+                        {
+                            newLog.text += ", dealt "
+                                + ColorText(stringAppliedIntensity, GlobalInput.Instance.damageColor)
+                                + " damage to " + newTargetName;
+                        }
                     }
                 }
             }

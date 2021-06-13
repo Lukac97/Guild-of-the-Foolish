@@ -13,6 +13,8 @@ public class CmbStatsView : MonoBehaviour
     public TextMeshProUGUI magicalDamageValue;
     public TextMeshProUGUI physicalResistanceValue;
     public TextMeshProUGUI magicalResistanceValue;
+    public TextMeshProUGUI avoidPotencyValue;
+    public TextMeshProUGUI criticalPotencyValue;
 
     private void Start()
     {
@@ -43,5 +45,7 @@ public class CmbStatsView : MonoBehaviour
         magicalDamageValue.text = charCombat.combatStats.magicalDamage.ToString("0.0");
         physicalResistanceValue.text = charCombat.combatStats.physicalResistance.ToString("0.0");
         magicalResistanceValue.text = charCombat.combatStats.magicalResistance.ToString("0.0");
+        avoidPotencyValue.text = charCombat.combatStats.avoidPotency.ToString("0.0");
+        criticalPotencyValue.text = charCombat.combatStats.criticalPotency.ToString("0.0");
     }
 }

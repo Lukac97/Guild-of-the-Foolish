@@ -36,8 +36,13 @@ public class AppliedIntensityInstance
     public SecondaryIntensityType secondaryIntensityType;
     public float intensity;
     public int originLevel;
+    public float originCriticalPotency;
 
-    public AppliedIntensityInstance(IntensityInstance intensityInstance, float _intensity, int _originLevel)
+    public bool hasBeenAvoided;
+    public bool isCritical;
+
+    public AppliedIntensityInstance(IntensityInstance intensityInstance, float _intensity,
+        int _originLevel, float _originCriticalPotency)
     {
         onSelf = intensityInstance.onSelf;
         intensityPurpose = intensityInstance.intensityPurpose;
@@ -45,6 +50,9 @@ public class AppliedIntensityInstance
         secondaryIntensityType = intensityInstance.secondaryIntensityType;
         intensity = _intensity;
         originLevel = _originLevel;
+        originCriticalPotency = _originCriticalPotency;
+        hasBeenAvoided = false;
+        isCritical = false;
     }
 
     //public AppliedIntensityInstance(bool _onSelf, IntensityPurpose _intensityPurpose,
@@ -64,5 +72,20 @@ public class AppliedIntensityInstance
         primaryIntensityType = appliedIntensityInstance.primaryIntensityType;
         secondaryIntensityType = appliedIntensityInstance.secondaryIntensityType;
         intensity = appliedIntensityInstance.intensity;
+        originCriticalPotency = appliedIntensityInstance.originCriticalPotency;
+        hasBeenAvoided = appliedIntensityInstance.hasBeenAvoided;
+        isCritical = appliedIntensityInstance.isCritical;
+    }
+
+    public void SetValues(AppliedIntensityInstance appliedIntensityInstance)
+    {
+        onSelf = appliedIntensityInstance.onSelf;
+        intensityPurpose = appliedIntensityInstance.intensityPurpose;
+        primaryIntensityType = appliedIntensityInstance.primaryIntensityType;
+        secondaryIntensityType = appliedIntensityInstance.secondaryIntensityType;
+        intensity = appliedIntensityInstance.intensity;
+        originCriticalPotency = appliedIntensityInstance.originCriticalPotency;
+        hasBeenAvoided = appliedIntensityInstance.hasBeenAvoided;
+        isCritical = appliedIntensityInstance.isCritical;
     }
 }

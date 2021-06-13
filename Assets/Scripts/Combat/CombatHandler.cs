@@ -178,16 +178,16 @@ public class CombatHandler : MonoBehaviour
     {
         AppliedIntensityInstance finalDmg = new AppliedIntensityInstance(dmg);
 
+        //Calculate resistances
         float maxRes = 100 + (dmg.originLevel - 1) * 20;
-        //TODO: Calculate damage reduction based on combatStats
-        if(dmg.primaryIntensityType == PrimaryIntensityType.PHYSICAL)
+        if (dmg.primaryIntensityType == PrimaryIntensityType.PHYSICAL)
         {
             float finalRes = combatStats.physicalResistance / maxRes;
-            if (finalRes > 0.9f)
-                finalRes = 0.9f;
+            if (finalRes > 0.95f)
+                finalRes = 0.95f;
             finalDmg.intensity = dmg.intensity * (1 - finalRes);
         }
-        else if(dmg.primaryIntensityType == PrimaryIntensityType.MAGICAL)
+        else if (dmg.primaryIntensityType == PrimaryIntensityType.MAGICAL)
         {
             float finalRes = combatStats.magicalResistance / maxRes;
             if (finalRes > 0.9f)
@@ -195,7 +195,37 @@ public class CombatHandler : MonoBehaviour
             finalDmg.intensity = dmg.intensity * (1 - finalRes);
         }
 
+        //Avoid check (after resistance calculation to show potential damage on log)
+        float finalAvoid = 100 + (dmg.originLevel - 1) * 20;
+        finalAvoid = combatStats.avoidPotency / finalAvoid;
+        if (finalAvoid > 0.8f)
+            finalAvoid = 0.8f;
+
+        if (RollChance(finalAvoid))
+        {
+            finalDmg.hasBeenAvoided = true;
+            //Return information about damage avoided
+            return finalDmg;
+        }
+
+        //Roll for critical
+        float finalCritical = 100 + (dmg.originLevel - 1) * 20;
+        finalCritical = dmg.originCriticalPotency / finalCritical;
+        if (finalCritical > 0.8f)
+            finalCritical = 0.8f;
+
+        //TODO: create a critical multiplier
+        if(RollChance(finalCritical))
+        {
+            finalDmg.intensity *= 2;
+            finalDmg.isCritical = true;
+        }
+
+        //Deal damage
         LowerHealth(finalDmg.intensity);
+        
+
+        //Return information about damage dealt
         return finalDmg;
     }
 
@@ -206,6 +236,23 @@ public class CombatHandler : MonoBehaviour
         RaiseHealth(finalHeal.intensity);
         return finalHeal;
     }
+
+    public bool RollChance(float percentage)
+    {
+        //Just for safety
+        if (percentage > 1)
+            percentage = 1;
+        if (percentage < 0)
+            percentage = 0;
+
+        //Random check
+        if(Random.Range(0.0f, 1.0f) < percentage)
+        {
+            return true;
+        }
+        return false;
+    }
+
 
     #region Resource Management
     public void RaiseHealth(float amount)
