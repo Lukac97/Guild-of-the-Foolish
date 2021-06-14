@@ -125,12 +125,15 @@ public class CombatHandler : MonoBehaviour
                     AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
                     inflictedStatusEffects.Add(inflictedSE);
                     isImmuneToCC = true;
+                    continue;
                 }
+
                 if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.HEALING_OVER_TIME)
                 {
                     AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
                     inflictedSE.intensityToReceive = CalculateHealingReceived(appliedStatusEffect.intensityToReceive);
                     inflictedStatusEffects.Add(inflictedSE);
+                    continue;
                 }
             }
 
@@ -142,6 +145,7 @@ public class CombatHandler : MonoBehaviour
                     inflictedStatusEffects.Add(inflictedSE);
                     isStunned = true;
                 }
+
                 if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DAMAGE_OVER_TIME)
                 {
                     AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
@@ -158,18 +162,77 @@ public class CombatHandler : MonoBehaviour
         return inflictedStatusEffects;
     }
 
+    public void ApplyAllTempEffects()
+    {
+        //IMPLEMENT MORE TEMP EFFECTS
+        CombatStats.StatFields statFlatBonus = new CombatStats.StatFields(0f);
+        CombatStats.StatFields statMultiplier = new CombatStats.StatFields(1f);
+        foreach(AppliedStatusEffect appliedStatusEffect in statusEffects)
+        {
+            if (appliedStatusEffect.statusEffect.GetType() == typeof(BeneficialStatusEffect))
+            {
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_AVOID_POTENCY)
+                {
+                    statFlatBonus.avoidPotency += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.avoidPotency *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_CRITICAL_POTENCY)
+                {
+                    statFlatBonus.criticalPotency += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.criticalPotency *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_HIT_POTENCY)
+                {
+                    statFlatBonus.hitPotency += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.hitPotency *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_MAGIC_RESISTANCE)
+                {
+                    statFlatBonus.magicalResistance += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.magicalResistance *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_PHYSICAL_RESISTANCE)
+                {
+                    statFlatBonus.physicalResistance += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.physicalResistance *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+            }
+
+            if (appliedStatusEffect.statusEffect.GetType() == typeof(HarmfulStatusEffect))
+            {
+            }
+        }
+    }
+
+    public void ClearAllStatusEffects()
+    {
+        statusEffects.Clear();
+    }
+
     public bool TryInflictHarmfulStatusEffect(AppliedStatusEffect statusEffect)
     {
-        //TODO: Roll chance based on combatStats on whether or not to inflict status effect
         if (isImmuneToCC)
             return false;
+        if (DoAvoidCheck(combatStats.totalStats.avoidPotency, statusEffect.intensityToReceive.originHitPotency))
+        {
+            return false;
+        }
+
         statusEffects.Add(new AppliedStatusEffect(statusEffect));
         return true;
     }
 
     public bool TryInflictBeneficialStatusEffect(AppliedStatusEffect statusEffect)
     {
-        //TODO: Roll chance based on combatStats on whether or not to inflict status effect
         statusEffects.Add(new AppliedStatusEffect(statusEffect));
         return true;
     }
@@ -182,41 +245,33 @@ public class CombatHandler : MonoBehaviour
         float maxRes = 100 + (dmg.originLevel - 1) * 20;
         if (dmg.primaryIntensityType == PrimaryIntensityType.PHYSICAL)
         {
-            float finalRes = combatStats.physicalResistance / maxRes;
+            float finalRes = combatStats.totalStats.physicalResistance / maxRes;
             if (finalRes > 0.95f)
                 finalRes = 0.95f;
             finalDmg.intensity = dmg.intensity * (1 - finalRes);
         }
         else if (dmg.primaryIntensityType == PrimaryIntensityType.MAGICAL)
         {
-            float finalRes = combatStats.magicalResistance / maxRes;
+            float finalRes = combatStats.totalStats.magicalResistance / maxRes;
             if (finalRes > 0.9f)
                 finalRes = 0.9f;
             finalDmg.intensity = dmg.intensity * (1 - finalRes);
         }
 
         //Avoid check (after resistance calculation to show potential damage on log)
-        float finalAvoid = 100 + (dmg.originLevel - 1) * 20;
-        finalAvoid = combatStats.avoidPotency / finalAvoid;
-        if (finalAvoid > 0.8f)
-            finalAvoid = 0.8f;
-
-        if (RollChance(finalAvoid))
+        if (DoAvoidCheck(combatStats.totalStats.avoidPotency, dmg.originHitPotency))
         {
+            //If successfully avoided
             finalDmg.hasBeenAvoided = true;
             //Return information about damage avoided
             return finalDmg;
         }
 
         //Roll for critical
-        float finalCritical = 100 + (dmg.originLevel - 1) * 20;
-        finalCritical = dmg.originCriticalPotency / finalCritical;
-        if (finalCritical > 0.8f)
-            finalCritical = 0.8f;
 
-        //TODO: create a critical multiplier
-        if(RollChance(finalCritical))
+        if(!DoCriticalCheck(combatStats.totalStats.avoidPotency, dmg.originCriticalPotency))
         {
+            //If critical check fails
             finalDmg.intensity *= 2;
             finalDmg.isCritical = true;
         }
@@ -229,12 +284,29 @@ public class CombatHandler : MonoBehaviour
         return finalDmg;
     }
 
-    public AppliedIntensityInstance CalculateHealingReceived(AppliedIntensityInstance heal)
+    public bool DoAvoidCheck(float avoidPotency, float originHitPotency)
     {
-        AppliedIntensityInstance finalHeal = new AppliedIntensityInstance(heal);
-        //TODO: Calculate heal amplification based on combatStats
-        RaiseHealth(finalHeal.intensity);
-        return finalHeal;
+        //Checks if normal attack is avoided
+        float finalAvoid = avoidPotency / (avoidPotency + originHitPotency + 100);
+        if (RollChance(finalAvoid))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool DoCriticalCheck(float avoidPotency, float originCriticalPotency)
+    {
+        //Checks if critical is avoided
+
+        float finalCritical = (2f * avoidPotency + 100) / (2*avoidPotency + originCriticalPotency + 100);
+
+        //TODO: create a critical multiplier
+        if (RollChance(finalCritical))
+        {
+            return true;
+        }
+        return false;
     }
 
     public bool RollChance(float percentage)
@@ -242,15 +314,23 @@ public class CombatHandler : MonoBehaviour
         //Just for safety
         if (percentage > 1)
             percentage = 1;
-        if (percentage < 0)
-            percentage = 0;
+        if (percentage <= 0)
+            return false;
 
         //Random check
-        if(Random.Range(0.0f, 1.0f) < percentage)
+        if (Random.Range(0.0f, 1.0f) <= percentage)
         {
             return true;
         }
         return false;
+    }
+
+    public AppliedIntensityInstance CalculateHealingReceived(AppliedIntensityInstance heal)
+    {
+        AppliedIntensityInstance finalHeal = new AppliedIntensityInstance(heal);
+        //TODO: Calculate heal amplification based on combatStats
+        RaiseHealth(finalHeal.intensity);
+        return finalHeal;
     }
 
 

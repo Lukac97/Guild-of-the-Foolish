@@ -24,11 +24,17 @@ public class CombatSpell : Spell
         //Create initial intensity instances
         foreach(IntensityInstance intInstance in intensityInstances)
         {
-            float newIntensity = intInstance.intensityDescription.flatIntensity +
-                intInstance.intensityDescription.scaleToMagicIntensity * caster.combatStats.magicalDamage +
-                intInstance.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.physicalDamage;
+            if(intInstance.intensityDescription.forStatScaling)
+            {
+                Debug.Log("Following spell contains an IntensityInstance with a forStatScaling flag, which is designated for stat modification by buffs/debuffs: " + name);
+                continue;
+            }
+            float newIntensity = intInstance.intensityDescription.flatIntensity * casterLevel +
+                intInstance.intensityDescription.scaleToMagicIntensity * caster.combatStats.totalStats.magicalDamage +
+                intInstance.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.totalStats.physicalDamage;
             AppliedIntensityInstance appliedIntensityInstance =
-                new AppliedIntensityInstance(intInstance, newIntensity, casterLevel, caster.combatStats.criticalPotency);
+                new AppliedIntensityInstance(intInstance, newIntensity, casterLevel,
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, 0, 0);
             _appliedIntensityInstances.Add(appliedIntensityInstance);
         }
 
@@ -62,11 +68,20 @@ public class CombatSpell : Spell
         foreach(HarmfulStatusEffect hse in harmfulEffectsToTarget)
         {
             AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(hse);
-            float intensityCalc = hse.intensity.intensityDescription.flatIntensity
-                + hse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.magicalDamage
-                + hse.intensity.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.physicalDamage;
+            float intensityCalc = hse.intensity.intensityDescription.flatIntensity * casterLevel
+                + hse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.totalStats.magicalDamage
+                + hse.intensity.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.totalStats.physicalDamage;
+
+            float totalStatMultiplier = hse.intensity.intensityDescription.statMultiplier
+                + hse.intensity.intensityDescription.statMultiplierScaleToMagic * caster.combatStats.totalStats.magicalDamage
+                + hse.intensity.intensityDescription.statMultiplierScaleToPhysical * caster.combatStats.totalStats.physicalDamage;
+
+            float totalStatFlatIntensity = hse.intensity.intensityDescription.statFlatIntensity * casterLevel;
+
             newAppliedSE.intensityToReceive =
-                new AppliedIntensityInstance(hse.intensity, intensityCalc, casterLevel, caster.combatStats.criticalPotency);
+                new AppliedIntensityInstance(hse.intensity, intensityCalc, casterLevel,
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier);
+
             if (target.TryInflictHarmfulStatusEffect(newAppliedSE))
                 _harmfulEffectsToTarget.Add(newAppliedSE);
         }
@@ -75,11 +90,20 @@ public class CombatSpell : Spell
         foreach (HarmfulStatusEffect hse in harmfulEffectsToSelf)
         {
             AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(hse);
-            float intensityCalc = hse.intensity.intensityDescription.flatIntensity
-                + hse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.magicalDamage
-                + hse.intensity.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.physicalDamage;
-            newAppliedSE.intensityToReceive = 
-                new AppliedIntensityInstance(hse.intensity, intensityCalc, casterLevel, caster.combatStats.criticalPotency);
+            float intensityCalc = hse.intensity.intensityDescription.flatIntensity * casterLevel
+                + hse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.totalStats.magicalDamage
+                + hse.intensity.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.totalStats.physicalDamage;
+
+            float totalStatMultiplier = hse.intensity.intensityDescription.statMultiplier
+                + hse.intensity.intensityDescription.statMultiplierScaleToMagic * caster.combatStats.totalStats.magicalDamage
+                + hse.intensity.intensityDescription.statMultiplierScaleToPhysical * caster.combatStats.totalStats.physicalDamage;
+
+            float totalStatFlatIntensity = hse.intensity.intensityDescription.statFlatIntensity * casterLevel;
+
+            newAppliedSE.intensityToReceive =
+                new AppliedIntensityInstance(hse.intensity, intensityCalc, casterLevel,
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier);
+
             if (caster.TryInflictHarmfulStatusEffect(newAppliedSE))
                 _harmfulEffectsToSelf.Add(newAppliedSE);
         }
@@ -88,11 +112,20 @@ public class CombatSpell : Spell
         foreach (BeneficialStatusEffect bse in beneficialEffectsToTarget)
         {
             AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(bse);
-            float intensityCalc = bse.intensity.intensityDescription.flatIntensity
-                + bse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.magicalDamage
-                + bse.intensity.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.physicalDamage;
+            float intensityCalc = bse.intensity.intensityDescription.flatIntensity * casterLevel
+                + bse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.totalStats.magicalDamage
+                + bse.intensity.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.totalStats.physicalDamage;
+
+            float totalStatMultiplier = bse.intensity.intensityDescription.statMultiplier
+                + bse.intensity.intensityDescription.statMultiplierScaleToMagic * caster.combatStats.totalStats.magicalDamage
+                + bse.intensity.intensityDescription.statMultiplierScaleToPhysical * caster.combatStats.totalStats.physicalDamage;
+
+            float totalStatFlatIntensity = bse.intensity.intensityDescription.statFlatIntensity * casterLevel;
+
             newAppliedSE.intensityToReceive =
-                new AppliedIntensityInstance(bse.intensity, intensityCalc, casterLevel, caster.combatStats.criticalPotency);
+                new AppliedIntensityInstance(bse.intensity, intensityCalc, casterLevel,
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier);
+
             if (target.TryInflictBeneficialStatusEffect(newAppliedSE))
                 _beneficialEffectsToTarget.Add(newAppliedSE);
         }
@@ -101,11 +134,20 @@ public class CombatSpell : Spell
         foreach (BeneficialStatusEffect bse in beneficialEffectsToSelf)
         {
             AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(bse);
-            float intensityCalc = bse.intensity.intensityDescription.flatIntensity
-                + bse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.magicalDamage
-                + bse.intensity.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.physicalDamage;
+            float intensityCalc = bse.intensity.intensityDescription.flatIntensity * casterLevel
+                + bse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.totalStats.magicalDamage
+                + bse.intensity.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.totalStats.physicalDamage;
+
+            float totalStatMultiplier = bse.intensity.intensityDescription.statMultiplier
+                + bse.intensity.intensityDescription.statMultiplierScaleToMagic * caster.combatStats.totalStats.magicalDamage
+                + bse.intensity.intensityDescription.statMultiplierScaleToPhysical * caster.combatStats.totalStats.physicalDamage;
+
+            float totalStatFlatIntensity = bse.intensity.intensityDescription.statFlatIntensity * casterLevel;
+
             newAppliedSE.intensityToReceive =
-                new AppliedIntensityInstance(bse.intensity, intensityCalc, casterLevel, caster.combatStats.criticalPotency);
+                new AppliedIntensityInstance(bse.intensity, intensityCalc, casterLevel,
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier);
+
             if (caster.TryInflictBeneficialStatusEffect(newAppliedSE))
                 _beneficialEffectsToSelf.Add(newAppliedSE);
         }

@@ -61,17 +61,17 @@ public class CharListElement : MonoBehaviour
             return;
         if (hpSlider != null)
         {
-            if (linkedCharacterCombat.combatStats.maxHealth == 0)
+            if (linkedCharacterCombat.combatStats.totalStats.maxHealth == 0)
                 hpSlider.value = 0;
             else
-                hpSlider.value = linkedCharacterCombat.combatStats.currentHealth / linkedCharacterCombat.combatStats.maxHealth;
+                hpSlider.value = linkedCharacterCombat.combatStats.currentHealth / linkedCharacterCombat.combatStats.totalStats.maxHealth;
         }
         if (srSlider != null)
         {
-            if (linkedCharacterCombat.combatStats.maxSpellResource == 0)
+            if (linkedCharacterCombat.combatStats.totalStats.maxSpellResource == 0)
                 srSlider.value = 0;
             else
-                srSlider.value = linkedCharacterCombat.combatStats.currentSpellResource / linkedCharacterCombat.combatStats.maxSpellResource;
+                srSlider.value = linkedCharacterCombat.combatStats.currentSpellResource / linkedCharacterCombat.combatStats.totalStats.maxSpellResource;
         }
     }
 

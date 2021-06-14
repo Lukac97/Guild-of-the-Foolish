@@ -105,6 +105,8 @@ public class CombatEncounter : MonoBehaviour
             }
         }
         combatLogger.AddFinishLog(character.participantName, enemy.participantName, outcome);
+        enemy.combatHandler.ClearAllStatusEffects();
+        character.combatHandler.ClearAllStatusEffects();
 
         combatReward = new CombatWinReward();
         combatReward.GenerateYield(enemy.combatHandler, outcome);

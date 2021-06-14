@@ -5,88 +5,167 @@ using UnityEngine;
 [System.Serializable]
 public class CombatStats
 {
-    [Header("Resources")]
-    public float maxHealth;
+    [System.Serializable]
+    public class StatFields
+    {
+        [Header("Resources")]
+        public float maxHealth;
+        public float maxSpellResource;
+        [Header("Stats")]
+        public float physicalDamage;
+        public float magicalDamage;
+        public float physicalResistance;
+        public float magicalResistance;
+        public float avoidPotency;
+        public float criticalPotency;
+        public float hitPotency;
+
+        public StatFields(float initNr)
+        {
+            maxHealth = initNr;
+            maxSpellResource = initNr;
+            physicalDamage = initNr;
+            magicalDamage = initNr;
+            physicalResistance = initNr;
+            magicalResistance = initNr;
+            avoidPotency = initNr;
+            criticalPotency = initNr;
+            hitPotency = initNr;
+        }
+    }
+
+    [Header("Resource current state")]
     public float currentHealth;
-    public float maxSpellResource;
     public float currentSpellResource;
 
     [Space(6)]
     [Header("Stats")]
-    public float physicalDamage;
-    public float magicalDamage;
-    public float physicalResistance;
-    public float magicalResistance;
+    public StatFields baseStats;
 
-    public float avoidPotency;
-    public float criticalPotency;
+    public StatFields tmpStats;
+
+    public StatFields totalStats;
 
     public void CalculateCombatStats(Attributes attributes)
     {
-        float healthChangeRatio = currentHealth > 0 ? maxHealth/currentHealth : 0;
-        if (currentHealth == 0 & maxHealth == 0)
+        float healthChangeRatio = currentHealth > 0 ? baseStats.maxHealth / currentHealth : 0;
+        if (currentHealth == 0 & baseStats.maxHealth == 0)
             healthChangeRatio = 1;
 
-        float spellResourceChangeRation = currentSpellResource > 0 ? maxSpellResource/currentSpellResource : 0;
-        if (currentSpellResource == 0 & maxSpellResource == 0)
-            spellResourceChangeRation = 1;
+        float spellResourceChangeRatio = currentSpellResource > 0 ? baseStats.maxSpellResource /currentSpellResource : 0;
+        if (currentSpellResource == 0 & baseStats.maxSpellResource == 0)
+            spellResourceChangeRatio = 1;
 
         //Initialize
-        maxHealth = 0;
-        maxSpellResource = 0;
+        baseStats.maxHealth = 0;
+        baseStats.maxSpellResource = 0;
 
-        physicalDamage = 0;
-        magicalDamage = 0;
-        physicalResistance = 0;
-        magicalResistance = 0;
-        avoidPotency = 0;
+        baseStats.physicalDamage = 0;
+        baseStats.magicalDamage = 0;
+        baseStats.physicalResistance = 0;
+        baseStats.magicalResistance = 0;
+        baseStats.avoidPotency = 0;
+        baseStats.criticalPotency = 0;
+        baseStats.hitPotency = 0;
         //maxHealth
-        maxHealth += attributes.strength * 10.0f;
-        maxHealth += attributes.agility * 6.0f;
-        maxHealth += attributes.intellect * 4.0f;
+        baseStats.maxHealth += attributes.strength * 10.0f;
+        baseStats.maxHealth += attributes.agility * 6.0f;
+        baseStats.maxHealth += attributes.intellect * 4.0f;
 
         //maxSpellResource
-        maxSpellResource += attributes.intellect * 20.0f;
+        baseStats.maxSpellResource += attributes.intellect * 20.0f;
 
 
         //----------------------------------------
         //physicalDmg
-        physicalDamage += attributes.strength * 0.8f;
-        physicalDamage += attributes.agility * 0.8f;
+        baseStats.physicalDamage += attributes.strength * 0.8f;
+        baseStats.physicalDamage += attributes.agility * 0.8f;
 
         //magicalDmg
-        magicalDamage += attributes.intellect * 1.1f;
+        baseStats.magicalDamage += attributes.intellect * 1.1f;
 
         //physicalRed
-        physicalResistance += attributes.strength * 1.5f;
+        baseStats.physicalResistance += attributes.strength * 1.5f;
 
         //magicalRed
-        magicalResistance += attributes.intellect * 0.5f;
+        baseStats.magicalResistance += attributes.intellect * 0.5f;
 
         //avoidPotency
-        avoidPotency += attributes.agility * 0.3f;
-        avoidPotency += attributes.luck * 0.7f;
+        baseStats.avoidPotency += attributes.agility * 0.3f;
+        baseStats.avoidPotency += attributes.luck * 0.7f;
 
         //criticalPotency
-        criticalPotency += attributes.agility * 0.7f;
-        criticalPotency += attributes.luck * 0.3f;
+        baseStats.criticalPotency += attributes.agility * 0.7f;
+        baseStats.criticalPotency += attributes.luck * 0.3f;
 
-        if (maxHealth > 0 & currentHealth > maxHealth)
-            currentHealth = maxHealth;
+        //criticalPotency
+        baseStats.hitPotency += attributes.agility * 0.5f;
+        baseStats.hitPotency += attributes.luck * 0.5f;
+
+        if (baseStats.maxHealth > 0 & currentHealth > baseStats.maxHealth)
+            currentHealth = baseStats.maxHealth;
         else
-            currentHealth = maxHealth / healthChangeRatio;
+            currentHealth = baseStats.maxHealth / healthChangeRatio;
 
-        if (maxSpellResource > 0 & currentSpellResource > maxSpellResource)
-            currentSpellResource = maxSpellResource;
+        if (baseStats.maxSpellResource > 0 & currentSpellResource > baseStats.maxSpellResource)
+            currentSpellResource = baseStats.maxSpellResource;
         else
-            currentSpellResource = maxSpellResource / spellResourceChangeRation;
+            currentSpellResource = baseStats.maxSpellResource / spellResourceChangeRatio;
 
+        CalculateTotalCombatStats();
     }
+
+    private void CalculateTotalCombatStats()
+    {
+        float healthChangeRatio = currentHealth > 0 ? baseStats.maxHealth / currentHealth : 0;
+        if (currentHealth == 0 & baseStats.maxHealth == 0)
+            healthChangeRatio = 1;
+
+        float spellResourceChangeRatio = currentSpellResource > 0 ? baseStats.maxSpellResource / currentSpellResource : 0;
+        if (currentSpellResource == 0 & baseStats.maxSpellResource == 0)
+            spellResourceChangeRatio = 1;
+
+        totalStats.maxHealth = baseStats.maxHealth + tmpStats.maxHealth;
+        totalStats.maxSpellResource = baseStats.maxSpellResource + tmpStats.maxSpellResource;
+        totalStats.physicalDamage = baseStats.physicalDamage + tmpStats.physicalDamage;
+        totalStats.magicalDamage = baseStats.magicalDamage + tmpStats.magicalDamage;
+        totalStats.physicalResistance = baseStats.physicalResistance + tmpStats.physicalResistance;
+        totalStats.magicalResistance = baseStats.magicalResistance + tmpStats.magicalResistance;
+        totalStats.avoidPotency = baseStats.avoidPotency + tmpStats.avoidPotency;
+        totalStats.criticalPotency = baseStats.criticalPotency + tmpStats.criticalPotency;
+        totalStats.hitPotency = baseStats.hitPotency + tmpStats.hitPotency;
+
+        if (totalStats.maxHealth > 0 & currentHealth > totalStats.maxHealth)
+            currentHealth = totalStats.maxHealth;
+        else
+            currentHealth = totalStats.maxHealth / healthChangeRatio;
+
+        if (totalStats.maxSpellResource > 0 & currentSpellResource > totalStats.maxSpellResource)
+            currentSpellResource = totalStats.maxSpellResource;
+        else
+            currentSpellResource = totalStats.maxSpellResource / spellResourceChangeRatio;
+    }
+
+    public void SetTmpCombatStats(StatFields _tmpStats)
+    {
+        tmpStats.maxHealth = _tmpStats.maxHealth;
+        tmpStats.maxSpellResource = _tmpStats.maxSpellResource;
+        tmpStats.physicalDamage = _tmpStats.physicalDamage;
+        tmpStats.magicalDamage = _tmpStats.magicalDamage;
+        tmpStats.physicalResistance = _tmpStats.physicalResistance;
+        tmpStats.magicalResistance = _tmpStats.magicalResistance;
+        tmpStats.avoidPotency = _tmpStats.avoidPotency;
+        tmpStats.criticalPotency = _tmpStats.criticalPotency;
+        tmpStats.hitPotency = _tmpStats.hitPotency;
+
+        CalculateTotalCombatStats();
+    }
+
     #region Resource Management
     public void RaiseHealth(float amount)
     {
-        if (currentHealth + amount >= maxHealth)
-            currentHealth = maxHealth;
+        if (currentHealth + amount >= totalStats.maxHealth)
+            currentHealth = totalStats.maxHealth;
         else
             currentHealth += amount;
     }
@@ -107,8 +186,8 @@ public class CombatStats
 
     public void RaiseSpellResource(float amount)
     {
-        if (currentSpellResource + amount >= maxSpellResource)
-            currentSpellResource = maxSpellResource;
+        if (currentSpellResource + amount >= totalStats.maxSpellResource)
+            currentSpellResource = totalStats.maxSpellResource;
         else
             currentSpellResource += amount;
     }
@@ -127,8 +206,8 @@ public class CombatStats
 
     public void FillResources()
     {
-        currentHealth = maxHealth;
-        currentSpellResource = maxSpellResource;
+        currentHealth = totalStats.maxHealth;
+        currentSpellResource = totalStats.maxSpellResource;
     }
     #endregion Resource Management
 }
