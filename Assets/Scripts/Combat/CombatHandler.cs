@@ -118,6 +118,12 @@ public class CombatHandler : MonoBehaviour
         List<AppliedStatusEffect> inflictedStatusEffects = new List<AppliedStatusEffect>();
         foreach (AppliedStatusEffect appliedStatusEffect in statusEffects)
         {
+            appliedStatusEffect.statusEffect.turnDuration -= 1;
+            if (appliedStatusEffect.statusEffect.turnDuration >= 0)
+                newStatusEffects.Add(appliedStatusEffect);
+            else
+                continue;
+
             if (appliedStatusEffect.statusEffect.GetType() == typeof(BeneficialStatusEffect))
             {
                 if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.ANTI_CC)
@@ -153,12 +159,9 @@ public class CombatHandler : MonoBehaviour
                     inflictedStatusEffects.Add(inflictedSE);
                 }
             }
-
-            appliedStatusEffect.statusEffect.turnDuration -= 1;
-            if (appliedStatusEffect.statusEffect.turnDuration > 0)
-                newStatusEffects.Add(appliedStatusEffect);
         }
         statusEffects = newStatusEffects;
+        ApplyAllTempEffects();
         return inflictedStatusEffects;
     }
 
@@ -169,6 +172,11 @@ public class CombatHandler : MonoBehaviour
         CombatStats.StatFields statMultiplier = new CombatStats.StatFields(1f);
         foreach(AppliedStatusEffect appliedStatusEffect in statusEffects)
         {
+            if(appliedStatusEffect.statusEffect.turnDuration < 0)
+            {
+                continue;
+            }
+
             if (appliedStatusEffect.statusEffect.GetType() == typeof(BeneficialStatusEffect))
             {
                 if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_AVOID_POTENCY)
@@ -205,12 +213,104 @@ public class CombatHandler : MonoBehaviour
                     statMultiplier.physicalResistance *= appliedStatusEffect.intensityToReceive.statMultiplier;
                     continue;
                 }
+
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_MAX_HEALTH)
+                {
+                    statFlatBonus.maxHealth += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.maxHealth *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_MAX_SPELL_RESOURCE)
+                {
+                    statFlatBonus.maxSpellResource += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.maxSpellResource *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_MAGIC_INTENSITY)
+                {
+                    statFlatBonus.magicalDamage += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.magicalDamage *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_PHYSICAL_INTENSITY)
+                {
+                    statFlatBonus.physicalDamage += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.physicalDamage *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
             }
 
             if (appliedStatusEffect.statusEffect.GetType() == typeof(HarmfulStatusEffect))
             {
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_AVOID_POTENCY)
+                {
+                    statFlatBonus.avoidPotency -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.avoidPotency /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_CRITICAL_POTENCY)
+                {
+                    statFlatBonus.criticalPotency -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.criticalPotency /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_HIT_POTENCY)
+                {
+                    statFlatBonus.hitPotency -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.hitPotency /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_MAGIC_RESISTANCE)
+                {
+                    statFlatBonus.magicalResistance -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.magicalResistance /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_PHYSICAL_RESISTANCE)
+                {
+                    statFlatBonus.physicalResistance -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.physicalResistance /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_MAX_HEALTH)
+                {
+                    statFlatBonus.maxHealth -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.maxHealth /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_MAX_SPELL_RESOURCE)
+                {
+                    statFlatBonus.maxSpellResource -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.maxSpellResource /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_MAGIC_INTENSITY)
+                {
+                    statFlatBonus.magicalDamage -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.magicalDamage /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
+
+                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_PHYSICAL_INTENSITY)
+                {
+                    statFlatBonus.physicalDamage -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                    statMultiplier.physicalDamage /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                    continue;
+                }
             }
         }
+
+        combatStats.SetTmpCombatStats(statFlatBonus, statMultiplier);
     }
 
     public void ClearAllStatusEffects()
@@ -226,14 +326,15 @@ public class CombatHandler : MonoBehaviour
         {
             return false;
         }
-
         statusEffects.Add(new AppliedStatusEffect(statusEffect));
+        ApplyAllTempEffects();
         return true;
     }
 
     public bool TryInflictBeneficialStatusEffect(AppliedStatusEffect statusEffect)
     {
         statusEffects.Add(new AppliedStatusEffect(statusEffect));
+        ApplyAllTempEffects();
         return true;
     }
 

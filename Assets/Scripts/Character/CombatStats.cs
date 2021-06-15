@@ -146,17 +146,17 @@ public class CombatStats
             currentSpellResource = totalStats.maxSpellResource / spellResourceChangeRatio;
     }
 
-    public void SetTmpCombatStats(StatFields _tmpStats)
+    public void SetTmpCombatStats(StatFields _tmpStatsFlat, StatFields _tmpStatsMultiplier)
     {
-        tmpStats.maxHealth = _tmpStats.maxHealth;
-        tmpStats.maxSpellResource = _tmpStats.maxSpellResource;
-        tmpStats.physicalDamage = _tmpStats.physicalDamage;
-        tmpStats.magicalDamage = _tmpStats.magicalDamage;
-        tmpStats.physicalResistance = _tmpStats.physicalResistance;
-        tmpStats.magicalResistance = _tmpStats.magicalResistance;
-        tmpStats.avoidPotency = _tmpStats.avoidPotency;
-        tmpStats.criticalPotency = _tmpStats.criticalPotency;
-        tmpStats.hitPotency = _tmpStats.hitPotency;
+        tmpStats.maxHealth = (baseStats.maxHealth + _tmpStatsFlat.maxHealth) * _tmpStatsMultiplier.maxHealth - baseStats.maxHealth;
+        tmpStats.maxSpellResource = (baseStats.maxSpellResource + _tmpStatsFlat.maxSpellResource) * _tmpStatsMultiplier.maxSpellResource - baseStats.maxSpellResource;
+        tmpStats.physicalDamage = (baseStats.physicalDamage + _tmpStatsFlat.physicalDamage) * _tmpStatsMultiplier.physicalDamage - baseStats.physicalDamage;
+        tmpStats.magicalDamage = (baseStats.magicalDamage + _tmpStatsFlat.magicalDamage) * _tmpStatsMultiplier.magicalDamage - baseStats.magicalDamage;
+        tmpStats.physicalResistance = (baseStats.physicalResistance + _tmpStatsFlat.physicalResistance) * _tmpStatsMultiplier.physicalResistance - baseStats.physicalResistance;
+        tmpStats.magicalResistance = (baseStats.magicalResistance + _tmpStatsFlat.magicalResistance) * _tmpStatsMultiplier.magicalResistance - baseStats.magicalResistance;
+        tmpStats.avoidPotency = (baseStats.avoidPotency + _tmpStatsFlat.avoidPotency) * _tmpStatsMultiplier.avoidPotency - baseStats.avoidPotency;
+        tmpStats.criticalPotency = (baseStats.criticalPotency + _tmpStatsFlat.criticalPotency) * _tmpStatsMultiplier.criticalPotency - baseStats.criticalPotency;
+        tmpStats.hitPotency = (baseStats.hitPotency + _tmpStatsFlat.hitPotency) * _tmpStatsMultiplier.hitPotency - baseStats.hitPotency;
 
         CalculateTotalCombatStats();
     }

@@ -67,6 +67,11 @@ public class CombatSpell : Spell
         //Apply Harmful Status Effects to target
         foreach(HarmfulStatusEffect hse in harmfulEffectsToTarget)
         {
+            if(!hse.intensity.intensityDescription.forStatScaling)
+            {
+                Debug.Log("Following spell contains an StatusEffect without a forStatScaling flag, which should be enabled for stat modification by buffs/debuffs: " + name);
+                continue;
+            }
             AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(hse);
             float intensityCalc = hse.intensity.intensityDescription.flatIntensity * casterLevel
                 + hse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.totalStats.magicalDamage
@@ -89,6 +94,11 @@ public class CombatSpell : Spell
         //Apply Harmful Status Effects to self
         foreach (HarmfulStatusEffect hse in harmfulEffectsToSelf)
         {
+            if (!hse.intensity.intensityDescription.forStatScaling)
+            {
+                Debug.Log("Following spell contains an StatusEffect without a forStatScaling flag, which should be enabled for stat modification by buffs/debuffs: " + name);
+                continue;
+            }
             AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(hse);
             float intensityCalc = hse.intensity.intensityDescription.flatIntensity * casterLevel
                 + hse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.totalStats.magicalDamage
@@ -111,6 +121,11 @@ public class CombatSpell : Spell
         //Apply Beneficial Status Effects to target
         foreach (BeneficialStatusEffect bse in beneficialEffectsToTarget)
         {
+            if (!bse.intensity.intensityDescription.forStatScaling)
+            {
+                Debug.Log("Following spell contains an StatusEffect without a forStatScaling flag, which should be enabled for stat modification by buffs/debuffs: " + name);
+                continue;
+            }
             AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(bse);
             float intensityCalc = bse.intensity.intensityDescription.flatIntensity * casterLevel
                 + bse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.totalStats.magicalDamage
@@ -133,6 +148,11 @@ public class CombatSpell : Spell
         //Apply Beneficial Status Effects to self
         foreach (BeneficialStatusEffect bse in beneficialEffectsToSelf)
         {
+            if (!bse.intensity.intensityDescription.forStatScaling)
+            {
+                Debug.Log("Following spell contains an StatusEffect without a forStatScaling flag, which should be enabled for stat modification by buffs/debuffs: " + name);
+                continue;
+            }
             AppliedStatusEffect newAppliedSE = new AppliedStatusEffect(bse);
             float intensityCalc = bse.intensity.intensityDescription.flatIntensity * casterLevel
                 + bse.intensity.intensityDescription.scaleToMagicIntensity * caster.combatStats.totalStats.magicalDamage

@@ -72,7 +72,7 @@ public class AppliedStatusEffect
             statusEffect = new HarmfulStatusEffect((HarmfulStatusEffect)_statusEffect);
         else
             statusEffect = null;
-        intensityToReceive = _intensityToReceive;
+        intensityToReceive = new AppliedIntensityInstance(_intensityToReceive);
         turnsLeft = _statusEffect.turnDuration;
     }
 
@@ -84,7 +84,7 @@ public class AppliedStatusEffect
             statusEffect = new HarmfulStatusEffect((HarmfulStatusEffect)_appliedStatusEffect.statusEffect);
         else
             statusEffect = null;
-        intensityToReceive = _appliedStatusEffect.intensityToReceive;
+        intensityToReceive = new AppliedIntensityInstance(_appliedStatusEffect.intensityToReceive);
         turnsLeft = _appliedStatusEffect.statusEffect.turnDuration;
     }
 

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96791f70a1c753a43adc19d0d8a64801, type: 3}
+  m_Name: TEST_decrease_phydmg
+  m_EditorClassIdentifier: 
+  spellDescription: 
+  spellLevel: 0
+  spellIcon: {fileID: 0}
+  turnCooldown: 5
+  intensityInstances: []
+  harmfulEffectsToTarget:
+  - turnDuration: 1
+    intensity:
+      onSelf: 0
+      intensityPurpose: 0
+      primaryIntensityType: 0
+      secondaryIntensityType: 0
+      intensityDescription:
+        flatIntensity: 0
+        scaleToMagicIntensity: 0
+        scaleToPhysicalIntensity: 0
+        forStatScaling: 1
+        statFlatIntensity: 3
+        statMultiplier: 1.2
+        statMultiplierScaleToMagic: 0
+        statMultiplierScaleToPhysical: 0.02
+    statusEffectType: 10
+  harmfulEffectsToSelf: []
+  beneficialEffectsToTarget: []
+  beneficialEffectsToSelf: []

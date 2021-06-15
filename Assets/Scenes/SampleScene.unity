@@ -37813,7 +37813,7 @@ PrefabInstance:
         type: 3}
       propertyPath: combatSpells.Array.data[0].combatSpell
       value: 
-      objectReference: {fileID: 11400000, guid: 536f17a365ae46347ac47039d828ea2f,
+      objectReference: {fileID: 11400000, guid: 7121a56df3c07dc44bac3e006d5fd91a,
         type: 2}
     - target: {fileID: 9089818981230238267, guid: 6f202eced77221a45a044d4656c594b6,
         type: 3}

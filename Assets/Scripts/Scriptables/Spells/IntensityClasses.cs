@@ -114,6 +114,8 @@ public class AppliedIntensityInstance
         intensity = appliedIntensityInstance.intensity;
         originCriticalPotency = appliedIntensityInstance.originCriticalPotency;
         originHitPotency = appliedIntensityInstance.originHitPotency;
+        statFlatIntensity = appliedIntensityInstance.statFlatIntensity;
+        statMultiplier = appliedIntensityInstance.statMultiplier;
         hasBeenAvoided = appliedIntensityInstance.hasBeenAvoided;
         isCritical = appliedIntensityInstance.isCritical;
     }
@@ -127,6 +129,8 @@ public class AppliedIntensityInstance
         intensity = appliedIntensityInstance.intensity;
         originCriticalPotency = appliedIntensityInstance.originCriticalPotency;
         originHitPotency = appliedIntensityInstance.originHitPotency;
+        statFlatIntensity = appliedIntensityInstance.statFlatIntensity;
+        statMultiplier = appliedIntensityInstance.statMultiplier;
         hasBeenAvoided = appliedIntensityInstance.hasBeenAvoided;
         isCritical = appliedIntensityInstance.isCritical;
     }
