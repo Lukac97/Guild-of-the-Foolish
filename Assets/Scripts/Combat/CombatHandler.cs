@@ -42,8 +42,20 @@ public class CombatHandler : MonoBehaviour
 
     [Header("Statuses")]
     public bool isInjured = false;
+
     public bool isStunned = false;
+    public bool isRooted = false;
+    public bool isBlind = false;
+    public bool isDazed = false;
+
     public bool isImmuneToCC = false;
+    public bool isPrecise = false;
+    public bool hasTruestrike = false;
+    public bool isEvasive = false;
+
+    public float damageReceivedMultiplier = 1.0f;
+    public float healingReceivedMultiplier = 1.0f;
+
     public List<AppliedStatusEffect> statusEffects = new List<AppliedStatusEffect>();
 
     [Header("Spells")]
@@ -99,78 +111,71 @@ public class CombatHandler : MonoBehaviour
         }
     }
 
+    public void ResetAllCooldowns()
+    {
+        foreach (EquippedCombatSpell spell in combatSpells)
+        {
+            spell.cooldownLeft = 0;
+        }
+    }
+
     public List<AppliedStatusEffect> TurnStart()
     {
         LowerAllCooldowns(1);
         return InvokeStatusEffects();
     }
 
+    public void EndOfCombat()
+    {
+        isInjured = false;
+        ResetAllCooldowns();
+        ClearAllStatusEffects();
+        ReapplyStatusEffects();
+    }
+
     public void SetAllStatesToFalse()
     {
         isStunned = false;
+        isRooted = false;
+        isBlind = false;
+        isDazed = false;
+
         isImmuneToCC = false;
+        isPrecise = false;
+        hasTruestrike = false;
+        isEvasive = false;
     }
 
     public List<AppliedStatusEffect> InvokeStatusEffects()
     {
         SetAllStatesToFalse();
         List<AppliedStatusEffect> newStatusEffects = new List<AppliedStatusEffect>();
-        List<AppliedStatusEffect> inflictedStatusEffects = new List<AppliedStatusEffect>();
         foreach (AppliedStatusEffect appliedStatusEffect in statusEffects)
         {
             appliedStatusEffect.statusEffect.turnDuration -= 1;
             if (appliedStatusEffect.statusEffect.turnDuration >= 0)
+            {
                 newStatusEffects.Add(appliedStatusEffect);
-            else
-                continue;
-
-            if (appliedStatusEffect.statusEffect.GetType() == typeof(BeneficialStatusEffect))
-            {
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.ANTI_CC)
-                {
-                    AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
-                    inflictedStatusEffects.Add(inflictedSE);
-                    isImmuneToCC = true;
-                    continue;
-                }
-
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.HEALING_OVER_TIME)
-                {
-                    AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
-                    inflictedSE.intensityToReceive = CalculateHealingReceived(appliedStatusEffect.intensityToReceive);
-                    inflictedStatusEffects.Add(inflictedSE);
-                    continue;
-                }
             }
-
-            if (appliedStatusEffect.statusEffect.GetType() == typeof(HarmfulStatusEffect))
+            else
             {
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.STUN)
-                {
-                    AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
-                    inflictedStatusEffects.Add(inflictedSE);
-                    isStunned = true;
-                }
-
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DAMAGE_OVER_TIME)
-                {
-                    AppliedStatusEffect inflictedSE = new AppliedStatusEffect(appliedStatusEffect);
-                    inflictedSE.intensityToReceive = CalculateDamageReceived(appliedStatusEffect.intensityToReceive);
-                    inflictedStatusEffects.Add(inflictedSE);
-                }
+                continue;
             }
         }
         statusEffects = newStatusEffects;
-        ApplyAllTempEffects();
-        return inflictedStatusEffects;
+        ReapplyStatusEffects();
+        return newStatusEffects;
     }
 
-    public void ApplyAllTempEffects()
+    public void ReapplyStatusEffects()
     {
         //IMPLEMENT MORE TEMP EFFECTS
         CombatStats.StatFields statFlatBonus = new CombatStats.StatFields(0f);
         CombatStats.StatFields statMultiplier = new CombatStats.StatFields(1f);
-        foreach(AppliedStatusEffect appliedStatusEffect in statusEffects)
+        damageReceivedMultiplier = 1;
+        healingReceivedMultiplier = 1;
+        SetAllStatesToFalse();
+        foreach (AppliedStatusEffect appliedStatusEffect in statusEffects)
         {
             if(appliedStatusEffect.statusEffect.turnDuration < 0)
             {
@@ -179,138 +184,161 @@ public class CombatHandler : MonoBehaviour
 
             if (appliedStatusEffect.statusEffect.GetType() == typeof(BeneficialStatusEffect))
             {
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_AVOID_POTENCY)
+                switch (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType)
                 {
-                    statFlatBonus.avoidPotency += appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.avoidPotency *= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case BeneficialStatusEffectType.ANTI_CC:
+                        isImmuneToCC = true;
+                        break;
 
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_CRITICAL_POTENCY)
-                {
-                    statFlatBonus.criticalPotency += appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.criticalPotency *= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case BeneficialStatusEffectType.PRECISE:
+                        isPrecise = true;
+                        break;
 
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_HIT_POTENCY)
-                {
-                    statFlatBonus.hitPotency += appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.hitPotency *= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case BeneficialStatusEffectType.EVASIVE:
+                        isEvasive = true;
+                        break;
 
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_MAGIC_RESISTANCE)
-                {
-                    statFlatBonus.magicalResistance += appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.magicalResistance *= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case BeneficialStatusEffectType.TRUESTRIKE:
+                        hasTruestrike = true;
+                        break;
 
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_PHYSICAL_RESISTANCE)
-                {
-                    statFlatBonus.physicalResistance += appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.physicalResistance *= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case BeneficialStatusEffectType.HEALING_OVER_TIME:
+                        appliedStatusEffect.intensityToReceive = CalculateHealingReceived(appliedStatusEffect.intensityToReceive);
+                        break;
 
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_MAX_HEALTH)
-                {
-                    statFlatBonus.maxHealth += appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.maxHealth *= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case BeneficialStatusEffectType.INCREASE_AVOID_POTENCY:
+                        statFlatBonus.avoidPotency += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.avoidPotency *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
 
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_MAX_SPELL_RESOURCE)
-                {
-                    statFlatBonus.maxSpellResource += appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.maxSpellResource *= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case BeneficialStatusEffectType.INCREASE_CRITICAL_POTENCY:
+                        statFlatBonus.criticalPotency += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.criticalPotency *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
 
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_MAGIC_INTENSITY)
-                {
-                    statFlatBonus.magicalDamage += appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.magicalDamage *= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case BeneficialStatusEffectType.INCREASE_HIT_POTENCY:
+                        statFlatBonus.hitPotency += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.hitPotency *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
 
-                if (((BeneficialStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == BeneficialStatusEffectType.INCREASE_PHYSICAL_INTENSITY)
-                {
-                    statFlatBonus.physicalDamage += appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.physicalDamage *= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
+                    case BeneficialStatusEffectType.INCREASE_MAGIC_RESISTANCE:
+                        statFlatBonus.magicalResistance += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.magicalResistance *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case BeneficialStatusEffectType.INCREASE_PHYSICAL_RESISTANCE:
+                        statFlatBonus.physicalResistance += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.physicalResistance *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case BeneficialStatusEffectType.INCREASE_MAX_HEALTH:
+                        statFlatBonus.maxHealth += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.maxHealth *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case BeneficialStatusEffectType.INCREASE_MAX_SPELL_RESOURCE:
+                        statFlatBonus.maxSpellResource += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.maxSpellResource *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case BeneficialStatusEffectType.INCREASE_MAGIC_INTENSITY:
+                        statFlatBonus.magicalDamage += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.magicalDamage *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case BeneficialStatusEffectType.INCREASE_PHYSICAL_INTENSITY:
+                        statFlatBonus.physicalDamage += appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.physicalDamage *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case BeneficialStatusEffectType.DECREASE_DAMAGE_RECEIVED:
+                        damageReceivedMultiplier /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case BeneficialStatusEffectType.INCREASE_HEALING_RECEIVED:
+                        healingReceivedMultiplier *= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
                 }
             }
 
-            if (appliedStatusEffect.statusEffect.GetType() == typeof(HarmfulStatusEffect))
+            else if (appliedStatusEffect.statusEffect.GetType() == typeof(HarmfulStatusEffect))
             {
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_AVOID_POTENCY)
+                switch (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType)
                 {
-                    statFlatBonus.avoidPotency -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.avoidPotency /= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case HarmfulStatusEffectType.STUN:
+                        isStunned = true;
+                        break;
 
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_CRITICAL_POTENCY)
-                {
-                    statFlatBonus.criticalPotency -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.criticalPotency /= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case HarmfulStatusEffectType.BLIND:
+                        isStunned = true;
+                        break;
 
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_HIT_POTENCY)
-                {
-                    statFlatBonus.hitPotency -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.hitPotency /= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case HarmfulStatusEffectType.ROOT:
+                        isRooted = true;
+                        break;
 
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_MAGIC_RESISTANCE)
-                {
-                    statFlatBonus.magicalResistance -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.magicalResistance /= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case HarmfulStatusEffectType.DAZED:
+                        isDazed = true;
+                        break;
 
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_PHYSICAL_RESISTANCE)
-                {
-                    statFlatBonus.physicalResistance -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.physicalResistance /= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case HarmfulStatusEffectType.DAMAGE_OVER_TIME:
+                        appliedStatusEffect.intensityToReceive = CalculateDamageReceived(appliedStatusEffect.intensityToReceive);
+                        break;
 
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_MAX_HEALTH)
-                {
-                    statFlatBonus.maxHealth -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.maxHealth /= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case HarmfulStatusEffectType.DECREASE_AVOID_POTENCY:
+                        statFlatBonus.avoidPotency -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.avoidPotency /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
 
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_MAX_SPELL_RESOURCE)
-                {
-                    statFlatBonus.maxSpellResource -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.maxSpellResource /= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case HarmfulStatusEffectType.DECREASE_CRITICAL_POTENCY:
+                        statFlatBonus.criticalPotency -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.criticalPotency /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
 
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_MAGIC_INTENSITY)
-                {
-                    statFlatBonus.magicalDamage -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.magicalDamage /= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
-                }
+                    case HarmfulStatusEffectType.DECREASE_HIT_POTENCY:
+                        statFlatBonus.hitPotency -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.hitPotency /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
 
-                if (((HarmfulStatusEffect)appliedStatusEffect.statusEffect).statusEffectType == HarmfulStatusEffectType.DECREASE_PHYSICAL_INTENSITY)
-                {
-                    statFlatBonus.physicalDamage -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
-                    statMultiplier.physicalDamage /= appliedStatusEffect.intensityToReceive.statMultiplier;
-                    continue;
+                    case HarmfulStatusEffectType.DECREASE_MAGIC_RESISTANCE:
+                        statFlatBonus.magicalResistance -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.magicalResistance /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case HarmfulStatusEffectType.DECREASE_PHYSICAL_RESISTANCE:
+                        statFlatBonus.physicalResistance -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.physicalResistance /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case HarmfulStatusEffectType.DECREASE_MAX_HEALTH:
+                        statFlatBonus.maxHealth -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.maxHealth /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case HarmfulStatusEffectType.DECREASE_MAX_SPELL_RESOURCE:
+                        statFlatBonus.maxSpellResource -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.maxSpellResource /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case HarmfulStatusEffectType.DECREASE_MAGIC_INTENSITY:
+                        statFlatBonus.magicalDamage -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.magicalDamage /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
+
+                    case HarmfulStatusEffectType.DECREASE_PHYSICAL_INTENSITY:
+                        statFlatBonus.physicalDamage -= appliedStatusEffect.intensityToReceive.statFlatIntensity;
+                        statMultiplier.physicalDamage /= appliedStatusEffect.intensityToReceive.statMultiplier;
+                        break;
                 }
             }
         }
 
         combatStats.SetTmpCombatStats(statFlatBonus, statMultiplier);
+    }
+
+    public void DispellStatusEffectsOfType(BeneficialStatusEffectType statusType)
+    {
+        statusEffects.RemoveAll(s => (s.GetType() == typeof(BeneficialStatusEffect) & ((BeneficialStatusEffect)s.statusEffect).statusEffectType == statusType));
     }
 
     public void ClearAllStatusEffects()
@@ -322,19 +350,19 @@ public class CombatHandler : MonoBehaviour
     {
         if (isImmuneToCC)
             return false;
-        if (DoAvoidCheck(combatStats.totalStats.avoidPotency, statusEffect.intensityToReceive.originHitPotency))
+        if (DoAvoidCheck(statusEffect.intensityToReceive))
         {
             return false;
         }
         statusEffects.Add(new AppliedStatusEffect(statusEffect));
-        ApplyAllTempEffects();
+        ReapplyStatusEffects();
         return true;
     }
 
     public bool TryInflictBeneficialStatusEffect(AppliedStatusEffect statusEffect)
     {
         statusEffects.Add(new AppliedStatusEffect(statusEffect));
-        ApplyAllTempEffects();
+        ReapplyStatusEffects();
         return true;
     }
 
@@ -360,7 +388,7 @@ public class CombatHandler : MonoBehaviour
         }
 
         //Avoid check (after resistance calculation to show potential damage on log)
-        if (DoAvoidCheck(combatStats.totalStats.avoidPotency, dmg.originHitPotency))
+        if (DoAvoidCheck(dmg))
         {
             //If successfully avoided
             finalDmg.hasBeenAvoided = true;
@@ -370,7 +398,7 @@ public class CombatHandler : MonoBehaviour
 
         //Roll for critical
 
-        if(!DoCriticalCheck(combatStats.totalStats.avoidPotency, dmg.originCriticalPotency))
+        if(!DoCriticalCheck(dmg))
         {
             //If critical check fails
             finalDmg.intensity *= 2;
@@ -385,10 +413,18 @@ public class CombatHandler : MonoBehaviour
         return finalDmg;
     }
 
-    public bool DoAvoidCheck(float avoidPotency, float originHitPotency)
+    public bool DoAvoidCheck(AppliedIntensityInstance intInstance)
     {
+        //Calcuting avoidanceRank based on states of character and states of attacker
+        int avoidanceRank = (isRooted ? -1 : 0) + (isEvasive ? 1 : 0) + (intInstance.castWithPrecise ? -1 : 0) + (intInstance.castWithBlind ? 1 : 0);
+
+        if (avoidanceRank > 0)
+            return true;
+        else if (avoidanceRank < 0)
+            return false;
+
         //Checks if normal attack is avoided
-        float finalAvoid = avoidPotency / (avoidPotency + originHitPotency + 100);
+        float finalAvoid = combatStats.totalStats.avoidPotency / (combatStats.totalStats.avoidPotency + intInstance.originHitPotency + 100);
         if (RollChance(finalAvoid))
         {
             return true;
@@ -396,11 +432,18 @@ public class CombatHandler : MonoBehaviour
         return false;
     }
 
-    public bool DoCriticalCheck(float avoidPotency, float originCriticalPotency)
+    public bool DoCriticalCheck(AppliedIntensityInstance intInstance)
     {
-        //Checks if critical is avoided
+        //Calcuting avoidanceRank based on states of character and states of attacker
+        int avoidanceRank = (intInstance.castWithTruestrike ? -1 : 0) + (intInstance.castWithDazed ? 1 : 0);
 
-        float finalCritical = (2f * avoidPotency + 100) / (2*avoidPotency + originCriticalPotency + 100);
+        if (avoidanceRank > 0)
+            return true;
+        else if (avoidanceRank < 0)
+            return false;
+
+        //Checks if critical is avoided
+        float finalCritical = (2f * combatStats.totalStats.avoidPotency + 100) / (2* combatStats.totalStats.avoidPotency + intInstance.originCriticalPotency + 100);
 
         //TODO: create a critical multiplier
         if (RollChance(finalCritical))

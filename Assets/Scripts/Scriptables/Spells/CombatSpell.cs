@@ -34,7 +34,7 @@ public class CombatSpell : Spell
                 intInstance.intensityDescription.scaleToPhysicalIntensity * caster.combatStats.totalStats.physicalDamage;
             AppliedIntensityInstance appliedIntensityInstance =
                 new AppliedIntensityInstance(intInstance, newIntensity, casterLevel,
-                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, 0, 0);
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, 0, 0, caster);
             _appliedIntensityInstances.Add(appliedIntensityInstance);
         }
 
@@ -85,7 +85,7 @@ public class CombatSpell : Spell
 
             newAppliedSE.intensityToReceive =
                 new AppliedIntensityInstance(hse.intensity, intensityCalc, casterLevel,
-                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier);
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier, caster);
 
             if (target.TryInflictHarmfulStatusEffect(newAppliedSE))
                 _harmfulEffectsToTarget.Add(newAppliedSE);
@@ -112,7 +112,7 @@ public class CombatSpell : Spell
 
             newAppliedSE.intensityToReceive =
                 new AppliedIntensityInstance(hse.intensity, intensityCalc, casterLevel,
-                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier);
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier, caster);
 
             if (caster.TryInflictHarmfulStatusEffect(newAppliedSE))
                 _harmfulEffectsToSelf.Add(newAppliedSE);
@@ -139,7 +139,7 @@ public class CombatSpell : Spell
 
             newAppliedSE.intensityToReceive =
                 new AppliedIntensityInstance(bse.intensity, intensityCalc, casterLevel,
-                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier);
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier, caster);
 
             if (target.TryInflictBeneficialStatusEffect(newAppliedSE))
                 _beneficialEffectsToTarget.Add(newAppliedSE);
@@ -166,7 +166,7 @@ public class CombatSpell : Spell
 
             newAppliedSE.intensityToReceive =
                 new AppliedIntensityInstance(bse.intensity, intensityCalc, casterLevel,
-                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier);
+                    caster.combatStats.totalStats.criticalPotency, caster.combatStats.totalStats.hitPotency, totalStatFlatIntensity, totalStatMultiplier, caster);
 
             if (caster.TryInflictBeneficialStatusEffect(newAppliedSE))
                 _beneficialEffectsToSelf.Add(newAppliedSE);

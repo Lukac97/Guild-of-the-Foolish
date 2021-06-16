@@ -26,7 +26,7 @@ public class IntensityDescription
     [Tooltip("This value represents flat value per level to add to target stat")]
     public float statFlatIntensity = 0;
 
-    [Tooltip("This value represents base value for multiplying target stat")]
+    [Tooltip("This value represents base value for multiplication(division) of target stat")]
     public float statMultiplier = 0;
 
     [Tooltip("This value represents +x on stat multiplier per MagicIntensity point")]
@@ -78,8 +78,14 @@ public class AppliedIntensityInstance
     public bool hasBeenAvoided;
     public bool isCritical;
 
+    public bool castWithTruestrike;
+    public bool castWithPrecise;
+    public bool castWithBlind;
+    public bool castWithDazed;
+
     public AppliedIntensityInstance(IntensityInstance intensityInstance, float _intensity,
-        int _originLevel, float _originCriticalPotency, float _originHitPotency, float _statFlatIntensity, float _statMultiplier)
+        int _originLevel, float _originCriticalPotency, float _originHitPotency, float _statFlatIntensity, float _statMultiplier,
+        CombatHandler casterOfThisIntensity)
     {
         onSelf = intensityInstance.onSelf;
         intensityPurpose = intensityInstance.intensityPurpose;
@@ -93,6 +99,11 @@ public class AppliedIntensityInstance
         statMultiplier = _statMultiplier;
         hasBeenAvoided = false;
         isCritical = false;
+
+        castWithTruestrike = casterOfThisIntensity.hasTruestrike;
+        castWithPrecise = casterOfThisIntensity.isPrecise;
+        castWithBlind = casterOfThisIntensity.isBlind;
+        castWithDazed = casterOfThisIntensity.isDazed;
     }
 
     //public AppliedIntensityInstance(bool _onSelf, IntensityPurpose _intensityPurpose,
@@ -118,6 +129,11 @@ public class AppliedIntensityInstance
         statMultiplier = appliedIntensityInstance.statMultiplier;
         hasBeenAvoided = appliedIntensityInstance.hasBeenAvoided;
         isCritical = appliedIntensityInstance.isCritical;
+
+        castWithTruestrike = appliedIntensityInstance.castWithTruestrike;
+        castWithPrecise = appliedIntensityInstance.castWithPrecise;
+        castWithBlind = appliedIntensityInstance.castWithBlind;
+        castWithDazed = appliedIntensityInstance.castWithDazed;
     }
 
     public void SetValues(AppliedIntensityInstance appliedIntensityInstance)
@@ -133,5 +149,10 @@ public class AppliedIntensityInstance
         statMultiplier = appliedIntensityInstance.statMultiplier;
         hasBeenAvoided = appliedIntensityInstance.hasBeenAvoided;
         isCritical = appliedIntensityInstance.isCritical;
+
+        castWithTruestrike = appliedIntensityInstance.castWithTruestrike;
+        castWithPrecise = appliedIntensityInstance.castWithPrecise;
+        castWithBlind = appliedIntensityInstance.castWithBlind;
+        castWithDazed = appliedIntensityInstance.castWithDazed;
     }
 }

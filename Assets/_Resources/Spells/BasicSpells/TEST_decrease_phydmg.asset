@@ -33,7 +33,7 @@ MonoBehaviour:
         statMultiplier: 1.2
         statMultiplierScaleToMagic: 0
         statMultiplierScaleToPhysical: 0.02
-    statusEffectType: 10
+    statusEffectType: 13
   harmfulEffectsToSelf: []
   beneficialEffectsToTarget: []
   beneficialEffectsToSelf: []

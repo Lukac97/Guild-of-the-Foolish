@@ -51,62 +51,48 @@ public class CombatEncounter : MonoBehaviour
     {
         int outcome = 2; // 0 - defeat, 1 - victory, 2 - tie
 
-        UsedSpellResult intensity = null;
         combatLogger = new CombatLogger();
         combatLogger.InitCombatLogger();
 
         List<AppliedStatusEffect> startSE = new List<AppliedStatusEffect>();
+        int turnOutcome = 2;
 
         for (int turnNumber = 1; turnNumber <= GlobalRules.maxCombatTurns; turnNumber++)
         {
             combatLogger.AddTurnNumberLog(turnNumber);
             //TODO: Apply status effects to character
-            startSE = character.combatHandler.TurnStart();
-            //Check if character dead
-            if (character.combatHandler.isInjured)
+
+            turnOutcome = SingleCharTurn(character, enemy, false);
+
+            if (turnOutcome == 0)
             {
-                outcome = 0;
+                outcome = 0;  //character died - defeat
                 break;
             }
-
-            combatLogger.AddStatusEffectsLog(character.participantName, startSE, false);
-            if (!character.combatHandler.isStunned)
+            else if (turnOutcome == 1)
             {
-                intensity = character.combatHandler.ChooseSpell(enemy.combatHandler);
-                combatLogger.AddLog(character.participantName, enemy.participantName, intensity, false);
-            }
-            if (character.combatHandler.isInjured)
-            {
-                outcome = 0;
+                outcome = 1; //enemy died - victory
                 break;
             }
 
             //--------------------------Enemy turn--------------------------------------
             //TODO: Apply status effects to character
-            startSE = enemy.combatHandler.TurnStart();
-            //Check if character dead
-            if (enemy.combatHandler.isInjured)
+
+            turnOutcome = SingleCharTurn(enemy, character, true);
+            if(turnOutcome == 0)
             {
-                outcome = 1;
+                outcome = 1;  //enemy died - victory
                 break;
             }
-
-            combatLogger.AddStatusEffectsLog(enemy.participantName, startSE, true);
-            if (!enemy.combatHandler.isStunned)
+            else if(turnOutcome == 1)
             {
-                intensity = enemy.combatHandler.ChooseSpell(character.combatHandler);
-                combatLogger.AddLog(enemy.participantName, character.participantName, intensity, true);
-            }
-
-            if (enemy.combatHandler.isInjured)
-            {
-                outcome = 1;
+                outcome = 0; //character died - defeat
                 break;
             }
         }
         combatLogger.AddFinishLog(character.participantName, enemy.participantName, outcome);
-        enemy.combatHandler.ClearAllStatusEffects();
-        character.combatHandler.ClearAllStatusEffects();
+        enemy.combatHandler.EndOfCombat();
+        character.combatHandler.EndOfCombat();
 
         combatReward = new CombatWinReward();
         combatReward.GenerateYield(enemy.combatHandler, outcome);
@@ -114,6 +100,40 @@ public class CombatEncounter : MonoBehaviour
         finalOutcome = outcome;
         UninitiateCombat();
         return outcome;
+    }
+
+    private int SingleCharTurn(CombatParticipant attackingChar, CombatParticipant defendingChar, bool isEnemyTurn)
+    {
+        //RETURNS:  0 - attackingChar died, 1 - defendingChar died, 2 - nothing happened
+        List<AppliedStatusEffect> startSE = new List<AppliedStatusEffect>();
+        UsedSpellResult intensity = null;
+
+        //Check if character dead
+        if (attackingChar.combatHandler.isInjured)
+        {
+            return 0;
+        }
+
+        startSE = attackingChar.combatHandler.TurnStart();
+        //Check if character dead
+        if (attackingChar.combatHandler.isInjured)
+        {
+            return 0;
+        }
+
+        combatLogger.AddStatusEffectsLog(attackingChar.participantName, startSE, isEnemyTurn);
+        if (!attackingChar.combatHandler.isStunned)
+        {
+            intensity = attackingChar.combatHandler.ChooseSpell(defendingChar.combatHandler);
+            combatLogger.AddLog(attackingChar.participantName, defendingChar.participantName, intensity, isEnemyTurn);
+        }
+
+        if (defendingChar.combatHandler.isInjured)
+        {
+            return 1;
+        }
+
+        return 2;
     }
 
     public void UninitiateCombat()
