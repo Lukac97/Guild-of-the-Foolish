@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TEST_decrease_phydmg
   m_EditorClassIdentifier: 
   spellDescription: 
-  spellLevel: 0
+  spellLevel: 3
   spellIcon: {fileID: 0}
   turnCooldown: 5
   intensityInstances: []
@@ -29,7 +29,7 @@ MonoBehaviour:
         scaleToMagicIntensity: 0
         scaleToPhysicalIntensity: 0
         forStatScaling: 1
-        statFlatIntensity: 3
+        statFlatIntensity: 0
         statMultiplier: 1.2
         statMultiplierScaleToMagic: 0
         statMultiplierScaleToPhysical: 0.02

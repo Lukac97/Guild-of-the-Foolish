@@ -102,6 +102,23 @@ public class CombatHandler : MonoBehaviour
         return spellResult;
     }
 
+    public UsedSpellResult CastASpell(EquippedCombatSpell chosenEquippedCombatSpell, CombatHandler enemy)
+    {
+        if (chosenEquippedCombatSpell == null)
+            return null;
+        if (!combatSpells.Contains(chosenEquippedCombatSpell))
+            return null;
+        if (chosenEquippedCombatSpell.cooldownLeft > 0)
+            return null;
+
+        UsedSpellResult spellResult = null;
+        if (chosenEquippedCombatSpell != null)
+        {
+            spellResult = chosenEquippedCombatSpell.combatSpell.UseSpell(this, enemy);
+            chosenEquippedCombatSpell.cooldownLeft = chosenEquippedCombatSpell.combatSpell.turnCooldown;
+        }
+        return spellResult;
+    }
 
     public void LowerAllCooldowns(int amount)
     {

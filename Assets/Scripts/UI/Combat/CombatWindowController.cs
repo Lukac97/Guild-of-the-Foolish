@@ -58,6 +58,7 @@ public class CombatWindowController : MonoBehaviour
     public void ClosePopUp()
     {
         popUpPanel.DeactivatePopUp(activatable);
+        UIScreenController.Instance.ActivateMainScreen();
         currentEncounter.DestroyThisCombatEncounter();
     }
 
@@ -168,39 +169,13 @@ public class CombatWindowController : MonoBehaviour
             GameObject displayedLog = Instantiate(loggerPrefab, loggerPanel.transform);
             displayedLog.GetComponentInChildren<TextMeshProUGUI>().text = singleLog.text;
             if (singleLog.enemyTurn)
-                ColorLogBackground(displayedLog, true);
+                CbLoggerFcts.ColorLogBackground(displayedLog, true);
             else if (singleLog.charTurn)
-                ColorLogBackground(displayedLog, false);
+                CbLoggerFcts.ColorLogBackground(displayedLog, false);
             else if (singleLog.turnNumber)
-                ColorLogDefault(displayedLog);
+                CbLoggerFcts.ColorLogDefault(displayedLog);
             else if (singleLog.outcome > -1)
-                ColorLogFinishedBackground(displayedLog, singleLog.outcome);
+                CbLoggerFcts.ColorLogFinishedBackground(displayedLog, singleLog.outcome);
         }
-    }
-
-    private void ColorLogBackground(GameObject logObj, bool isEnemyTurn)
-    {
-        Image image = logObj.GetComponent<Image>();
-        if (isEnemyTurn)
-            image.color = GlobalInput.Instance.enemyTurnColor;
-        else
-            image.color = GlobalInput.Instance.characterTurnColor;
-    }
-
-    private void ColorLogFinishedBackground(GameObject logObj, int outcome)
-    {
-        Image image = logObj.GetComponent<Image>();
-        if (outcome == 1)
-            image.color = GlobalInput.Instance.battleWonColor;
-        else if (outcome == 0)
-            image.color = GlobalInput.Instance.battleLostColor;
-        else
-            image.color = GlobalInput.Instance.battleTiedColor;
-    }
-
-    private void ColorLogDefault(GameObject logObj)
-    {
-        Image image = logObj.GetComponent<Image>();
-        image.color = GlobalInput.Instance.defaultLogColor;
     }
 }

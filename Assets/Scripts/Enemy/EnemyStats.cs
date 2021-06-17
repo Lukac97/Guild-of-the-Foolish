@@ -11,6 +11,8 @@ public class EnemyStats : MonoBehaviour
     public int level;
     public Attributes enemyAttributes = new Attributes();
 
+    public EnemyMould enemyMould;
+
     [HideInInspector]
     public List<Item> possibleItemYields;
 
@@ -20,8 +22,9 @@ public class EnemyStats : MonoBehaviour
         enemyCombat = GetComponent<EnemyCombat>();
     }
 
-    public void InitEnemyStats(EnemyMould enemyMould, int lvl, Location loc)
+    public void InitEnemyStats(EnemyMould _enemyMould, int lvl, Location loc)
     {
+        enemyMould = _enemyMould;
         enemyName = enemyMould.name;
         location = loc;
         creatureType = enemyMould.creatureType;
