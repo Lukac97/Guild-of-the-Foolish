@@ -37,8 +37,9 @@ public class CombatEncounter : MonoBehaviour
     public int finalOutcome = -1;
     public int manualTurnNumber = 1;
     public bool manualIsPlayersTurn;
-    public void InitiateCombat(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc)
+    public void InitiateCombat(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc, bool isManual)
     {
+        isManualEncounter = isManual;
         GameObject gO = Instantiate(enemyPrefab, transform);
         activeEnemies.Add(gO);
         int selectedLvl = Random.Range(enemyFromLoc.minLevel, enemyFromLoc.maxLevel);
@@ -50,9 +51,6 @@ public class CombatEncounter : MonoBehaviour
 
         character = new CombatParticipant(charStats.GetComponent<CombatHandler>(), charStats.characterName, true);
         enemy = new CombatParticipant(gO.GetComponent<CombatHandler>(), eStats.enemyName, false);
-
-        //PLACEHOLDER
-        isManualEncounter = true;
 
         //Global action
         if (isManualEncounter)
@@ -91,6 +89,7 @@ public class CombatEncounter : MonoBehaviour
         if (character.combatHandler.isInjured)
         {
             EndOfCombat(0); //char died - defeat
+            return;
         }
 
         startSE = character.combatHandler.TurnStart();
@@ -98,18 +97,28 @@ public class CombatEncounter : MonoBehaviour
         if (character.combatHandler.isInjured)
         {
             EndOfCombat(0); //char died - defeat
+            return;
         }
 
         combatLogger.AddStatusEffectsLog(character.participantName, startSE, false);
-        if (!character.combatHandler.isStunned)
-        {
-            intensity = character.combatHandler.CastASpell(eqSpell, enemy.combatHandler);
-            combatLogger.AddLog(character.participantName, enemy.participantName, intensity, false);
-        }
 
+
+        if (eqSpell == null)
+        {
+            combatLogger.AddPassedTurnLog(character.participantName, false);
+        }
+        else
+        {
+            if (!character.combatHandler.isStunned)
+            {
+                intensity = character.combatHandler.CastASpell(eqSpell, enemy.combatHandler);
+                combatLogger.AddLog(character.participantName, enemy.participantName, intensity, false);
+            }
+        }
         if (enemy.combatHandler.isInjured)
         {
             EndOfCombat(1);  //enemy died - victory
+            return;
         }
 
         manualIsPlayersTurn = false;
@@ -126,14 +135,19 @@ public class CombatEncounter : MonoBehaviour
             if (turnOutcome == 0)
             {
                 EndOfCombat(1);  //enemy died - victory
+                return;
             }
             else if (turnOutcome == 1)
             {
                 EndOfCombat(0); //character died - defeat
+                return;
             }
             manualTurnNumber += 1;
             if (manualTurnNumber > GlobalRules.maxCombatTurns)
+            {
                 EndOfCombat(2); //its a tie
+                return;
+            }
             manualIsPlayersTurn = true;
             ManualCombatUIHandler.Instance.TurnEnd();
         }
@@ -150,6 +164,14 @@ public class CombatEncounter : MonoBehaviour
         //TODO: Log to file when finished calculating combat, then read when necessary...
         finalOutcome = outcome;
         UninitiateCombat();
+    }
+
+    public bool ManualRunFromCombat()
+    {
+        if (!manualIsPlayersTurn)
+            return false;
+        EndOfCombat(0); //character ran - defeat
+        return true;
     }
 
     #endregion Manual combat

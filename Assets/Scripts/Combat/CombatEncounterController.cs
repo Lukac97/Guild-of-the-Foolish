@@ -30,12 +30,12 @@ public class CombatEncounterController : MonoBehaviour
         ClearEncounters();
     }
 
-    public bool CreateEncounter(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc)
+    public bool CreateEncounter(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc, bool isManual)
     {
         if (charStats.location != loc)
             return false;
         GameObject gO = Instantiate(combatEncounterPrefab, combatEncountersPanel.transform);
-        gO.GetComponent<CombatEncounter>().InitiateCombat(charStats, enemyFromLoc, loc);
+        gO.GetComponent<CombatEncounter>().InitiateCombat(charStats, enemyFromLoc, loc, isManual);
         return true;
     }
 

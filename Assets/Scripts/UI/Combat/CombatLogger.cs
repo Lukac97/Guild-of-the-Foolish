@@ -156,6 +156,35 @@ public class CombatLogger
             newLog.charTurn = true;
     }
 
+    public void AddFinishLog(string casterName, string targetName, int outcome)
+    {
+        SingleLog newLog = InstantiateCombatLog();
+        if (outcome == 1)
+            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
+                + " won the battle against " + ColorText(targetName, GlobalInput.Instance.enemyNameColor) + ".";
+        else if (outcome == 0)
+            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
+                + " lost the battle against " + ColorText(targetName, GlobalInput.Instance.enemyNameColor) + ".";
+        else
+            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
+                + " tied in battle against " + ColorText(targetName, GlobalInput.Instance.enemyNameColor) + ".";
+
+        newLog.outcome = outcome;
+    }
+
+    public void AddPassedTurnLog(string casterName, bool isEnemyTurn)
+    {
+        SingleLog newLog = InstantiateCombatLog();
+        string newCasterName = isEnemyTurn ? ColorText(casterName, GlobalInput.Instance.enemyNameColor)
+            : ColorText(casterName, GlobalInput.Instance.charNameColor);
+        newLog.text = newCasterName + " passed the turn.";
+
+        if (isEnemyTurn)
+            newLog.enemyTurn = true;
+        else
+            newLog.charTurn = true;
+    }
+
     private string GetStatusEffectSpecificString(AppliedStatusEffect appliedStatusEffect)
     {
         if(appliedStatusEffect.statusEffect.GetType() == typeof(HarmfulStatusEffect))
@@ -186,22 +215,6 @@ public class CombatLogger
         }
 
         return "";
-    }
-
-    public void AddFinishLog(string casterName, string targetName, int outcome)
-    {
-        SingleLog newLog = InstantiateCombatLog();
-        if (outcome == 1)
-            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
-                + " won the battle against " + ColorText(targetName, GlobalInput.Instance.enemyNameColor) + ".";
-        else if (outcome == 0)
-            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
-                + " lost the battle against " + ColorText(targetName, GlobalInput.Instance.enemyNameColor) + ".";
-        else
-            newLog.text = ColorText(casterName, GlobalInput.Instance.charNameColor)
-                + " tied in battle against " + ColorText(targetName, GlobalInput.Instance.enemyNameColor) + ".";
-
-        newLog.outcome = outcome;
     }
 
     private string ColorText(string text, Color clr)

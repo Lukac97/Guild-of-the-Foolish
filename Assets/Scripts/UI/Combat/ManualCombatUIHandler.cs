@@ -108,6 +108,16 @@ public class ManualCombatUIHandler : MonoBehaviour
         }
     }
 
+    public void OnClickPassTurn()
+    {
+        combatEncounter.ManualChooseAction(null);
+    }
+
+    public void OnClickRun()
+    {
+        combatEncounter.ManualRunFromCombat();
+    }
+
     private void UpdateUsableSpells()
     {
         foreach (UsableSpellDisplay usableSpell in usableSpellDisplays)

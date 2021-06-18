@@ -50,14 +50,16 @@ public class PopUpController : MonoBehaviour
         background.GetComponent<Image>().color = currentColor;
     }
 
-    public void ActivatePopUp(GameObject popUp)
+    public void ActivatePopUp(GameObject popUpActivatable)
     {
         if(activatedPopUps.Count == 0)
         {
             SetShaderValue(shadeLevel);
         }
-        popUp.SetActive(true);
-        activatedPopUps.Add(popUp);
+        popUpActivatable.SetActive(true);
+        activatedPopUps.Add(popUpActivatable);
+        background.GetComponent<RectTransform>().SetAsLastSibling();
+        popUpActivatable.transform.parent.GetComponent<RectTransform>().SetAsLastSibling();
     }
 
     public void DeactivatePopUp(GameObject popUp)
@@ -71,6 +73,10 @@ public class PopUpController : MonoBehaviour
         if(activatedPopUps.Count == 0)
         {
             SetShaderValue(0);
+        }
+        else
+        {
+            activatedPopUps[activatedPopUps.Count - 1].transform.parent.GetComponent<RectTransform>().SetAsLastSibling();
         }
     }
 

@@ -5,17 +5,16 @@ using TMPro;
 
 public class LocationInfoPanel : MonoBehaviour
 {
+    [Header("Container - for small info only")]
     public GameObject enemyOnLocationUIPrefab;
-    public GameObject container;
+    public CanvasGroup canvasGroup;
     [Header("Sections")]
     public GameObject sectionQuests;
     public GameObject sectionEnemies;
     [Header("Text")]
     public TextMeshProUGUI locationName;
-    [Header("PopUp")]
-    public AttackPopUp attackPopUp;
 
-    private Location currentLocation;
+    public Location currentLocation;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +24,6 @@ public class LocationInfoPanel : MonoBehaviour
 
     public void newLocationInfoPanel()
     {
-        CanvasGroup cg = container.GetComponent<CanvasGroup>();
         if (GlobalInput.CheckIfSelectedLocation())
         {
             if (currentLocation == GlobalInput.Instance.selectedEntity.GetComponent<Location>())
@@ -34,9 +32,8 @@ public class LocationInfoPanel : MonoBehaviour
             {
                 Destroy(eol.gameObject);
             }
-            cg.alpha = 1;
-            cg.interactable = true;
-            cg.blocksRaycasts = true;
+
+            CanvasGroupSetActive(true);
 
             currentLocation = GlobalInput.Instance.selectedEntity.GetComponent<Location>();
             foreach (Location.PossibleEnemy posEn in currentLocation.possibleEnemies)
@@ -53,9 +50,19 @@ public class LocationInfoPanel : MonoBehaviour
             {
                 Destroy(eol.gameObject);
             }
-            cg.alpha = 0;
-            cg.interactable = false;
-            cg.blocksRaycasts = false;
+            CanvasGroupSetActive(false);
         }
+    }
+
+    public void OnClickMoreInfo()
+    {
+        DetailedLocationInfo.Instance.OpenDetailedLocationInfo(currentLocation);
+    }
+
+    private void CanvasGroupSetActive(bool setActive)
+    {
+        canvasGroup.alpha = setActive ? 1 : 0;
+        canvasGroup.interactable = setActive;
+        canvasGroup.blocksRaycasts = setActive;
     }
 }
