@@ -81,27 +81,7 @@ public class CombatEncounter : MonoBehaviour
         if (!manualIsPlayersTurn)
             return;
 
-        combatLogger.AddTurnNumberLog(manualTurnNumber);
-
-        List<AppliedStatusEffect> startSE = new List<AppliedStatusEffect>();
         UsedSpellResult intensity = null;
-
-        if (character.combatHandler.isInjured)
-        {
-            EndOfCombat(0); //char died - defeat
-            return;
-        }
-
-        startSE = character.combatHandler.TurnStart();
-        //Check if character dead
-        if (character.combatHandler.isInjured)
-        {
-            EndOfCombat(0); //char died - defeat
-            return;
-        }
-
-        combatLogger.AddStatusEffectsLog(character.participantName, startSE, false);
-
 
         if (eqSpell == null)
         {
@@ -112,6 +92,11 @@ public class CombatEncounter : MonoBehaviour
             if (!character.combatHandler.isStunned)
             {
                 intensity = character.combatHandler.CastASpell(eqSpell, enemy.combatHandler);
+                if(intensity.notEnoughSpellResource)
+                {
+                    ManualCombatUIHandler.Instance.DisplayMessage();
+                    return;
+                }
                 combatLogger.AddLog(character.participantName, enemy.participantName, intensity, false);
             }
         }
@@ -126,7 +111,7 @@ public class CombatEncounter : MonoBehaviour
         ManualSimulateCombat();
     }
 
-    public void ManualSimulateCombat()
+    private void ManualSimulateCombat()
     {
         int turnOutcome = 2;
         if(!manualIsPlayersTurn)
@@ -148,9 +133,34 @@ public class CombatEncounter : MonoBehaviour
                 EndOfCombat(2); //its a tie
                 return;
             }
-            manualIsPlayersTurn = true;
-            ManualCombatUIHandler.Instance.TurnEnd();
+            ManualCombatUIHandler.Instance.RefreshDisplay();
+            ManualBeginPlayerTurn();
         }
+    }
+
+    private void ManualBeginPlayerTurn()
+    {
+        //Character turn begin
+
+        List<AppliedStatusEffect> startSE = new List<AppliedStatusEffect>();
+        combatLogger.AddTurnNumberLog(manualTurnNumber);
+
+        if (character.combatHandler.isInjured)
+        {
+            EndOfCombat(0); //char died - defeat
+            return;
+        }
+
+        startSE = character.combatHandler.TurnStart();
+        //Check if character dead
+        if (character.combatHandler.isInjured)
+        {
+            EndOfCombat(0); //char died - defeat
+            return;
+        }
+        combatLogger.AddStatusEffectsLog(character.participantName, startSE, false);
+        ManualCombatUIHandler.Instance.RefreshDisplay();
+        manualIsPlayersTurn = true;
     }
 
     public void EndOfCombat(int outcome)

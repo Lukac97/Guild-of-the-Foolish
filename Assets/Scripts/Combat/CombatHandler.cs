@@ -73,7 +73,7 @@ public class CombatHandler : MonoBehaviour
         List<EquippedCombatSpell> availableSpells = new List<EquippedCombatSpell>();
         foreach (EquippedCombatSpell spell in combatSpells)
         {
-            if (!spell.IsOnCooldown())
+            if (!spell.IsOnCooldown() & HasEnoughSpellResource(spell))
                 availableSpells.Add(spell);
         }
 
@@ -92,12 +92,7 @@ public class CombatHandler : MonoBehaviour
         if (nonOptimalSpells.Count > 0)
             chosenSpell = nonOptimalSpells[0];
 
-        UsedSpellResult spellResult = null;
-        if (chosenSpell != null)
-        {
-            spellResult = chosenSpell.combatSpell.UseSpell(this, enemy);
-            chosenSpell.cooldownLeft = chosenSpell.combatSpell.turnCooldown;
-        }
+        UsedSpellResult spellResult = CastASpell(chosenSpell, enemy);
         
         return spellResult;
     }
@@ -111,12 +106,19 @@ public class CombatHandler : MonoBehaviour
         if (chosenEquippedCombatSpell.cooldownLeft > 0)
             return null;
 
-        UsedSpellResult spellResult = null;
-        if (chosenEquippedCombatSpell != null)
+
+        UsedSpellResult spellResult = new UsedSpellResult();
+        if (HasEnoughSpellResource(chosenEquippedCombatSpell))
         {
             spellResult = chosenEquippedCombatSpell.combatSpell.UseSpell(this, enemy);
-            chosenEquippedCombatSpell.cooldownLeft = chosenEquippedCombatSpell.combatSpell.turnCooldown;
+            combatStats.LowerSpellResource(chosenEquippedCombatSpell.combatSpell.spellCost);
+            chosenEquippedCombatSpell.PutOnCooldown();
         }
+        else
+        {
+            spellResult.notEnoughSpellResource = true;
+        }
+
         return spellResult;
     }
 
@@ -134,6 +136,15 @@ public class CombatHandler : MonoBehaviour
         {
             spell.cooldownLeft = 0;
         }
+    }
+
+    private bool HasEnoughSpellResource(EquippedCombatSpell spell)
+    {
+        if(combatStats.currentSpellResource >= spell.combatSpell.spellCost)
+        {
+            return true;
+        }
+        return false;
     }
 
     public List<AppliedStatusEffect> TurnStart()

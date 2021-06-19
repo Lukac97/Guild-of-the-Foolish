@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using UnityEditor.UIElements;
 
 [CreateAssetMenu(fileName = "New Combat Spell", menuName = "Spells/Combat Spell")]
 public class CombatSpell : Spell

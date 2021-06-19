@@ -55,7 +55,7 @@ public class ManualCombatUIHandler : MonoBehaviour
         UIScreenController.Instance.ActivateCombatScreen();
     }
 
-    public void TurnEnd()
+    public void RefreshDisplay()
     {
         RefreshCombatLog();
         UpdateUsableSpells();
@@ -124,5 +124,11 @@ public class ManualCombatUIHandler : MonoBehaviour
         {
             usableSpell.UpdateSpell();
         }
+    }
+
+    public void DisplayMessage()
+    {
+        //Implement message system
+
     }
 }

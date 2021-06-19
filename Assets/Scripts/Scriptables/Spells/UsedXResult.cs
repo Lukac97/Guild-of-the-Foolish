@@ -13,6 +13,8 @@ public class UsedSpellResult
     public List<AppliedStatusEffect> beneficialStatusEffectsToTarget;
     public List<AppliedStatusEffect> beneficialStatusEffectsToSelf;
 
+    public bool notEnoughSpellResource;
+
     public UsedSpellResult()
     {
         spellUsed = null;
@@ -21,6 +23,7 @@ public class UsedSpellResult
         harmfulStatusEffectsToSelf = new List<AppliedStatusEffect>();
         beneficialStatusEffectsToTarget = new List<AppliedStatusEffect>();
         beneficialStatusEffectsToSelf = new List<AppliedStatusEffect>();
+        notEnoughSpellResource = false;
     }
 
     public UsedSpellResult(CombatSpell _spellUsed
@@ -36,6 +39,7 @@ public class UsedSpellResult
         harmfulStatusEffectsToSelf = _harmfulStatusEffectsToSelf;
         beneficialStatusEffectsToTarget = _beneficialStatusEffectsToTarget;
         beneficialStatusEffectsToSelf = _beneficialStatusEffectsToSelf;
+        notEnoughSpellResource = false;
     }
 }
 
