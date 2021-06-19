@@ -422,12 +422,23 @@ public class CombatHandler : MonoBehaviour
             finalDmg.isCritical = true;
         }
 
+        //Apply multiplier
+        finalDmg.intensity *= damageReceivedMultiplier;
         //Deal damage
         LowerHealth(finalDmg.intensity);
         
 
         //Return information about damage dealt
         return finalDmg;
+    }
+
+    public AppliedIntensityInstance CalculateHealingReceived(AppliedIntensityInstance heal)
+    {
+        AppliedIntensityInstance finalHeal = new AppliedIntensityInstance(heal);
+        //Apply multiplier
+        finalHeal.intensity *= healingReceivedMultiplier;
+        RaiseHealth(finalHeal.intensity);
+        return finalHeal;
     }
 
     public bool DoAvoidCheck(AppliedIntensityInstance intInstance)
@@ -484,14 +495,6 @@ public class CombatHandler : MonoBehaviour
             return true;
         }
         return false;
-    }
-
-    public AppliedIntensityInstance CalculateHealingReceived(AppliedIntensityInstance heal)
-    {
-        AppliedIntensityInstance finalHeal = new AppliedIntensityInstance(heal);
-        //TODO: Calculate heal amplification based on combatStats
-        RaiseHealth(finalHeal.intensity);
-        return finalHeal;
     }
 
 

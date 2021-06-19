@@ -43,7 +43,6 @@ public class AttackPopUp : MonoBehaviour
     public void ClosePopUp()
     {
         popUpPanel.DeactivatePopUp(activatable);
-        DetailedLocationInfo.Instance.CloseDetailedLocationInfo();
     }
 
     public void ConfirmSelection()
@@ -57,6 +56,7 @@ public class AttackPopUp : MonoBehaviour
                 CombatEncounterController.Instance.CreateEncounter(currCharStats, enemyToAttack, charListCtrl.onlyOnThisLoc, manualAttack);
                 wrongSelectedAlert.text = "";
                 ClosePopUp();
+                DetailedLocationInfo.Instance.CloseDetailedLocationInfo();
             }
             else
             {
