@@ -10,6 +10,7 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
     public CanvasGroup canvasGroup;
 
     public TextMeshProUGUI level;
+    public TextMeshProUGUI spellCost;
     public Image spellIcon;
     public CombatSpell linkedSpell;
 
@@ -30,6 +31,7 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
         ShowSpellSlot(true);
         linkedSpell = combatSpell;
         level.text = combatSpell.spellLevel.ToString();
+        spellCost.text = combatSpell.spellCost.ToString();
         spellIcon.sprite = combatSpell.spellIcon;
     }
 

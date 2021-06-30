@@ -413,7 +413,7 @@ GameObject:
   - component: {fileID: 5100754290451529231}
   - component: {fileID: 730412219249877411}
   m_Layer: 5
-  m_Name: Enemy
+  m_Name: EnemyOnLoc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -453,12 +453,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90b8db37fd1cb1b49b55a2f3ec1759cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forDetailedInfo: 0
   enemyName: {fileID: 6717212287920601869}
   enemyLevel: {fileID: 1032425414710650066}
   enemyMould:
     enemyMould: {fileID: 0}
     minLevel: 0
     maxLevel: 0
+  levelPrefix: 
 --- !u!1 &7959029828026870911
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,7 +528,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 91ae108a563939e47bc848c248d4bc34, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

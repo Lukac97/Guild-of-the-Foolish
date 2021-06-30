@@ -49,7 +49,7 @@ public class ManualCombatUIHandler : MonoBehaviour
 
         EnemyStats enemyStats = cbEncounter.enemy.combatHandler.GetComponent<EnemyStats>();
         enemyImage.sprite = enemyStats.enemyMould.enemyIcon;
-        enemyName.text = enemyStats.name;
+        enemyName.text = enemyStats.enemyMould.name;
         InitEquippedCombatSpells();
         RefreshCombatLog();
         UIScreenController.Instance.ActivateCombatScreen();

@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class UsableSpellDisplay : MonoBehaviour, IPointerClickHandler
 {
     public TextMeshProUGUI level;
+    public TextMeshProUGUI spellCost;
     public Image spellIcon;
 
     [Space(6)]
@@ -28,6 +29,7 @@ public class UsableSpellDisplay : MonoBehaviour, IPointerClickHandler
         }
         linkedSpell = equippedCombatSpell;
         level.text = equippedCombatSpell.combatSpell.spellLevel.ToString();
+        spellCost.text = equippedCombatSpell.combatSpell.spellCost.ToString();
         spellIcon.sprite = equippedCombatSpell.combatSpell.spellIcon;
 
         UpdateSpell();

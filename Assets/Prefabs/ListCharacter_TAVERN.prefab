@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8490566, g: 0.7270109, b: 0.34042364, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -168,12 +168,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linkedCharacter: {fileID: 0}
+  linkedCharacterCombat: {fileID: 0}
   textName: {fileID: 3361234965071860294}
   textClass: {fileID: 1482753814599154878}
   textLevel: {fileID: 8040411499038203273}
   textLocation: {fileID: 0}
   icon: {fileID: 3094709034157523148}
   levelPrefix: 
+  hpSlider: {fileID: 0}
+  srSlider: {fileID: 0}
 --- !u!114 &8335960125729429140
 MonoBehaviour:
   m_ObjectHideFlags: 0
