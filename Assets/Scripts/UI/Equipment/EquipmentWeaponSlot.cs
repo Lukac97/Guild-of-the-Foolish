@@ -11,6 +11,8 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler
     public TextMeshProUGUI slotName;
     public Image itemIcon;
     public CharEquipment.WeaponSlotItem weaponSlotItem = null;
+
+    private EquipmentSlotController parentController;
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount == 1)
@@ -25,14 +27,17 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler
 
     public void OnItemClick()
     {
+        if (weaponSlotItem != null)
+        {
+            EquipmentSlotPopUp.Instance.OpenEquipmentSlot(CharTabMain.Instance.currentChar, weaponSlotItem);
+        }
     }
 
     public void OnItemDoubleClick()
     {
-        if (!GlobalInput.CheckIfSelectedCharacter())
-            return;
-
-        GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().UnequipSlot(weaponSlotItem);
+        CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
+        if (charEq != null)
+           charEq.UnequipSlot(weaponSlotItem);
     }
 
     public void SetItemSlot(CharEquipment.WeaponSlotItem slotItem)
@@ -41,6 +46,7 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler
         if (slotItem == null)
         {
             item = null;
+            weaponSlotItem = null;
         }
         else
         {

@@ -28,14 +28,13 @@ public class AttributesView : MonoBehaviour
 
     private void Start()
     {
-        GlobalInput.Instance.onChangedSelectedEntity += UpdateAttributesView;
         CharactersController.CharactersUpdated += UpdateAttributesView;
         UpdateAttributesView();
     }
 
     public void UpdateAttributesView()
     {
-        if (!GlobalInput.CheckIfSelectedCharacter())
+        if (CharStatsPopUp.Instance.currentChar == null)
         {
             bodyPanel.alpha = 0;
             bodyPanel.interactable = false;
@@ -52,7 +51,7 @@ public class AttributesView : MonoBehaviour
         bodyPanel.alpha = 1;
         bodyPanel.interactable = true;
         bodyPanel.blocksRaycasts = true;
-        currentChar = GlobalInput.Instance.selectedEntity.GetComponent<CharStats>();
+        currentChar = CharStatsPopUp.Instance.currentChar.GetComponent<CharStats>();
         if (currentChar.availablePoints > 0)
         {
             attributesTitle.text = defaultTitle + " (" + currentChar.availablePoints.ToString() + ")";

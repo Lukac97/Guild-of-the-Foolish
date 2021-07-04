@@ -12,6 +12,12 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler
     public Image itemIcon;
     public CharEquipment.ArmorSlotItem armorSlotItem = null;
 
+    private EquipmentSlotController parentController;
+    void Start()
+    {
+        parentController = GetComponentInParent<EquipmentSlotController>();
+    }
+
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount == 1)
@@ -26,14 +32,14 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler
 
     public void OnItemClick()
     {
+        EquipmentSlotPopUp.Instance.OpenEquipmentSlot(CharTabMain.Instance.currentChar, armorSlotItem);
     }
 
     public void OnItemDoubleClick()
     {
-        if (!GlobalInput.CheckIfSelectedCharacter())
-            return;
-
-        GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().UnequipSlot(armorSlotItem);
+        CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
+        if(charEq != null)
+            charEq.UnequipSlot(armorSlotItem);
     }
 
 
@@ -43,6 +49,7 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler
         if (slotItem == null)
         {
             item = null;
+            armorSlotItem = null;
         }
         else
         {

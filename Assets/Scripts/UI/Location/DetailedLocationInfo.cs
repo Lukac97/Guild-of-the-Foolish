@@ -32,11 +32,11 @@ public class DetailedLocationInfo : MonoBehaviour
     {
         if (Instance == null)
             _instance = this;
+        popUpPanel = GetComponentInParent<PopUpController>();
     }
 
     private void Start()
     {
-        popUpPanel = GetComponentInParent<PopUpController>();
     }
 
     public void OpenDetailedLocationInfo(Location locationToOpen)

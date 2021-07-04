@@ -302,7 +302,7 @@ public class EquipItemComparison : MonoBehaviour
         if(weaponComparison.attackDamagePercent != 0)
         {
             GameObject gO = Instantiate(statComparisonPrefab, bodyPanel.transform);
-            gO.GetComponent<CmpStat>().SetText("ATT DMG", weaponComparison.attackDamagePercent, "%");
+            gO.GetComponent<CmpStat>().SetText("ATK", weaponComparison.attackDamagePercent, "%");
         }
         if (weaponComparison.armorValue != 0)
         {

@@ -2,6 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class EnumToString
+{
+    public static string ToNiceString(WeaponSlot enumer)
+    {
+        return ToNiceString(enumer.ToString());
+    }
+
+    public static string ToNiceString(ArmorSlot enumer)
+    {
+        return ToNiceString(enumer.ToString());
+    }
+
+    public static string ToNiceString(string str)
+    {
+        str = str.Replace('_', ' ').ToUpper();
+        return str;
+    }
+}
+
 [System.Serializable]
 public enum AttributesEnum
 {

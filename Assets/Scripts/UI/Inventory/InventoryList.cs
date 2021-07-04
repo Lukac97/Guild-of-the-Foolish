@@ -26,6 +26,7 @@ public class InventoryList : MonoBehaviour
     private int pageNumber;
     private int maxPageNumber;
     private int itemsPerPage;
+    private List<InventoryListElement> listElements;
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class InventoryList : MonoBehaviour
     {
         GuildInventory.Instance.InventoryChanged += UpdateInventoryItems;
         GlobalInput.Instance.changeSelectedItemObject += HighlightInventorySlot;
+        listElements = new List<InventoryListElement>(itemPanel.GetComponentsInChildren<InventoryListElement>());
         UpdateInventoryItems();
     }
 
@@ -44,7 +46,7 @@ public class InventoryList : MonoBehaviour
         ItemObject iO = GlobalInput.Instance.selectedItemObject;
         if (iO == null)
             return;
-        foreach(InventoryListElement elem in itemPanel.GetComponentsInChildren<InventoryListElement>())
+        foreach(InventoryListElement elem in listElements)
         {
             if(elem.itemObject == iO)
             {
@@ -85,9 +87,8 @@ public class InventoryList : MonoBehaviour
     private void AssignItemObjects()
     {
         int startCnt = (pageNumber-1) * itemsPerPage;
-        foreach (Transform child in itemPanel.transform)
+        foreach (InventoryListElement ilElement in listElements)
         {
-            InventoryListElement ilElement = child.GetComponent<InventoryListElement>();
             if (startCnt < itemObjects.Count)
             {
                 ilElement.AssignItemObject(itemObjects[startCnt]);

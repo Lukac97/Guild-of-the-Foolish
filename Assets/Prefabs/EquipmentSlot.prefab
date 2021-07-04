@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 4126722686353505119}
   - component: {fileID: 4152630221111804670}
   m_Layer: 5
-  m_Name: Head
+  m_Name: EquipmentSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,7 +111,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 120, y: 120}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4152630221111804670
 MonoBehaviour:
@@ -128,6 +128,9 @@ MonoBehaviour:
   armorSlot: 0
   slotName: {fileID: 5226032633181562964}
   itemIcon: {fileID: 3491228775253860014}
+  armorSlotItem:
+    slot: 0
+    item: {fileID: 0}
 --- !u!1 &3295591768679424555
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,7 +299,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 43.15
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

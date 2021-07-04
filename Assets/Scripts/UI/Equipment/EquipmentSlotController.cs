@@ -5,15 +5,19 @@ using UnityEngine;
 
 public class EquipmentSlotController : MonoBehaviour
 {
+
     public GameObject equipmentPanel;
-    public CharEquipment currentCharEquipment;
     public List<EquipmentArmorSlot> armorSlots;
     public List<EquipmentWeaponSlot> weaponSlots;
 
+    private void Awake()
+    {
+        CharactersController.CharactersUpdated += OnEntityChanged;
+        CharTabMain.CharTabChangedChar += OnEntityChanged;
+    }
+
     void Start()
     {
-        GlobalInput.Instance.onChangedSelectedEntity += OnEntityChanged;
-        CharactersController.CharactersUpdated += OnEntityChanged;
         armorSlots = new List<EquipmentArmorSlot>();
         armorSlots.AddRange(equipmentPanel.GetComponentsInChildren<EquipmentArmorSlot>());
         weaponSlots = new List<EquipmentWeaponSlot>();
@@ -29,20 +33,17 @@ public class EquipmentSlotController : MonoBehaviour
         OnEntityChanged();
     }
 
-
     private void OnEntityChanged()
     {
-        if (!GlobalInput.CheckIfSelectedCharacter())
-        {
-            equipmentPanel.SetActive(false);
+        if (CharTabMain.Instance.currentChar == null)
             return;
-        }
         if (!equipmentPanel.activeSelf)
             equipmentPanel.SetActive(true);
-        currentCharEquipment = GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>();
 
-        List<EquipmentArmorSlot> leftArmorSlots = new List<EquipmentArmorSlot>(armorSlots);
-        foreach(CharEquipment.ArmorSlotItem armorSlotItem in currentCharEquipment.armorSlots)
+        CharEquipment currCharEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
+
+        List <EquipmentArmorSlot> leftArmorSlots = new List<EquipmentArmorSlot>(armorSlots);
+        foreach(CharEquipment.ArmorSlotItem armorSlotItem in currCharEq.armorSlots)
         {
             List<EquipmentArmorSlot> eqSlots = FindEquipmentSlots(armorSlotItem.slot);
             EquipmentArmorSlot eqSlot = null;
@@ -69,7 +70,7 @@ public class EquipmentSlotController : MonoBehaviour
         }
 
         List<EquipmentWeaponSlot> leftWeaponSlots = new List<EquipmentWeaponSlot>(weaponSlots);
-        foreach (CharEquipment.WeaponSlotItem weaponSlotItem in currentCharEquipment.weaponSlots)
+        foreach (CharEquipment.WeaponSlotItem weaponSlotItem in currCharEq.weaponSlots)
         {
             List<EquipmentWeaponSlot> eqSlots = FindEquipmentSlots(weaponSlotItem.slot);
             EquipmentWeaponSlot eqSlot = null;

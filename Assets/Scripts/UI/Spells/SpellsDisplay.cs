@@ -33,7 +33,7 @@ public class SpellsDisplay : MonoBehaviour
 
     private void Start()
     {
-        GlobalInput.Instance.onChangedSelectedEntity += UpdateSpellDisplay;
+        CharTabMain.CharTabChangedChar += UpdateSpellDisplay;
         CharactersController.ChangedChosenSpells += UpdateSpellDisplay;
         singleSpellDisplays = new List<SingleSpellDisplay>();
         foreach (Transform child in spellPanel.transform)
@@ -43,13 +43,13 @@ public class SpellsDisplay : MonoBehaviour
 
     public void UpdateSpellDisplay()
     {
-        if (!GlobalInput.CheckIfSelectedCharacter())
+        if (CharTabMain.Instance.currentChar == null)
         {
             HideAllSpellSlots();
             return;
         }
 
-        selectedCharacterCombat = GlobalInput.Instance.selectedEntity.GetComponent<CharCombat>();
+        selectedCharacterCombat = CharTabMain.Instance.currentChar.GetComponent<CharCombat>();
         selectedCharacterStats = selectedCharacterCombat.GetComponent<CharStats>();
         allCombatSpells = new List<CombatSpell>();
 
