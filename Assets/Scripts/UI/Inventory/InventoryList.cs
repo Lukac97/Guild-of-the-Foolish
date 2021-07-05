@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
@@ -22,6 +23,9 @@ public class InventoryList : MonoBehaviour
     public GameObject sortingPanel;
     public InventorySortBy sortBy = InventorySortBy.NAME;
     public InventorySortOrder sortOrder = InventorySortOrder.ASCENDING;
+
+    public UnityEvent<ItemObject> SingleClickEvent;
+    public UnityEvent<ItemObject> DoubleClickEvent;
 
     private int pageNumber;
     private int maxPageNumber;
@@ -92,10 +96,12 @@ public class InventoryList : MonoBehaviour
             if (startCnt < itemObjects.Count)
             {
                 ilElement.AssignItemObject(itemObjects[startCnt]);
+                ilElement.AssignEvents(SingleClickEvent, DoubleClickEvent);
             }
             else
             {
                 ilElement.AssignItemObject(null);
+                ilElement.AssignEvents(SingleClickEvent, DoubleClickEvent);
             }
             startCnt += 1;
         }

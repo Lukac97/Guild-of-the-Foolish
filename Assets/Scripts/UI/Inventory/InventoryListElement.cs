@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
@@ -12,7 +13,9 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
     public ItemObject itemObject;
     public TextMeshProUGUI quantity;
     public TextMeshProUGUI level;
-
+    [Space(6)]
+    public UnityEvent<ItemObject> SingleClickEvent;
+    public UnityEvent<ItemObject> DoubleClickEvent;
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount == 1)
@@ -47,6 +50,12 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void AssignEvents(UnityEvent<ItemObject> _single, UnityEvent<ItemObject> _double)
+    {
+        SingleClickEvent = _single;
+        DoubleClickEvent = _double;
+    }
+
     public void SetHighlight(bool doHighlight, Color color = default(Color))
     {
         if(doHighlight)
@@ -62,14 +71,15 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
 
     public void OnItemClick()
     {
-        GlobalInput.Instance.SetSelectedItemObject(itemObject);
+        if (SingleClickEvent != null)
+        {
+            SingleClickEvent.Invoke((ItemObject)itemObject);
+        }
     }
 
     public void OnItemDoubleClick()
     {
-        if(GlobalInput.CheckIfSelectedCharacter())
-        {
-            GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().EquipItem(itemObject);
-        }
+        if (DoubleClickEvent != null)
+            DoubleClickEvent.Invoke((ItemObject)itemObject);
     }
 }

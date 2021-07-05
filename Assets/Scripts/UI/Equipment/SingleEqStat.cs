@@ -15,4 +15,10 @@ public class SingleEqStat : MonoBehaviour
         statName.text = _statName;
         statValue.text = _statValue.ToString() + postfix;
     }
+
+    public void ColorAllText(Color colorToSet)
+    {
+        statName.color = colorToSet;
+        statValue.color = colorToSet;
+    }
 }
