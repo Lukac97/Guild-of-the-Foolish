@@ -22,4 +22,4 @@ MonoBehaviour:
     luck: 0
     intellect: 0
   armorValue: 0
-  armorType: 5
+  armorType: 0

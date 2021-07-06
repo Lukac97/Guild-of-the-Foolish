@@ -32,14 +32,17 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler
 
     public void OnItemClick()
     {
-        EquipmentSlotPopUp.Instance.OpenEquipmentSlot(CharTabMain.Instance.currentChar, armorSlotItem);
+        if (armorSlotItem != null)
+        {
+            EquipmentSlotPopUp.Instance.OpenEquipmentSlot(CharTabMain.Instance.currentChar, armorSlotItem);
+        }
     }
 
     public void OnItemDoubleClick()
     {
-        CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
-        if(charEq != null)
-            charEq.UnequipSlot(armorSlotItem);
+        //CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
+        //if(charEq != null)
+        //    charEq.UnequipSlot(armorSlotItem);
     }
 
 

@@ -84,7 +84,17 @@ public class CharEquipment : MonoBehaviour
         equipmentAttributes = eqAttr;
     }
 
-    public bool EquipItem(ItemObject itemObject)
+    public bool EquipItem(ItemObject itemObject, ArmorSlotItem armorSlotItem)
+    {
+        return EquipItem(itemObject, armorSlotItem, null);
+    }
+
+    public bool EquipItem(ItemObject itemObject, WeaponSlotItem weaponSlotItem)
+    {
+        return EquipItem(itemObject, null, weaponSlotItem);
+    }
+
+    private bool EquipItem(ItemObject itemObject, ArmorSlotItem armorSlotItem, WeaponSlotItem weaponSlotItem)
     {
         //Perform checks
         Item equipmentItem = itemObject.item;
@@ -92,10 +102,12 @@ public class CharEquipment : MonoBehaviour
             return false;
         //
         GuildInventory.Instance.RemoveItemFromInventory(equipmentItem);
-        if(equipmentItem.GetType() == typeof(ArmorItem))
-            EquipItem((ArmorItem)equipmentItem);
+        if (armorSlotItem != null)
+            EquipItem((ArmorItem)equipmentItem, armorSlotItem);
+        else if (weaponSlotItem != null)
+            EquipItem((WeaponItem)equipmentItem, weaponSlotItem);
         else
-            EquipItem((WeaponItem)equipmentItem);
+            return false;
         NotifyAfterEquipping(true);
         return true;
     }
@@ -127,7 +139,61 @@ public class CharEquipment : MonoBehaviour
     }
 
     #region Specific Equips
-    public bool EquipItem(ArmorItem armor)
+    private bool EquipItem(ArmorItem armor, ArmorSlotItem slotItem)
+    {
+        if (slotItem == null)
+            return false;
+        if (!UnequipSlot(slotItem, true))
+            return false;
+        slotItem.item = armor;
+        return true;
+    }
+
+    private bool EquipItem(WeaponItem weapon, WeaponSlotItem slotItem)
+    {
+        if (slotItem == null)
+            return false;
+        if (!UnequipSlot(slotItem, true))
+            return false;
+        if (weapon.weaponWielding == WeaponWielding.MAIN_HAND)
+        {
+            if (slotItem.slot != WeaponSlot.MAIN_HAND)
+                return false;
+            UnequipSlot(slotItem, true);
+            slotItem.item = weapon;
+        }
+        else if (weapon.weaponWielding == WeaponWielding.OFF_HAND)
+        {
+            if (slotItem.slot != WeaponSlot.OFF_HAND)
+                return false;
+            UnequipSlot(slotItem, true);
+            slotItem.item = weapon;
+        }
+        else if (weapon.weaponWielding == WeaponWielding.ONE_HANDED)
+        {
+            UnequipSlot(slotItem, true);
+            slotItem.item = weapon;
+        }
+        else if (weapon.weaponWielding == WeaponWielding.TWO_HANDED)
+        {
+            UnequipSlot(slotItem, true);
+            slotItem.item = weapon;
+            foreach(WeaponSlotItem wSlotItem in weaponSlots)
+            {
+                if(wSlotItem.slot != slotItem.slot)
+                {
+                    wSlotItem.item = weapon;
+                    wSlotItem.isFakeEquipped = true;
+                    break;
+                }
+            }
+        }
+        
+        slotItem.item = weapon;
+        return true;
+    }
+    
+    private bool EquipItemAuto(ArmorItem armor)
     {
         List<ArmorSlotItem> occupiedSlots = new List<ArmorSlotItem>();
         foreach(ArmorSlotItem armorSlot in armorSlots)
@@ -167,7 +233,7 @@ public class CharEquipment : MonoBehaviour
         }
     }
 
-    public bool EquipItem(WeaponItem weapon)
+    private bool EquipItemAuto(WeaponItem weapon)
     {
         List<WeaponSlotItem> occupiedSlots = new List<WeaponSlotItem>();
         List<WeaponSlot> requiredSlots = new List<WeaponSlot>();
@@ -267,6 +333,7 @@ public class CharEquipment : MonoBehaviour
         GuildInventory.Instance.AddItemToInventory(weaponSlot.item);
         if(weaponSlot.item.weaponWielding == WeaponWielding.TWO_HANDED)
         {
+            //clear both slots when two handed
             foreach(WeaponSlotItem si in weaponSlots)
             {
                 si.item = null;
@@ -277,29 +344,4 @@ public class CharEquipment : MonoBehaviour
         NotifyAfterEquipping(!equip);
         return true;
     }
-
-    public bool CanWear(WeaponItem item)
-    {
-        foreach(WeaponType wType in charStats.characterClass.viableWeaponTypes)
-        {
-            if(item.weaponType == wType)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public bool CanWear(ArmorItem item)
-    {
-        foreach (ArmorType aType in charStats.characterClass.viableArmorTypes)
-        {
-            if (item.armorType == aType)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

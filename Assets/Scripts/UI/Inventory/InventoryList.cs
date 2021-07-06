@@ -24,6 +24,7 @@ public class InventoryList : MonoBehaviour
     public InventorySortBy sortBy = InventorySortBy.NAME;
     public InventorySortOrder sortOrder = InventorySortOrder.ASCENDING;
 
+    [Space(3)]
     public UnityEvent<ItemObject> SingleClickEvent;
     public UnityEvent<ItemObject> DoubleClickEvent;
 
@@ -32,6 +33,9 @@ public class InventoryList : MonoBehaviour
     private int itemsPerPage;
     private List<InventoryListElement> listElements;
 
+    private CharEquipment equippableForChar;
+    private ArmorSlot? filterByArmorSlot;
+    private WeaponSlot? filterByWeaponSlot;
     private void Awake()
     {
         itemsPerPage = itemPanel.transform.childCount;
@@ -65,10 +69,12 @@ public class InventoryList : MonoBehaviour
 
     public void UpdateInventoryItems()
     {
+        //Main update function
+
         itemObjects = GuildInventory.Instance.GetAllItemObjects();
-        //TODO: Filtering functions
+        ApplyFilters();
         InsertionSort();
-        maxPageNumber = 1 + itemObjects.Count / itemsPerPage;
+        maxPageNumber = 1 + (itemObjects.Count > 0 ? itemObjects.Count - 1 : 0) / itemsPerPage;
         pageNumber = 1;
         UpdatePagePanel();
     }
@@ -135,7 +141,99 @@ public class InventoryList : MonoBehaviour
         UpdateInventoryItems();
     }
 
-    public void InsertionSort()
+    #region Filter Functions
+    public void EnableFilterByEquippableForChar(CharEquipment charForFilter)
+    {
+        equippableForChar = charForFilter;
+        UpdateInventoryItems();
+    }
+
+    public void DisableFilterByEquippableForChar()
+    {
+        equippableForChar = null;
+        UpdateInventoryItems();
+    }
+
+    public void EnableFilterByItemSlot(WeaponSlot weaponSlot)
+    {
+        filterByWeaponSlot = weaponSlot;
+        filterByArmorSlot = null;
+        UpdateInventoryItems();
+    }
+
+    public void EnableFilterByItemSlot(ArmorSlot armorSlot)
+    {
+        filterByWeaponSlot = null;
+        filterByArmorSlot = armorSlot;
+        UpdateInventoryItems();
+    }
+
+    public void DisableFilterByItemSlot()
+    {
+        filterByWeaponSlot = null;
+        filterByArmorSlot = null;
+        UpdateInventoryItems();
+    }
+
+    public void EnableFilterByEquipmentSlotPreset(CharEquipment charForFilter, ArmorSlot? armorSlot, WeaponSlot? weaponSlot)
+    {
+        equippableForChar = charForFilter;
+        filterByWeaponSlot = weaponSlot;
+        filterByArmorSlot = armorSlot;
+        UpdateInventoryItems();
+    }
+    #endregion Filter Functions
+
+    private void ApplyFilters()
+    {
+        List<ItemObject> newItemList = new List<ItemObject>(itemObjects);
+        foreach (ItemObject itemObj in itemObjects)
+        {
+            if(equippableForChar != null)
+            { 
+                if (!equippableForChar.CanEquipItem(itemObj.item))
+                {
+                    newItemList.Remove(itemObj);
+                }
+            }
+            if(filterByArmorSlot != null)
+            {
+                if (!(itemObj.item is ArmorItem))
+                {
+                    newItemList.Remove(itemObj);
+                }
+                else
+                {
+                    ArmorSlot aSlot = (filterByArmorSlot ?? default(ArmorSlot));
+                    if (((ArmorItem)itemObj.item).itemSlot != aSlot)
+                    {
+                        newItemList.Remove(itemObj);
+                    }
+                }
+            }
+            if(filterByWeaponSlot != null)
+            {
+                if (!(itemObj.item is WeaponItem))
+                {
+                    newItemList.Remove(itemObj);
+                }
+                else
+                {
+                    WeaponSlot wSlot = (filterByWeaponSlot ?? default(WeaponSlot));
+                    if ((wSlot == WeaponSlot.MAIN_HAND &
+                        ((WeaponItem)itemObj.item).weaponWielding == WeaponWielding.OFF_HAND) |
+                        (wSlot == WeaponSlot.OFF_HAND &
+                        ((WeaponItem)itemObj.item).weaponWielding == WeaponWielding.MAIN_HAND))
+                    {
+                        newItemList.Remove(itemObj);
+                    }
+                }
+            }
+        }
+        itemObjects = newItemList;
+    }
+
+    private void InsertionSort()
     {
         int n = itemObjects.Count;
         for (int i = 1; i < n; ++i)
@@ -156,7 +254,7 @@ public class InventoryList : MonoBehaviour
         }
     }
 
-    public bool CheckIfShouldBeInFront (ItemObject obj1, ItemObject obj2)
+    private bool CheckIfShouldBeInFront (ItemObject obj1, ItemObject obj2)
     {
         bool returnValue = false;
         if (sortBy == InventorySortBy.LEVEL)
@@ -175,5 +273,4 @@ public class InventoryList : MonoBehaviour
             returnValue = !returnValue;
         return returnValue;
     }
-
 }

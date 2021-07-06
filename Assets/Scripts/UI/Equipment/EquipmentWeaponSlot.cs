@@ -35,9 +35,9 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler
 
     public void OnItemDoubleClick()
     {
-        CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
-        if (charEq != null)
-           charEq.UnequipSlot(weaponSlotItem);
+        //CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
+        //if (charEq != null)
+        //   charEq.UnequipSlot(weaponSlotItem);
     }
 
     public void SetItemSlot(CharEquipment.WeaponSlotItem slotItem)
