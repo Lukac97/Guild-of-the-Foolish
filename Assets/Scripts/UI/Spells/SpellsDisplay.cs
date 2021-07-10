@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+//UI class for displaying spells
 public class SpellsDisplay : MonoBehaviour
 {
     public GameObject spellPanel;
-    public bool forChosen = false;
     private int itemsPerPage;
 
     [Header("Pages")]
@@ -53,17 +53,9 @@ public class SpellsDisplay : MonoBehaviour
         selectedCharacterStats = selectedCharacterCombat.GetComponent<CharStats>();
         allCombatSpells = new List<CombatSpell>();
 
-        if (forChosen)
-        {
-            foreach(CombatHandler.EquippedCombatSpell eqCbSpell in selectedCharacterCombat.combatSpells)
-                allCombatSpells.Add(eqCbSpell.combatSpell);
-        }
-        else
-        {
-            allCombatSpells.AddRange(selectedCharacterStats.characterClass.combatSpells);
-            foreach(CombatHandler.EquippedCombatSpell eqCbSpell in selectedCharacterCombat.combatSpells)
-                allCombatSpells.Remove(eqCbSpell.combatSpell);
-        }
+        allCombatSpells.AddRange(selectedCharacterStats.characterClass.combatSpells);
+        foreach(CombatHandler.EquippedCombatSpell eqCbSpell in selectedCharacterCombat.combatSpells)
+            allCombatSpells.Remove(eqCbSpell.combatSpell);
 
         totalSpellCount = allCombatSpells.Count;
         maxPageNumber = 1 + totalSpellCount / itemsPerPage;
@@ -90,19 +82,15 @@ public class SpellsDisplay : MonoBehaviour
 
     public void UpdatePagePanel()
     {
-        if (!forChosen)
-        {
-            pageNumberMesh.text = pageNumber.ToString();
-            if (pageNumber == 1)
-                previousPage.interactable = false;
-            else
-                previousPage.interactable = true;
-            if (pageNumber == maxPageNumber)
-                nextPage.interactable = false;
-            else
-                nextPage.interactable = true;
-        }
-
+        pageNumberMesh.text = pageNumber.ToString();
+        if (pageNumber == 1)
+            previousPage.interactable = false;
+        else
+            previousPage.interactable = true;
+        if (pageNumber == maxPageNumber)
+            nextPage.interactable = false;
+        else
+            nextPage.interactable = true;
         AssignSingleSpells();
     }
 

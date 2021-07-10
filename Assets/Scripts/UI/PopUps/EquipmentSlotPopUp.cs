@@ -193,7 +193,6 @@ public class EquipmentSlotPopUp : MonoBehaviour
     private void DisplayItemsDetails(Item item, GameObject parentPanel, Image iconToSet,
         TextMeshProUGUI descToSet, TextMeshProUGUI nameToSet, bool bolCmp = false, Item itemComparison = null)
     {
-        Debug.Log(itemComparison);
         foreach (Transform child in parentPanel.transform)
         {
             Destroy(child.gameObject);

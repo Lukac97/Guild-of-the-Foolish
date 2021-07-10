@@ -9,7 +9,7 @@ public class GlobalRules : MonoBehaviour
 
     public static int attributePointsPerLevel = 5;
     public static int maxCombatTurns = 20;
-    public static int maxCombatSpells = 3;
+    public static int maxCombatSpells = 6;
     private static float levelOneExp = 100.0f;
 
     private void Start()

@@ -39,6 +39,7 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
     {
         if (eventData.clickCount == 1)
         {
+            OnSpellClick();
         }
         else if (eventData.clickCount == 2)
         {
@@ -46,12 +47,17 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void OnSpellClick()
+    {
+        //SpellSlotPopUp.Instance.OpenSpellSlot(chosenCharCombat.gameObject, chosenSpellIdx);
+    }
+
     public void OnSpellDoubleClick()
     {
-        if (spellsDisplay.forChosen)
-            spellsDisplay.selectedCharacterCombat.RemoveCombatSpell(linkedSpell);
-        else
-            spellsDisplay.selectedCharacterCombat.AddCombatSpell(linkedSpell);
+        //if (spellsDisplay.forChosen)
+        //    spellsDisplay.selectedCharacterCombat.RemoveCombatSpell(linkedSpell);
+        //else
+        //    spellsDisplay.selectedCharacterCombat.AddCombatSpell(linkedSpell);
     }
 
     public void ShowSpellSlot(bool doShow)
