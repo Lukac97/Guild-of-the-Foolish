@@ -98,7 +98,7 @@ public class SpellSlotPopUp : MonoBehaviour
 
     public void OnClickEquipYes()
     {
-        spellsDisplay.selectedCharacterCombat.AddCombatSpell(toChooseCombatSpell);
+        spellsDisplay.selectedCharacterCombat.AddCombatSpellToSlot(toChooseCombatSpell, spellSlotNumber);
         InitContent();
     }
 

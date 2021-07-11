@@ -17,6 +17,23 @@ public class CombatHandler : MonoBehaviour
             cooldownLeft = 0;
         }
 
+        public EquippedCombatSpell()
+        {
+            combatSpell = null;
+            cooldownLeft = 0;
+        }
+
+        public void AssignSpell(CombatSpell _combatSpell)
+        {
+            combatSpell = _combatSpell;
+            cooldownLeft = 0;
+        }
+        public void UnassignSpell()
+        {
+            combatSpell = null;
+            cooldownLeft = 0;
+        }
+
         public bool IsOnCooldown()
         {
             return cooldownLeft > 0 ? true : false;
@@ -73,7 +90,7 @@ public class CombatHandler : MonoBehaviour
         List<EquippedCombatSpell> availableSpells = new List<EquippedCombatSpell>();
         foreach (EquippedCombatSpell spell in combatSpells)
         {
-            if (!spell.IsOnCooldown() & HasEnoughSpellResource(spell))
+            if (!spell.IsOnCooldown() & HasEnoughSpellResource(spell) & spell.combatSpell != null)
                 availableSpells.Add(spell);
         }
 
@@ -100,6 +117,8 @@ public class CombatHandler : MonoBehaviour
     public UsedSpellResult CastASpell(EquippedCombatSpell chosenEquippedCombatSpell, CombatHandler enemy)
     {
         if (chosenEquippedCombatSpell == null)
+            return null;
+        if (chosenEquippedCombatSpell.combatSpell == null)
             return null;
         if (!combatSpells.Contains(chosenEquippedCombatSpell))
             return null;

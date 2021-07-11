@@ -36,14 +36,36 @@ public class CharCombat : CombatHandler
 
     public bool AddCombatSpell(CombatSpell newCombatSpell)
     {
+        //if (IndexOfEquippedCombatSpell(newCombatSpell) >= 0)
+        //    return false;
+        //if (combatSpells.Count >= GlobalRules.maxCombatSpells)
+        //{
+        //    combatSpells.RemoveAt(0);
+        //}
+
+        //combatSpells.Add(new EquippedCombatSpell(newCombatSpell));
+        //CharactersController.ChangedChosenSpells.Invoke();
+        return true;
+    }
+
+    public bool AddCombatSpellToSlot(CombatSpell newCombatSpell, int slotNr)
+    {
+        if (slotNr >= GlobalRules.maxCombatSpells)
+            return false;
         if (IndexOfEquippedCombatSpell(newCombatSpell) >= 0)
             return false;
-        if (combatSpells.Count >= GlobalRules.maxCombatSpells)
+        if (slotNr < combatSpells.Count)
         {
-            combatSpells.RemoveAt(0);
+            combatSpells[slotNr].AssignSpell(newCombatSpell);
         }
-
-        combatSpells.Add(new EquippedCombatSpell(newCombatSpell));
+        else
+        {
+            for(int i = combatSpells.Count; i < slotNr; i++)
+            {
+                combatSpells.Add(new EquippedCombatSpell());
+            }
+            combatSpells.Add(new EquippedCombatSpell(newCombatSpell));
+        }
         CharactersController.ChangedChosenSpells.Invoke();
         return true;
     }
