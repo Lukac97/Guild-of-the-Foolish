@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
@@ -14,6 +15,11 @@ public class SpellsDisplay : MonoBehaviour
     public Button nextPage;
     public TextMeshProUGUI pageNumberMesh;
     public Button previousPage;
+
+    [Header("On spell click events")]
+    [Space(3)]
+    public UnityEvent<CombatSpell> SingleClickEvent;
+    public UnityEvent<CombatSpell> DoubleClickEvent;
 
     [HideInInspector]
     public CharCombat selectedCharacterCombat;
@@ -71,10 +77,12 @@ public class SpellsDisplay : MonoBehaviour
             if (startCnt < totalSpellCount)
             {
                 ssd.InitSingleSpellDisplay(allCombatSpells[startCnt]);
+                ssd.AssignEvents(SingleClickEvent, DoubleClickEvent);
             }
             else
             {
                 ssd.InitSingleSpellDisplay(null);
+                ssd.AssignEvents(SingleClickEvent, DoubleClickEvent);
             }
             startCnt += 1;
         }

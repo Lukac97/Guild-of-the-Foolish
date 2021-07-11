@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
 {
@@ -13,6 +14,10 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
     public TextMeshProUGUI spellCost;
     public Image spellIcon;
     public CombatSpell linkedSpell;
+
+    [Space(6)]
+    public UnityEvent<CombatSpell> SingleClickEvent;
+    public UnityEvent<CombatSpell> DoubleClickEvent;
 
     private SpellsDisplay spellsDisplay;
 
@@ -35,6 +40,12 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
         spellIcon.sprite = combatSpell.spellIcon;
     }
 
+    public void AssignEvents(UnityEvent<CombatSpell> _single, UnityEvent<CombatSpell> _double)
+    {
+        SingleClickEvent = _single;
+        DoubleClickEvent = _double;
+    }
+
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount == 1)
@@ -49,15 +60,18 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
 
     public void OnSpellClick()
     {
-        //SpellSlotPopUp.Instance.OpenSpellSlot(chosenCharCombat.gameObject, chosenSpellIdx);
+        if (SingleClickEvent != null)
+        {
+            SingleClickEvent.Invoke((CombatSpell)linkedSpell);
+        }
     }
 
     public void OnSpellDoubleClick()
     {
-        //if (spellsDisplay.forChosen)
-        //    spellsDisplay.selectedCharacterCombat.RemoveCombatSpell(linkedSpell);
-        //else
-        //    spellsDisplay.selectedCharacterCombat.AddCombatSpell(linkedSpell);
+        if (DoubleClickEvent != null)
+        {
+            DoubleClickEvent.Invoke((CombatSpell)linkedSpell);
+        }
     }
 
     public void ShowSpellSlot(bool doShow)

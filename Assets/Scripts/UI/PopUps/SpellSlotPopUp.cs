@@ -16,12 +16,20 @@ public class SpellSlotPopUp : MonoBehaviour
     }
 
     public GameObject activatable;
+    [SerializeField]
+    private SpellsDisplay spellsDisplay;
 
     [Space(5)]
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI spellDescription;
     public TextMeshProUGUI spellName;
     public Image spellIcon;
+    
+    [Header("To choose spell")]
+    [Space(5)]
+    public TextMeshProUGUI toChooseSpellDescription;
+    public TextMeshProUGUI toChooseSpellName;
+    public Image toChooseSpellIcon;
 
     [Header("Canvas groups")]
     [Space(6)]
@@ -45,6 +53,7 @@ public class SpellSlotPopUp : MonoBehaviour
     private CharCombat currentCharCombat;
     private int spellSlotNumber;
     private CombatSpell currentCombatSpell;
+    private CombatSpell toChooseCombatSpell;
 
     private PopUpController popUpPanel;
 
@@ -65,17 +74,57 @@ public class SpellSlotPopUp : MonoBehaviour
             return;
         currentCharCombat = selectedChar;
         spellSlotNumber = slotNumber;
-        currentCombatSpell = spellSlotNumber < currentCharCombat.combatSpells.Count ?
-            currentCharCombat.combatSpells[spellSlotNumber].combatSpell : null;
         popUpPanel.ActivatePopUp(activatable);
         InitContent();
     }
 
-    private void InitContent()
+    public void OnClickChange()
+    {
+        InitAvailableSpellsList();
+        ActivateChangeChosenPanel();
+    }
+
+    public void OnClickOnAvailableSpell(CombatSpell cmbSpell)
+    {
+        toChooseCombatSpell = cmbSpell;
+        InitToEquipSpellDetails();
+        ActivateSpellDetailsPanel();
+    }
+
+    public void OnClickCancelChange()
     {
         ActivateMainSlotPanel();
+    }
+
+    public void OnClickEquipYes()
+    {
+        spellsDisplay.selectedCharacterCombat.AddCombatSpell(toChooseCombatSpell);
+        InitContent();
+    }
+
+    public void OnClickEquipNo()
+    {
+        InitAvailableSpellsList();
+    }
+
+    private void InitToEquipSpellDetails()
+    {
+        DisplaySpellsDetails(toChooseCombatSpell, toChooseSpellIcon, toChooseSpellDescription, toChooseSpellName);
+    }
+
+    private void InitAvailableSpellsList()
+    {
+        spellsDisplay.UpdateSpellDisplay();
+        ActivateAvailableSpellsPanel();
+    }
+
+    private void InitContent()
+    {
+        currentCombatSpell = spellSlotNumber < currentCharCombat.combatSpells.Count ?
+            currentCharCombat.combatSpells[spellSlotNumber].combatSpell : null;
         titleText.text = "Spell slot " + (spellSlotNumber + 1).ToString();
         DisplaySpellsDetails(currentCombatSpell, spellIcon, spellDescription, spellName);
+        ActivateMainSlotPanel();
     }
 
     private void DisplaySpellsDetails(CombatSpell spell, Image iconToSet,
@@ -111,15 +160,15 @@ public class SpellSlotPopUp : MonoBehaviour
         ActivateCanvasGroup(changeEquippedSlotPanel, false);
     }
 
-    private void ActivateChangeEquippedPanel()
+    private void ActivateChangeChosenPanel()
     {
         ActivateCanvasGroup(changeEquippedSlotPanel, true);
         ActivateCanvasGroup(mainSlotPanel, false);
 
-        ActivateAvailableItemsPanel();
+        ActivateAvailableSpellsPanel();
     }
 
-    private void ActivateAvailableItemsPanel()
+    private void ActivateAvailableSpellsPanel()
     {
         ActivateCanvasGroup(availableSpellsPanel, true);
         ActivateCanvasGroup(availableSpellsButtonsPanel, true);
@@ -127,7 +176,7 @@ public class SpellSlotPopUp : MonoBehaviour
         ActivateCanvasGroup(spellDetailsButtonsPanel, false);
     }
 
-    private void ActivateItemDetailsPanel()
+    private void ActivateSpellDetailsPanel()
     {
         ActivateCanvasGroup(spellDetailsPanel, true);
         ActivateCanvasGroup(spellDetailsButtonsPanel, true);
