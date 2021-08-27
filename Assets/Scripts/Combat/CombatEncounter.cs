@@ -37,6 +37,20 @@ public class CombatEncounter : MonoBehaviour
     public int finalOutcome = -1;
     public int manualTurnNumber = 1;
     public bool manualIsPlayersTurn;
+
+    private bool waitingOnCombatStart = false;
+
+    private void Update()
+    {
+        if(waitingOnCombatStart)
+        {
+            if(enemy.combatHandler.GetComponent<EnemyCombat>().CheckIfReadyForBattle())
+            {
+                StartCombat();
+            }
+        }
+    }
+
     public void InitiateCombat(CharStats charStats, Location.PossibleEnemy enemyFromLoc, Location loc, bool isManual)
     {
         isManualEncounter = isManual;
@@ -52,6 +66,11 @@ public class CombatEncounter : MonoBehaviour
         character = new CombatParticipant(charStats.GetComponent<CombatHandler>(), charStats.characterName, true);
         enemy = new CombatParticipant(gO.GetComponent<CombatHandler>(), eStats.enemyName, false);
 
+        waitingOnCombatStart = true;
+    }
+
+    private void StartCombat()
+    {
         //Global action
         if (isManualEncounter)
         {
@@ -61,6 +80,7 @@ public class CombatEncounter : MonoBehaviour
         {
             GlobalTime.CreateCombatEncounterAction(this);
         }
+        waitingOnCombatStart = false;
     }
 
     #region Manual combat
@@ -275,6 +295,11 @@ public class CombatEncounter : MonoBehaviour
     public void DestroyThisCombatEncounter()
     {
         GetComponentInParent<CombatEncounterController>().DestroyEncounter(this);
+    }
+
+    public void UpdateEnemyResources()
+    {
+        ManualCombatUIHandler.Instance.UpdateEnemyResources();
     }
 
 }

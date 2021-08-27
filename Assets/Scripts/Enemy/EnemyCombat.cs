@@ -16,6 +16,13 @@ public class EnemyCombat : CombatHandler
         FillResources();
     }
 
+    protected override void NotifyResourcesUpdated()
+    {
+        if (combatEncounter == null)
+            return;
+        combatEncounter.UpdateEnemyResources();
+    }
+
     public bool CheckIfReadyForBattle()
     {
         return isCreatedForBattle;

@@ -35,12 +35,10 @@ public class UsableSpellDisplay : MonoBehaviour, IPointerClickHandler
         UpdateSpell();
     }
 
+
     public virtual void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.clickCount == 1)
-        {
-            OnClickUsableSpell();
-        }
+        OnClickUsableSpell();
     }
 
     private void OnClickUsableSpell()

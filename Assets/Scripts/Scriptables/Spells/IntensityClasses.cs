@@ -20,7 +20,7 @@ public class IntensityDescription
     [Space(5)]
     [Header("For stat scaling (Buffs/Debuffs)")]
 
-    [Tooltip("Enable if you intend to use this section and not the \"For intensity calculation\" one.")]
+    [Tooltip("Enable if this effect affects stats of target (Buffs/Debuffs).")]
     public bool forStatScaling = false;
 
     [Tooltip("This value represents flat value per level to add to target stat")]
@@ -105,16 +105,6 @@ public class AppliedIntensityInstance
         castWithBlind = casterOfThisIntensity.isBlind;
         castWithDazed = casterOfThisIntensity.isDazed;
     }
-
-    //public AppliedIntensityInstance(bool _onSelf, IntensityPurpose _intensityPurpose,
-    //    PrimaryIntensityType _primaryIntensityType, SecondaryIntensityType _secondaryIntensityType, float _intensity)
-    //{
-    //    onSelf = _onSelf;
-    //    intensityPurpose = _intensityPurpose;
-    //    primaryIntensityType = _primaryIntensityType;
-    //    secondaryIntensityType = _secondaryIntensityType;
-    //    intensity = _intensity;
-    //}
 
     public AppliedIntensityInstance(AppliedIntensityInstance appliedIntensityInstance)
     {
