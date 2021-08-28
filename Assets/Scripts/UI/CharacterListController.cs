@@ -7,10 +7,17 @@ using UnityEngine.UI;
 public class CharacterListController : MonoBehaviour
 {
     public GameObject panel;
+    [SerializeField] private GameObject panelScroll;
     public GameObject characterPrefab;
 
     [Space(10)]
     public Location onlyOnThisLoc = null;
+
+    [Space(3)]
+    [Header("Grid layout settings")]
+    [SerializeField] private bool hasGridLayout = false;
+    [SerializeField] private float widthToHeightRatio;
+    [SerializeField] private float spacingPercentage;
 
     private List<GameObject> lastHighlitedCharacters = new List<GameObject>();
 
@@ -24,6 +31,10 @@ public class CharacterListController : MonoBehaviour
     {
         GlobalInput.Instance.onChangedSelectedEntity += HighlightSelectedCharacter;
         OnUpdateCharacters();
+        if(hasGridLayout)
+        {
+            GlobalFuncs.PackGridLayoutWithScroll(panelScroll, panel, widthToHeightRatio, spacingPercentage);
+        }
     }
 
     public void DeHighlightCharacters()

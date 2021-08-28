@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class TabController : MonoBehaviour
 {
@@ -36,6 +37,17 @@ public class TabController : MonoBehaviour
                 tab.GetComponent<Image>().color = inactiveTabColor;
             }
         }
+    }
+
+    private void Start()
+    {
+        //TODO: Polishing
+        //List<TextMeshProUGUI> listOfMeshes = new List<TextMeshProUGUI>();
+        //foreach(GameObject tab in tabs)
+        //{
+        //    listOfMeshes.Add(tab.GetComponentInChildren<TextMeshProUGUI>());
+        //}
+        //GlobalFuncs.EqualizeToMinFontSize(listOfMeshes);
     }
 
     public void ChangeTab(GameObject newTab)

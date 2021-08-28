@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GlobalFuncs : MonoBehaviour
 {
@@ -44,5 +46,88 @@ public class GlobalFuncs : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    //Returns cell size
+    public static int PackGridLayoutSquare(GameObject gridPanel, int itemsPerPage, int fixedCellSize = 0,
+        float spacingPercentage = 0.2f)
+    {
+        GridLayoutGroup gridLayoutGroup = gridPanel.GetComponent<GridLayoutGroup>();
+        float maxWidth = gridPanel.GetComponent<RectTransform>().rect.width;
+        float maxHeight = gridPanel.GetComponent<RectTransform>().rect.height;
+        int columnNumber = gridLayoutGroup.constraintCount;
+        int rowNumber = Mathf.CeilToInt(itemsPerPage / columnNumber);
+
+        int cellSize = 0;
+
+        if (fixedCellSize > 0)
+        {
+            cellSize = fixedCellSize;
+        }
+
+        if (fixedCellSize <= 0 | (cellSize * columnNumber > maxWidth) | (cellSize * rowNumber > maxHeight))
+        {
+            int cellWidth = Mathf.FloorToInt(((1 - spacingPercentage) * maxWidth) / columnNumber);
+            int cellHeight = Mathf.FloorToInt(((1 - spacingPercentage) * maxHeight) / rowNumber);
+            cellSize = Mathf.Min(cellWidth, cellHeight);
+        }
+
+        int spacingX = Mathf.FloorToInt((maxWidth - cellSize * columnNumber) / (columnNumber + 1));
+        int spacingY = Mathf.FloorToInt((maxHeight - cellSize * rowNumber) / (rowNumber + 1));
+
+        gridLayoutGroup.spacing = new Vector2(spacingX, spacingY);
+        gridLayoutGroup.padding.left = spacingX;
+        gridLayoutGroup.padding.right = spacingX;
+        gridLayoutGroup.padding.top = spacingY;
+        gridLayoutGroup.padding.bottom = spacingY;
+
+        gridLayoutGroup.cellSize = new Vector2(cellSize, cellSize);
+
+        return cellSize;
+    }
+
+    public static Vector2 PackGridLayoutWithScroll(GameObject scrollGO, GameObject gridPanel, float widthToHeightRatio,
+        float spacingPercentage = 0.05f)
+    {
+        GridLayoutGroup gridLayoutGroup = gridPanel.GetComponent<GridLayoutGroup>();
+        float maxWidth = scrollGO.GetComponent<RectTransform>().rect.width;
+        int columnNr = gridLayoutGroup.constraintCount;
+
+        int cellWidth = Mathf.FloorToInt(((1-spacingPercentage) * maxWidth) / columnNr);
+        int cellHeight = Mathf.FloorToInt(cellWidth / widthToHeightRatio);
+        int spacing = Mathf.FloorToInt((spacingPercentage * maxWidth) / (columnNr + 1));
+
+        gridLayoutGroup.spacing = new Vector2(spacing, spacing);
+        gridLayoutGroup.padding.left = spacing;
+        gridLayoutGroup.padding.right = spacing;
+        gridLayoutGroup.padding.top = spacing;
+        gridLayoutGroup.padding.bottom = spacing;
+
+        gridLayoutGroup.cellSize = new Vector2(cellWidth, cellHeight);
+
+        return gridLayoutGroup.cellSize;
+    }
+
+    public static float EqualizeToMinFontSize(List<TextMeshProUGUI> textMeshes)
+    {
+        if (textMeshes.Count == 0)
+            return -1f;
+
+        float minFontSize = textMeshes[0].fontSize;
+        foreach(TextMeshProUGUI tmp in textMeshes)
+        {
+            if(tmp.fontSize < minFontSize)
+            {
+                minFontSize = tmp.fontSize;
+            }
+        }
+
+        foreach(TextMeshProUGUI tmp in textMeshes)
+        {
+            tmp.enableAutoSizing = false;
+            tmp.fontSize = minFontSize;
+        }
+
+        return minFontSize;
     }
 }

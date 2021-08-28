@@ -5,12 +5,19 @@ using UnityEngine;
 public class RecruitList : MonoBehaviour
 {
     public GameObject panel;
+    public GameObject panelScroll;
     public GameObject recruitPrefab;
     public PopUp chooseNamePopUp;
+
+    [Space(3)]
+    [Header("Grid layout settings")]
+    [SerializeField] private float widthToHeightRatio;
+    [SerializeField] private float spacingPercentage;
     // Start is called before the first frame update
     void Start()
     {
         InitRecruits();
+        GlobalFuncs.PackGridLayoutWithScroll(panelScroll, panel, widthToHeightRatio, spacingPercentage);
     }
 
     public void InitRecruits()

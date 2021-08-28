@@ -47,6 +47,7 @@ public class InventoryList : MonoBehaviour
         GlobalInput.Instance.changeSelectedItemObject += HighlightInventorySlot;
         listElements = new List<InventoryListElement>(itemPanel.GetComponentsInChildren<InventoryListElement>());
         UpdateInventoryItems();
+        GlobalFuncs.PackGridLayoutSquare(itemPanel, itemsPerPage);
     }
 
     public void HighlightInventorySlot()

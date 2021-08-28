@@ -10,6 +10,10 @@ public class EquipmentSlotController : MonoBehaviour
     public List<EquipmentArmorSlot> armorSlots;
     public List<EquipmentWeaponSlot> weaponSlots;
 
+    [Header("Grid layouts for packing")]
+    [SerializeField] private GameObject mainArmorGO;
+    [SerializeField] private GameObject mainAccsGO;
+
     private void Awake()
     {
         CharactersController.CharactersUpdated += OnEntityChanged;
@@ -31,6 +35,8 @@ public class EquipmentSlotController : MonoBehaviour
             slot.SetItemSlot(null);
         }
         OnEntityChanged();
+        int cellSize = GlobalFuncs.PackGridLayoutSquare(mainArmorGO, mainArmorGO.transform.childCount);
+        GlobalFuncs.PackGridLayoutSquare(mainAccsGO, mainAccsGO.transform.childCount, cellSize);
     }
 
     private void OnEntityChanged()

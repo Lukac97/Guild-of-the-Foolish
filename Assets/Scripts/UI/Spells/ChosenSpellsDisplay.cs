@@ -21,6 +21,7 @@ public class ChosenSpellsDisplay : MonoBehaviour
         foreach (Transform child in spellPanel.transform)
             singleChosenSpellDisplays.Add(child.GetComponent<SingleChosenSpellDisplay>());
         UpdateSpellDisplay();
+        GlobalFuncs.PackGridLayoutSquare(spellPanel, spellPanel.transform.childCount);
     }
 
     public void UpdateSpellDisplay()

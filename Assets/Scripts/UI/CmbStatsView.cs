@@ -16,17 +16,21 @@ public class CmbStatsView : MonoBehaviour
     public TextMeshProUGUI avoidPotencyValue;
     public TextMeshProUGUI criticalPotencyValue;
 
+    private void Awake()
+    {
+        CharTabMain.CharTabChangedChar += ChangeInformation;
+        CharactersController.CharactersUpdated += ChangeInformation;
+        CharactersController.CharactersResourcesUpdated += ChangeInformation;
+    }
 
     private void Start()
     {
-        CharactersController.CharactersUpdated += ChangeInformation;
-        CharactersController.CharactersResourcesUpdated += ChangeInformation;
         ChangeInformation();
     }
 
     public void ChangeInformation()
     {
-        if(CharStatsPopUp.Instance.currentChar == null)
+        if(CharTabMain.Instance.currentChar == null)
         {
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
@@ -36,7 +40,7 @@ public class CmbStatsView : MonoBehaviour
         canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
-        CharCombat charCombat = CharStatsPopUp.Instance.currentChar.GetComponent<CharCombat>();
+        CharCombat charCombat = CharTabMain.Instance.currentChar.GetComponent<CharCombat>();
         healthValue.text = charCombat.combatStats.currentHealth.ToString("0")
             + " / " + charCombat.combatStats.baseStats.maxHealth.ToString("0");
         spellResourceValue.text = charCombat.combatStats.currentSpellResource.ToString("0")

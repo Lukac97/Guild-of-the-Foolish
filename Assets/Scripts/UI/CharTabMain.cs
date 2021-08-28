@@ -16,7 +16,11 @@ public class CharTabMain : MonoBehaviour
     }
 
     public GameObject currentChar;
+    [Header("Dropdown")]
     public TMP_Dropdown charDropdown;
+    public RectTransform dropdownChoiceTransform;
+    public RectTransform dropdownTemplateTransform;
+    public TextMeshProUGUI dropdownText;
 
     public delegate void CharTabSelectedCharDelegate();
     public static CharTabSelectedCharDelegate CharTabChangedChar;
@@ -34,6 +38,8 @@ public class CharTabMain : MonoBehaviour
 
     void Start()
     {
+        dropdownChoiceTransform.sizeDelta = new Vector2(0, 0.6f * charDropdown.GetComponent<RectTransform>().rect.height);
+        dropdownTemplateTransform.sizeDelta = new Vector2(0, 5 * dropdownChoiceTransform.rect.height);
         UpdateCharDropdown();
     }
 
