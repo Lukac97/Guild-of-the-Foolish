@@ -36,18 +36,35 @@ public class InventoryList : MonoBehaviour
     private CharEquipment equippableForChar;
     private ArmorSlot? filterByArmorSlot;
     private WeaponSlot? filterByWeaponSlot;
+
+    private bool markedForUpdate;
+
     private void Awake()
     {
-        itemsPerPage = itemPanel.transform.childCount;
+        listElements = new List<InventoryListElement>(itemPanel.GetComponentsInChildren<InventoryListElement>(true));
+        itemsPerPage = listElements.Count;
+        markedForUpdate = true;
     }
 
     private void Start()
     {
         GuildInventory.Instance.InventoryChanged += UpdateInventoryItems;
         GlobalInput.Instance.changeSelectedItemObject += HighlightInventorySlot;
-        listElements = new List<InventoryListElement>(itemPanel.GetComponentsInChildren<InventoryListElement>());
-        UpdateInventoryItems();
+        if (markedForUpdate)
+        {
+            UpdateInventoryItems();
+            markedForUpdate = false;
+        }
         GlobalFuncs.PackGridLayoutSquare(itemPanel, itemsPerPage);
+    }
+
+    private void Update()
+    {
+        if(markedForUpdate)
+        {
+            UpdateInventoryItems();
+            markedForUpdate = false;
+        }
     }
 
     public void HighlightInventorySlot()
@@ -70,8 +87,6 @@ public class InventoryList : MonoBehaviour
 
     public void UpdateInventoryItems()
     {
-        //Main update function
-
         itemObjects = GuildInventory.Instance.GetAllItemObjects();
         ApplyFilters();
         InsertionSort();
@@ -139,41 +154,41 @@ public class InventoryList : MonoBehaviour
             sortOrder = InventorySortOrder.ASCENDING;
         }
         sortBy = newSortBy;
-        UpdateInventoryItems();
+        markedForUpdate = true;
     }
 
     #region Filter Functions
     public void EnableFilterByEquippableForChar(CharEquipment charForFilter)
     {
         equippableForChar = charForFilter;
-        UpdateInventoryItems();
+        markedForUpdate = true;
     }
 
     public void DisableFilterByEquippableForChar()
     {
         equippableForChar = null;
-        UpdateInventoryItems();
+        markedForUpdate = true;
     }
 
     public void EnableFilterByItemSlot(WeaponSlot weaponSlot)
     {
         filterByWeaponSlot = weaponSlot;
         filterByArmorSlot = null;
-        UpdateInventoryItems();
+        markedForUpdate = true;
     }
 
     public void EnableFilterByItemSlot(ArmorSlot armorSlot)
     {
         filterByWeaponSlot = null;
         filterByArmorSlot = armorSlot;
-        UpdateInventoryItems();
+        markedForUpdate = true;
     }
 
     public void DisableFilterByItemSlot()
     {
         filterByWeaponSlot = null;
         filterByArmorSlot = null;
-        UpdateInventoryItems();
+        markedForUpdate = true;
     }
 
     public void EnableFilterByEquipmentSlotPreset(CharEquipment charForFilter, ArmorSlot? armorSlot, WeaponSlot? weaponSlot)
@@ -181,7 +196,7 @@ public class InventoryList : MonoBehaviour
         equippableForChar = charForFilter;
         filterByWeaponSlot = weaponSlot;
         filterByArmorSlot = armorSlot;
-        UpdateInventoryItems();
+        markedForUpdate = true;
     }
     #endregion Filter Functions
 

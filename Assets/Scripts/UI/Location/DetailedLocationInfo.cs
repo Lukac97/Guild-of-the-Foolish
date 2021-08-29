@@ -19,11 +19,17 @@ public class DetailedLocationInfo : MonoBehaviour
     public GameObject enemyOnLocationUIPrefab;
 
     [Header("Sections")]
-    public GameObject sectionQuests;
-    public GameObject sectionEnemies;
-    public GameObject sectionNPCs;
+    [SerializeField] private GameObject sectionQuests;
+    [SerializeField] private GameObject sectionEnemies;
+    [SerializeField] private GameObject sectionEnemiesScroll;
+    [SerializeField] private GameObject sectionNPCs;
+    [SerializeField] private GameObject sectionNPCsScroll;
     [Header("UI")]
     public TextMeshProUGUI locationName;
+
+    [Header("Grid options")]
+    [SerializeField] private float spacingPercentage;
+    [SerializeField] private float widthToHeightRatio;
 
     public Location currentLocation;
     private PopUpController popUpPanel;
@@ -37,6 +43,9 @@ public class DetailedLocationInfo : MonoBehaviour
 
     private void Start()
     {
+        GlobalFuncs.PackGridLayoutWithScroll(sectionEnemiesScroll, sectionEnemies, widthToHeightRatio, spacingPercentage);
+        if(sectionNPCs != null)
+            GlobalFuncs.PackGridLayoutWithScroll(sectionNPCsScroll, sectionNPCs, widthToHeightRatio, spacingPercentage);
     }
 
     public void OpenDetailedLocationInfo(Location locationToOpen)

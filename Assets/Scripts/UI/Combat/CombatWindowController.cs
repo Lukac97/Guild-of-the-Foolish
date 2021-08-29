@@ -27,8 +27,11 @@ public class CombatWindowController : MonoBehaviour
     public TextMeshProUGUI outcomeTitle;
     [Space(3)]
     public GameObject itemRewardPrefab;
-    public GameObject GEPanel;
-    public GameObject ItemPanel;
+    [SerializeField] private GameObject GEPanel;
+    [SerializeField] private GameObject GEPanelScroll;
+    [SerializeField] private GameObject ItemPanel;
+    [SerializeField] private GameObject ItemPanelScroll;
+    [SerializeField] private float spacingPercentage;
     [Space(3)]
     public GameObject goldExpPrizeSlot;
     public GameObject itemPrizeSlot;
@@ -47,6 +50,8 @@ public class CombatWindowController : MonoBehaviour
     private void Start()
     {
         popUpPanel = GetComponentInParent<PopUpController>();
+        GlobalFuncs.PackGridLayoutWithScroll(GEPanelScroll, GEPanel, 1, spacingPercentage);
+        GlobalFuncs.PackGridLayoutWithScroll(ItemPanelScroll, ItemPanel, 1, spacingPercentage);
     }
 
     public void ActivateThisPopUp(CombatEncounter combatEncounter)

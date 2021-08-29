@@ -11,6 +11,7 @@ public class EnemyOnLocation : MonoBehaviour
     public Location.PossibleEnemy enemyMould;
 
     public string levelPrefix = "";
+    public string levelPostfix = "";
 
     private LocationInfoPanel locationInfoPanel;
     private DetailedLocationInfo detailedLocationInfo;
@@ -25,7 +26,8 @@ public class EnemyOnLocation : MonoBehaviour
     public void InitEnemyOnLocation(Location.PossibleEnemy psEn)
     {
         enemyName.text = psEn.enemyMould.name;
-        enemyLevel.text = levelPrefix + (levelPrefix == "" ? "" : " ") + psEn.minLevel.ToString() + " - " + psEn.maxLevel.ToString();
+        enemyLevel.text = levelPrefix + (levelPrefix == "" ? "" : " ") + psEn.minLevel.ToString()
+            + " - " + psEn.maxLevel.ToString() + (levelPostfix == "" ? "" : " ") + levelPostfix;
         enemyMould = psEn;
     }
 

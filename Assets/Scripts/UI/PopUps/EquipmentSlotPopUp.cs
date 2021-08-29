@@ -28,38 +28,14 @@ public class EquipmentSlotPopUp : MonoBehaviour
     public GameObject attributesPanel;
     public GameObject singleStatPrefab;
     public GameObject cmpStatPrefab;
-
-    [Header("Layout groups")]
-    [Space(3)]
-
-    [Space(6)]
-    [SerializeField]
-    private CanvasGroup mainSlotPanel;
-    [SerializeField]
-    private CanvasGroup changeEquippedSlotPanel;
-
-    [Header("Comparison")]
+    [SerializeField] private GameObject itemPanel;
     [Space(10)]
-
-    [SerializeField]
-    private CanvasGroup itemDetailsPanel;
-    [SerializeField]
-    private CanvasGroup itemDetailsButtonsPanel;
-
-    [SerializeField]
-    private CanvasGroup availableItemsPanel;
-    [SerializeField]
-    private CanvasGroup availableItemsButtonsPanel;
-
-    [Space(10)]
-    [SerializeField]
-    private GameObject toEquipStats;
-    [SerializeField]
-    private TextMeshProUGUI toEquipName;
-    [SerializeField]
-    private TextMeshProUGUI toEquipDesc;
-    [SerializeField]
-    private Image toEquipIcon;
+    [SerializeField] private GameObject deselectButton;
+    [SerializeField] private GameObject toEquipStats;
+    [SerializeField] private TextMeshProUGUI toEquipName;
+    [SerializeField] private TextMeshProUGUI toEquipDesc;
+    [SerializeField] private TextMeshProUGUI equipButtonText;
+    [SerializeField] private Image toEquipIcon;
 
     private CharEquipment.ArmorSlotItem armorSlot;
     private CharEquipment.WeaponSlotItem weaponSlot;
@@ -73,6 +49,11 @@ public class EquipmentSlotPopUp : MonoBehaviour
         if (Instance == null)
             _instance = this;
         popUpPanel = GetComponentInParent<PopUpController>();
+    }
+
+    private void Start()
+    {
+        GlobalFuncs.PackGridLayoutSquare(itemPanel, itemPanel.transform.childCount);
     }
 
     public void OpenEquipmentSlot(GameObject selectedChar, CharEquipment.ArmorSlotItem _armorSlot)
@@ -102,22 +83,30 @@ public class EquipmentSlotPopUp : MonoBehaviour
         popUpPanel.ActivatePopUp(activatable);
     }
 
-    public void OnClickChange()
-    {
-        InitItemList();
-        ActivateChangeEquippedPanel();
-    }
-
-    public void OnClickEquipYes()
+    public void OnClickEquip()
     {
         bool result = false;
         if(armorSlot != null)
         {
-            result = currentChar.GetComponent<CharEquipment>().EquipItem(itemToEquip, armorSlot);
+            if (itemToEquip == null)
+            {
+                result = currentChar.GetComponent<CharEquipment>().UnequipSlot(armorSlot);
+            }
+            else
+            {
+                result = currentChar.GetComponent<CharEquipment>().EquipItem(itemToEquip, armorSlot);
+            }
         }
         else if (weaponSlot != null)
         {
-            result = currentChar.GetComponent<CharEquipment>().EquipItem(itemToEquip, weaponSlot);
+            if (itemToEquip == null)
+            {
+                result = currentChar.GetComponent<CharEquipment>().UnequipSlot(weaponSlot);
+            }
+            else
+            {
+                result = currentChar.GetComponent<CharEquipment>().EquipItem(itemToEquip, weaponSlot);
+            }
         }
 
         if (result)
@@ -130,22 +119,16 @@ public class EquipmentSlotPopUp : MonoBehaviour
         }
     }
 
-    public void OnClickEquipNo()
+    public void OnClickDeselectItemToEquip()
     {
-        InitItemList();
-        ActivateAvailableItemsPanel();
+        itemToEquip = null;
+        UpdateItemToEquip();
     }
 
     public void OnClickOnItem(ItemObject itemObj)
     {
         itemToEquip = itemObj;
-        InitItemComparison();
-        ActivateItemDetailsPanel();
-    }
-    
-    public void OnClickCancelChange()
-    {
-        ActivateMainSlotPanel();
+        UpdateItemToEquip();
     }
 
     private void InitItemList()
@@ -155,25 +138,24 @@ public class EquipmentSlotPopUp : MonoBehaviour
             weaponSlot == null ? null : (WeaponSlot?)weaponSlot.slot);
     }
 
-    private void InitItemComparison()
+    private void UpdateItemToEquip()
     {
-        DisplayItemsDetails(itemToEquip.item, toEquipStats, toEquipIcon, toEquipDesc, toEquipName,
-            bolCmp: true,
-            itemComparison: weaponSlot != null ? (Item)weaponSlot.item : (armorSlot != null ? (Item)armorSlot.item : null));
-        //if (armorSlot != null)
-        //{
-        //    DisplayItemsDetails(armorSlot.item, equippedStats, equippedIcon, null, equippedName, itemComparisonLG);
-        //}
-        //else
-        //{
-        //    DisplayItemsDetails(weaponSlot.item, esquippedStats, equippedIcon, null, equippedName, itemComparisonLG);
-        //}
+        if (itemToEquip == null)
+        {
+            deselectButton.SetActive(false);
+            equipButtonText.text = "UNEQUIP";
+            DisplayItemsDetails(null, toEquipStats, toEquipIcon, toEquipDesc, toEquipName);
+        }
+        else
+        {
+            deselectButton.SetActive(true);
+            equipButtonText.text = "EQUIP";
+            DisplayItemsDetails(itemToEquip.item, toEquipStats, toEquipIcon, toEquipDesc, toEquipName);
+        }
     }
 
     private void InitContent()
     {
-        ActivateMainSlotPanel();
-
         if (weaponSlot != null)
         {
             titleText.text = EnumToString.ToNiceString(weaponSlot.slot);
@@ -188,10 +170,12 @@ public class EquipmentSlotPopUp : MonoBehaviour
         {
             titleText.text = "ERROR";
         }
+        InitItemList();
+        UpdateItemToEquip();
     }
 
     private void DisplayItemsDetails(Item item, GameObject parentPanel, Image iconToSet,
-        TextMeshProUGUI descToSet, TextMeshProUGUI nameToSet, bool bolCmp = false, Item itemComparison = null)
+        TextMeshProUGUI descToSet, TextMeshProUGUI nameToSet)
     {
         foreach (Transform child in parentPanel.transform)
         {
@@ -208,8 +192,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
                 descToSet.text = "";
             return;
         }
-
-        GameObject prefabToUse = bolCmp ? cmpStatPrefab : singleStatPrefab;
+        GameObject prefabToUse = singleStatPrefab;
 
         if (item is WeaponItem)
         {
@@ -230,54 +213,36 @@ public class EquipmentSlotPopUp : MonoBehaviour
                 nameToSet.text = equippedWeapon.name;
             }
 
-            if (equippedWeapon.attackDamageMultiplier != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).attackDamageMultiplier != 0 : false)))
+            if (equippedWeapon.attackDamageMultiplier != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
                 gO.GetComponent<SingleEqStat>().SetText("ATK",
-                    Mathf.FloorToInt(equippedWeapon.attackDamageMultiplier * 100), "%",
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((WeaponItem) itemComparison).attackDamageMultiplier * 100) : 0));
+                    Mathf.FloorToInt(equippedWeapon.attackDamageMultiplier * 100), "%");
             }
-            if (equippedWeapon.armorValue != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).armorValue != 0 : false)))
+            if (equippedWeapon.armorValue != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("ARMOR", Mathf.FloorToInt(equippedWeapon.armorValue),
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((WeaponItem)itemComparison).armorValue) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("ARMOR", Mathf.FloorToInt(equippedWeapon.armorValue));
             }
-            if (equippedWeapon.attributes.strength != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).attributes.strength != 0 : false)))
+            if (equippedWeapon.attributes.strength != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("STR", equippedWeapon.attributes.strength,
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((WeaponItem)itemComparison).attributes.strength) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("STR", equippedWeapon.attributes.strength);
             }
-            if (equippedWeapon.attributes.agility != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).attributes.agility != 0 : false)))
+            if (equippedWeapon.attributes.agility != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("AGI", equippedWeapon.attributes.agility,
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((WeaponItem)itemComparison).attributes.agility) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("AGI", equippedWeapon.attributes.agility);
             }
-            if (equippedWeapon.attributes.intellect != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).attributes.intellect != 0 : false)))
+            if (equippedWeapon.attributes.intellect != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("INT", equippedWeapon.attributes.intellect,
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((WeaponItem)itemComparison).attributes.intellect) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("INT", equippedWeapon.attributes.intellect);
             }
-            if (equippedWeapon.attributes.luck != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).attributes.luck != 0 : false)))
+            if (equippedWeapon.attributes.luck != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("LUK", equippedWeapon.attributes.luck,
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((WeaponItem)itemComparison).attributes.luck) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("LUK", equippedWeapon.attributes.luck);
             }
         }
         else if (item is ArmorItem)
@@ -302,85 +267,33 @@ public class EquipmentSlotPopUp : MonoBehaviour
                 nameToSet.text = equippedArmor.name;
             }
 
-            if (equippedArmor.armorValue != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).armorValue != 0 : false)))
+            if (equippedArmor.armorValue != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("ARMOR", Mathf.FloorToInt(equippedArmor.armorValue),
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((ArmorItem)itemComparison).armorValue) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("ARMOR", Mathf.FloorToInt(equippedArmor.armorValue));
             }
-            if (equippedArmor.attributes.strength != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).attributes.strength != 0 : false)))
+            if (equippedArmor.attributes.strength != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("STR", equippedArmor.attributes.strength,
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((ArmorItem)itemComparison).attributes.strength) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("STR", equippedArmor.attributes.strength);
             }
-            if (equippedArmor.attributes.agility != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).attributes.agility != 0 : false)))
+            if (equippedArmor.attributes.agility != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("AGI", equippedArmor.attributes.agility,
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((ArmorItem)itemComparison).attributes.agility) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("AGI", equippedArmor.attributes.agility);
             }
-            if (equippedArmor.attributes.intellect != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).attributes.intellect != 0 : false)))
+            if (equippedArmor.attributes.intellect != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("INT", equippedArmor.attributes.intellect,
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((ArmorItem)itemComparison).attributes.intellect) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("INT", equippedArmor.attributes.intellect);
             }
-            if (equippedArmor.attributes.luck != 0 |
-                (bolCmp & (itemComparison != null ? ((WeaponItem)itemComparison).attributes.luck != 0 : false)))
+            if (equippedArmor.attributes.luck != 0)
             {
                 GameObject gO = Instantiate(prefabToUse, parentPanel.transform);
-                gO.GetComponent<SingleEqStat>().SetText("LUK", equippedArmor.attributes.luck,
-                    _statChange: (itemComparison != null ?
-                    Mathf.FloorToInt(((ArmorItem)itemComparison).attributes.luck) : 0));
+                gO.GetComponent<SingleEqStat>().SetText("LUK", equippedArmor.attributes.luck);
             }
         }
         LayoutRebuilder.ForceRebuildLayoutImmediate(parentPanel.GetComponent<RectTransform>());
-    }
-
-    private void ActivateMainSlotPanel()
-    {
-        ActivateCanvasGroup(mainSlotPanel, true);
-        ActivateCanvasGroup(changeEquippedSlotPanel, false);
-    }
-
-    private void ActivateChangeEquippedPanel()
-    {
-        ActivateCanvasGroup(changeEquippedSlotPanel, true);
-        ActivateCanvasGroup(mainSlotPanel, false);
-
-        ActivateAvailableItemsPanel();
-    }
-
-    private void ActivateAvailableItemsPanel()
-    {
-        ActivateCanvasGroup(availableItemsPanel, true);
-        ActivateCanvasGroup(availableItemsButtonsPanel, true);
-        ActivateCanvasGroup(itemDetailsPanel, false);
-        ActivateCanvasGroup(itemDetailsButtonsPanel, false);
-    }
-
-    private void ActivateItemDetailsPanel()
-    {
-        ActivateCanvasGroup(itemDetailsPanel, true);
-        ActivateCanvasGroup(itemDetailsButtonsPanel, true);
-        ActivateCanvasGroup(availableItemsPanel, false);
-        ActivateCanvasGroup(availableItemsButtonsPanel, false);
-    }
-
-    public void ActivateCanvasGroup(CanvasGroup cg, bool doActivate)
-    {
-        cg.alpha = doActivate ? 1 : 0;
-        cg.interactable = doActivate;
-        cg.blocksRaycasts = doActivate;
     }
 
     public void CloseEquipmentSlot()
