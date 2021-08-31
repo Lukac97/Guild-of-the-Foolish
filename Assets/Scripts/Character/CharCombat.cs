@@ -70,6 +70,15 @@ public class CharCombat : CombatHandler
         return true;
     }
 
+    public bool RemoveCombatSpellFromSlot(int slotNr)
+    {
+        if (slotNr < 0)
+            return false;
+        combatSpells.RemoveAt(slotNr);
+        CharactersController.ChangedChosenSpells.Invoke();
+        return true;
+    }
+
     public bool RemoveCombatSpell(CombatSpell remCombatSpell)
     {
         int idxCS = IndexOfEquippedCombatSpell(remCombatSpell);

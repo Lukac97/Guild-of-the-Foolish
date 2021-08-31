@@ -78,44 +78,28 @@ public class SpellSlotPopUp : MonoBehaviour
         InitContent();
     }
 
-    public void OnClickChange()
-    {
-        InitAvailableSpellsList();
-        ActivateChangeChosenPanel();
-    }
-
     public void OnClickOnAvailableSpell(CombatSpell cmbSpell)
     {
         toChooseCombatSpell = cmbSpell;
         InitToEquipSpellDetails();
-        ActivateSpellDetailsPanel();
-    }
-
-    public void OnClickCancelChange()
-    {
-        ActivateMainSlotPanel();
     }
 
     public void OnClickEquipYes()
     {
-        spellsDisplay.selectedCharacterCombat.AddCombatSpellToSlot(toChooseCombatSpell, spellSlotNumber);
+        if (toChooseCombatSpell == null)
+        {
+            spellsDisplay.selectedCharacterCombat.RemoveCombatSpellFromSlot(spellSlotNumber);
+        }
+        else
+        {
+            spellsDisplay.selectedCharacterCombat.AddCombatSpellToSlot(toChooseCombatSpell, spellSlotNumber);
+        }
         InitContent();
-    }
-
-    public void OnClickEquipNo()
-    {
-        InitAvailableSpellsList();
     }
 
     private void InitToEquipSpellDetails()
     {
         DisplaySpellsDetails(toChooseCombatSpell, toChooseSpellIcon, toChooseSpellDescription, toChooseSpellName);
-    }
-
-    private void InitAvailableSpellsList()
-    {
-        spellsDisplay.UpdateSpellDisplay();
-        ActivateAvailableSpellsPanel();
     }
 
     private void InitContent()
@@ -124,7 +108,7 @@ public class SpellSlotPopUp : MonoBehaviour
             currentCharCombat.combatSpells[spellSlotNumber].combatSpell : null;
         titleText.text = "Spell slot " + (spellSlotNumber + 1).ToString();
         DisplaySpellsDetails(currentCombatSpell, spellIcon, spellDescription, spellName);
-        ActivateMainSlotPanel();
+        InitToEquipSpellDetails();
     }
 
     private void DisplaySpellsDetails(CombatSpell spell, Image iconToSet,
@@ -154,40 +138,4 @@ public class SpellSlotPopUp : MonoBehaviour
         popUpPanel.DeactivatePopUp(activatable);
     }
 
-    private void ActivateMainSlotPanel()
-    {
-        ActivateCanvasGroup(mainSlotPanel, true);
-        ActivateCanvasGroup(changeEquippedSlotPanel, false);
-    }
-
-    private void ActivateChangeChosenPanel()
-    {
-        ActivateCanvasGroup(changeEquippedSlotPanel, true);
-        ActivateCanvasGroup(mainSlotPanel, false);
-
-        ActivateAvailableSpellsPanel();
-    }
-
-    private void ActivateAvailableSpellsPanel()
-    {
-        ActivateCanvasGroup(availableSpellsPanel, true);
-        ActivateCanvasGroup(availableSpellsButtonsPanel, true);
-        ActivateCanvasGroup(spellDetailsPanel, false);
-        ActivateCanvasGroup(spellDetailsButtonsPanel, false);
-    }
-
-    private void ActivateSpellDetailsPanel()
-    {
-        ActivateCanvasGroup(spellDetailsPanel, true);
-        ActivateCanvasGroup(spellDetailsButtonsPanel, true);
-        ActivateCanvasGroup(availableSpellsPanel, false);
-        ActivateCanvasGroup(availableSpellsButtonsPanel, false);
-    }
-
-    public void ActivateCanvasGroup(CanvasGroup cg, bool doActivate)
-    {
-        cg.alpha = doActivate ? 1 : 0;
-        cg.interactable = doActivate;
-        cg.blocksRaycasts = doActivate;
-    }
 }

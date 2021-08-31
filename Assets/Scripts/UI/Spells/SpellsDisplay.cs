@@ -44,6 +44,7 @@ public class SpellsDisplay : MonoBehaviour
         singleSpellDisplays = new List<SingleSpellDisplay>();
         foreach (Transform child in spellPanel.transform)
             singleSpellDisplays.Add(child.GetComponent<SingleSpellDisplay>());
+        GlobalFuncs.PackGridLayoutSquare(spellPanel, itemsPerPage);
         UpdateSpellDisplay();
     }
 

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 47629117863253511}
   - component: {fileID: 47629117863253510}
   m_Layer: 5
-  m_Name: ChosenSpell
+  m_Name: AvailableSpellDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,6 +58,12 @@ MonoBehaviour:
   spellCost: {fileID: 6759251778549671977}
   spellIcon: {fileID: 47629118614464128}
   linkedSpell: {fileID: 0}
+  SingleClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  DoubleClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!225 &47629117863253510
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -178,10 +184,10 @@ RectTransform:
   m_Father: {fileID: 47629117863253505}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.1, y: 0.1}
+  m_AnchorMax: {x: 0.9, y: 0.9}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: -20}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &47629118614464129
 CanvasRenderer:
@@ -309,11 +315,11 @@ RectTransform:
   m_Father: {fileID: 47629117863253505}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10.013, y: 0}
-  m_SizeDelta: {x: 60, y: 60}
-  m_Pivot: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0.0000076293945, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &47629118670448705
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -369,14 +375,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 52
+  m_fontSize: 22.35
   m_fontSizeBase: 52
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -443,11 +449,11 @@ RectTransform:
   m_Father: {fileID: 47629117863253505}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 4.993792, y: 0}
-  m_SizeDelta: {x: -30.012417, y: 60}
-  m_Pivot: {x: 0.5, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0.0000076293945, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6104937246825297731
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -503,11 +509,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 52
+  m_fontSize: 22.35
   m_fontSizeBase: 52
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 40
+  m_fontSizeMin: 10
   m_fontSizeMax: 52
   m_fontStyle: 0
   m_HorizontalAlignment: 4
