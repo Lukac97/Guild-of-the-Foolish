@@ -24,13 +24,21 @@ public class UsableSpellDisplay : MonoBehaviour, IPointerClickHandler
         manualCombatHandler = GetComponentInParent<ManualCombatUIHandler>();
         if (equippedCombatSpell == null)
         {
-            Destroy(gameObject);
-            return;
+            linkedSpell = null;
+            level.text = "";
+            spellCost.text = "";
+            spellIcon.enabled = false;
+            spellIcon.sprite = null;
+            cooldownContainer.SetActive(false);
         }
-        linkedSpell = equippedCombatSpell;
-        level.text = equippedCombatSpell.combatSpell.spellLevel.ToString();
-        spellCost.text = equippedCombatSpell.combatSpell.spellCost.ToString();
-        spellIcon.sprite = equippedCombatSpell.combatSpell.spellIcon;
+        else
+        {
+            linkedSpell = equippedCombatSpell;
+            level.text = equippedCombatSpell.combatSpell.spellLevel.ToString();
+            spellCost.text = equippedCombatSpell.combatSpell.spellCost.ToString();
+            spellIcon.enabled = true;
+            spellIcon.sprite = equippedCombatSpell.combatSpell.spellIcon;
+        }
 
         UpdateSpell();
     }
@@ -43,6 +51,8 @@ public class UsableSpellDisplay : MonoBehaviour, IPointerClickHandler
 
     private void OnClickUsableSpell()
     {
+        if (linkedSpell == null)
+            return;
         if(linkedSpell.cooldownLeft <= 0)
         {
             manualCombatHandler.combatEncounter.ManualChooseAction(linkedSpell);
@@ -51,6 +61,8 @@ public class UsableSpellDisplay : MonoBehaviour, IPointerClickHandler
 
     public void UpdateSpell()
     {
+        if (linkedSpell == null)
+            return;
         cooldownLeft.text = linkedSpell.cooldownLeft.ToString();
         if (linkedSpell.cooldownLeft <= 0)
         {

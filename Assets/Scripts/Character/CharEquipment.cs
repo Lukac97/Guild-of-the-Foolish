@@ -160,6 +160,7 @@ public class CharEquipment : MonoBehaviour
             if (slotItem.slot != WeaponSlot.MAIN_HAND)
                 return false;
             UnequipSlot(slotItem, true);
+            slotItem.isFakeEquipped = false;
             slotItem.item = weapon;
         }
         else if (weapon.weaponWielding == WeaponWielding.OFF_HAND)
@@ -167,11 +168,13 @@ public class CharEquipment : MonoBehaviour
             if (slotItem.slot != WeaponSlot.OFF_HAND)
                 return false;
             UnequipSlot(slotItem, true);
+            slotItem.isFakeEquipped = false;
             slotItem.item = weapon;
         }
         else if (weapon.weaponWielding == WeaponWielding.ONE_HANDED)
         {
             UnequipSlot(slotItem, true);
+            slotItem.isFakeEquipped = false;
             slotItem.item = weapon;
         }
         else if (weapon.weaponWielding == WeaponWielding.TWO_HANDED)

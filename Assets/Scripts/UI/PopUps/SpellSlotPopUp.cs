@@ -30,24 +30,8 @@ public class SpellSlotPopUp : MonoBehaviour
     public TextMeshProUGUI toChooseSpellDescription;
     public TextMeshProUGUI toChooseSpellName;
     public Image toChooseSpellIcon;
-
-    [Header("Canvas groups")]
-    [Space(6)]
-    [SerializeField]
-    private CanvasGroup mainSlotPanel;
-    [SerializeField]
-    private CanvasGroup changeEquippedSlotPanel;
-
-    [Space(10)]
-    [SerializeField]
-    private CanvasGroup spellDetailsPanel;
-    [SerializeField]
-    private CanvasGroup spellDetailsButtonsPanel;
-
-    [SerializeField]
-    private CanvasGroup availableSpellsPanel;
-    [SerializeField]
-    private CanvasGroup availableSpellsButtonsPanel;
+    [SerializeField] private GameObject deselectButton;
+    [SerializeField] private TextMeshProUGUI equipButtonText;
 
 
     private CharCombat currentCharCombat;
@@ -84,8 +68,15 @@ public class SpellSlotPopUp : MonoBehaviour
         InitToEquipSpellDetails();
     }
 
+    public void OnClickDeselectSpellToEquip()
+    {
+        toChooseCombatSpell = null;
+        InitToEquipSpellDetails();
+    }
+
     public void OnClickEquipYes()
     {
+        CombatSpell temp = currentCombatSpell;
         if (toChooseCombatSpell == null)
         {
             spellsDisplay.selectedCharacterCombat.RemoveCombatSpellFromSlot(spellSlotNumber);
@@ -94,11 +85,22 @@ public class SpellSlotPopUp : MonoBehaviour
         {
             spellsDisplay.selectedCharacterCombat.AddCombatSpellToSlot(toChooseCombatSpell, spellSlotNumber);
         }
+        toChooseCombatSpell = currentCombatSpell;
         InitContent();
     }
 
     private void InitToEquipSpellDetails()
     {
+        if (toChooseCombatSpell == null)
+        {
+            deselectButton.SetActive(false);
+            equipButtonText.text = "UNEQUIP";
+        }
+        else
+        {
+            deselectButton.SetActive(true);
+            equipButtonText.text = "EQUIP";
+        }
         DisplaySpellsDetails(toChooseCombatSpell, toChooseSpellIcon, toChooseSpellDescription, toChooseSpellName);
     }
 
@@ -135,6 +137,7 @@ public class SpellSlotPopUp : MonoBehaviour
 
     public void CloseSpellSlot()
     {
+        toChooseCombatSpell = null;
         popUpPanel.DeactivatePopUp(activatable);
     }
 

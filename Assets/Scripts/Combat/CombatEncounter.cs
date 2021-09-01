@@ -114,12 +114,12 @@ public class CombatEncounter : MonoBehaviour
                 intensity = character.combatHandler.CastASpell(eqSpell, enemy.combatHandler);
                 if(intensity.notEnoughSpellResource)
                 {
-                    ManualCombatUIHandler.Instance.DisplayMessage();
                     return;
                 }
                 combatLogger.AddLog(character.participantName, enemy.participantName, intensity, false);
             }
         }
+        ManualCombatUIHandler.Instance.DisplayMessage(intensity, true);
         if (enemy.combatHandler.isInjured)
         {
             EndOfCombat(1);  //enemy died - victory
@@ -277,6 +277,8 @@ public class CombatEncounter : MonoBehaviour
         {
             intensity = attackingChar.combatHandler.ChooseSpell(defendingChar.combatHandler);
             combatLogger.AddLog(attackingChar.participantName, defendingChar.participantName, intensity, isEnemyTurn);
+            if(isManualEncounter)
+                ManualCombatUIHandler.Instance.DisplayMessage(intensity, false);
         }
 
         if (defendingChar.combatHandler.isInjured)

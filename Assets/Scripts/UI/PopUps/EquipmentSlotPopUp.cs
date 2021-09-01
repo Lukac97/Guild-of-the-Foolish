@@ -86,8 +86,10 @@ public class EquipmentSlotPopUp : MonoBehaviour
     public void OnClickEquip()
     {
         bool result = false;
+        Item temp = null;
         if(armorSlot != null)
         {
+            temp = armorSlot.item;
             if (itemToEquip == null)
             {
                 result = currentChar.GetComponent<CharEquipment>().UnequipSlot(armorSlot);
@@ -99,6 +101,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
         }
         else if (weaponSlot != null)
         {
+            temp = weaponSlot.item;
             if (itemToEquip == null)
             {
                 result = currentChar.GetComponent<CharEquipment>().UnequipSlot(weaponSlot);
@@ -111,6 +114,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
 
         if (result)
         {
+            itemToEquip = GuildInventory.Instance.FindItem(temp);
             InitContent();
         }
         else
@@ -298,6 +302,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
 
     public void CloseEquipmentSlot()
     {
+        itemToEquip = null;
         popUpPanel.DeactivatePopUp(activatable);
     }
 }
