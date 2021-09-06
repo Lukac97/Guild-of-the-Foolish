@@ -130,7 +130,7 @@ public class CombatHandler : MonoBehaviour
         if (HasEnoughSpellResource(chosenEquippedCombatSpell))
         {
             spellResult = chosenEquippedCombatSpell.combatSpell.UseSpell(this, enemy);
-            combatStats.LowerSpellResource(chosenEquippedCombatSpell.combatSpell.spellCost);
+            LowerSpellResource(chosenEquippedCombatSpell.combatSpell.spellCost);
             chosenEquippedCombatSpell.PutOnCooldown();
         }
         else

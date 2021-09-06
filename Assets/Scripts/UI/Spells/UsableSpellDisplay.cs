@@ -55,7 +55,13 @@ public class UsableSpellDisplay : MonoBehaviour, IPointerClickHandler
             return;
         if(linkedSpell.cooldownLeft <= 0)
         {
-            manualCombatHandler.combatEncounter.ManualChooseAction(linkedSpell);
+            int outcome = manualCombatHandler.combatEncounter.ManualChooseAction(linkedSpell);
+            if(outcome == 1)
+                manualCombatHandler.mCombatAnimationHandler.NotEnoughResourceAlert();
+        }
+        else
+        {
+            manualCombatHandler.mCombatAnimationHandler.OnCooldownAlert();
         }
     }
 

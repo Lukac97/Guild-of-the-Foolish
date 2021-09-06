@@ -214,7 +214,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
             }
             if (nameToSet != null)
             {
-                nameToSet.text = equippedWeapon.name;
+                nameToSet.text = equippedWeapon.itemName;
             }
 
             if (equippedWeapon.attackDamageMultiplier != 0)
@@ -268,7 +268,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
             if (nameToSet != null)
             {
                 nameToSet.enabled = true;
-                nameToSet.text = equippedArmor.name;
+                nameToSet.text = equippedArmor.itemName;
             }
 
             if (equippedArmor.armorValue != 0)

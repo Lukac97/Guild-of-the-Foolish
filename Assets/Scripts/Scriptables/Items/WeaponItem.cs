@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-[CreateAssetMenu(fileName = "New Weapon", menuName = "Items/Weapon")]
 public class WeaponItem : Item
 {
     public WeaponWielding weaponWielding;
@@ -13,5 +11,24 @@ public class WeaponItem : Item
     public Attributes attributes;
     public float attackDamageMultiplier;
     public float armorValue;
+
+    public WeaponItem(WeaponItem newWeaponItem)
+    {
+        itemName = newWeaponItem.itemName;
+        itemDescription = newWeaponItem.itemDescription;
+        itemIcon = newWeaponItem.itemIcon;
+        level = newWeaponItem.level;
+        weaponWielding = newWeaponItem.weaponWielding;
+        weaponRange = newWeaponItem.weaponRange;
+        weaponType = newWeaponItem.weaponType;
+        attributes = newWeaponItem.attributes;
+        attackDamageMultiplier = newWeaponItem.attackDamageMultiplier;
+        armorValue = newWeaponItem.armorValue;
+    }
+
+    public WeaponItem()
+    {
+
+    }
 
 }

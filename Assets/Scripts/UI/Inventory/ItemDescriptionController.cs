@@ -31,7 +31,7 @@ public class ItemDescriptionController : MonoBehaviour
         }
         itemNamePanel.SetActive(true);
         itemDescriptionPanel.SetActive(true);
-        itemName.text = itemObject.item.name;
+        itemName.text = itemObject.item.itemName;
         itemLevel.text = itemObject.item.level.ToString();
         itemDescription.text = itemObject.item.itemDescription;
         icon.sprite = itemObject.item.itemIcon;

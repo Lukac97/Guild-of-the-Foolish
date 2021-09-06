@@ -96,10 +96,10 @@ public class CombatEncounter : MonoBehaviour
         ManualCombatUIHandler.Instance.InitManualCombatUIHandler(this);
     }
 
-    public void ManualChooseAction(CombatHandler.EquippedCombatSpell eqSpell)
+    public int ManualChooseAction(CombatHandler.EquippedCombatSpell eqSpell)
     {
         if (!manualIsPlayersTurn)
-            return;
+            return -1;
 
         UsedSpellResult intensity = null;
 
@@ -114,7 +114,7 @@ public class CombatEncounter : MonoBehaviour
                 intensity = character.combatHandler.CastASpell(eqSpell, enemy.combatHandler);
                 if(intensity.notEnoughSpellResource)
                 {
-                    return;
+                    return 1;
                 }
                 combatLogger.AddLog(character.participantName, enemy.participantName, intensity, false);
             }
@@ -123,12 +123,14 @@ public class CombatEncounter : MonoBehaviour
         if (enemy.combatHandler.isInjured)
         {
             EndOfCombat(1);  //enemy died - victory
-            return;
+            return 0;
         }
 
         manualIsPlayersTurn = false;
         //Enemy turn
         ManualSimulateCombat();
+
+        return 0;
     }
 
     private void ManualSimulateCombat()

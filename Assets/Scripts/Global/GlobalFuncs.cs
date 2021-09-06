@@ -21,6 +21,8 @@ public class GlobalFuncs : MonoBehaviour
             _instance = this;
     }
 
+    #region Equipment_Helper
+
     public static bool CheckIfWorse(ArmorItem armor1, ArmorItem armor2)
     {
         if (armor1 == null)
@@ -47,6 +49,40 @@ public class GlobalFuncs : MonoBehaviour
         else
             return false;
     }
+
+    #endregion Equipment_Helper
+
+    #region Item_Helper
+
+    public static Item GenerateItemFromPredefined(ArmorItemPredefined itemPredef)
+    {
+        ArmorItem itemRes = new ArmorItem(itemPredef.armorItem);
+        return itemRes;
+    }
+
+    public static Item GenerateItemFromPredefined(WeaponItemPredefined itemPredef)
+    {
+        WeaponItem itemRes = new WeaponItem(itemPredef.weaponItem);
+        return itemRes;
+    }
+
+    public static Item GenerateItemFromMould(ArmorItemMould itemMould)
+    {
+        //TODO: Implement logic for generating item based on item mould
+        ArmorItem itemRes = new ArmorItem();
+        return itemRes;
+    }
+
+    private static string GenerateItemName(ItemMould itemMould)
+    {
+        //TODO: Create logic for generating random item name
+        return "";
+    }
+
+
+    #endregion Item_Helper
+
+    #region UI_Helper
 
     //Returns cell size
     public static int PackGridLayoutSquare(GameObject gridPanel, int itemsPerPage, int fixedCellSize = 0,
@@ -130,4 +166,7 @@ public class GlobalFuncs : MonoBehaviour
 
         return minFontSize;
     }
+
+    #endregion UI_Helper
+
 }

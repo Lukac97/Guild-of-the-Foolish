@@ -279,7 +279,7 @@ public class InventoryList : MonoBehaviour
         }
         if (sortBy == InventorySortBy.NAME)
         {
-            returnValue = String.Compare(obj1.item.name, obj2.item.name, comparisonType: StringComparison.OrdinalIgnoreCase) > 0 ? true : false;
+            returnValue = String.Compare(obj1.item.itemName, obj2.item.itemName, comparisonType: StringComparison.OrdinalIgnoreCase) > 0 ? true : false;
         }
         if (sortBy == InventorySortBy.QUANTITY)
         {

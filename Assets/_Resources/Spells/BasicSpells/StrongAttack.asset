@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spellDescription: 
   spellLevel: 1
+  spellCost: 12
+  spellIcon: {fileID: 0}
   turnCooldown: 3
   intensityInstances:
   - onSelf: 0
@@ -24,6 +26,11 @@ MonoBehaviour:
       flatIntensity: 0
       scaleToMagicIntensity: 0
       scaleToPhysicalIntensity: 1.5
+      forStatScaling: 0
+      statFlatIntensity: 0
+      statMultiplier: 0
+      statMultiplierScaleToMagic: 0
+      statMultiplierScaleToPhysical: 0
   harmfulEffectsToTarget:
   - turnDuration: 1
     intensity:
@@ -35,6 +42,11 @@ MonoBehaviour:
         flatIntensity: 0
         scaleToMagicIntensity: 0
         scaleToPhysicalIntensity: 0
+        forStatScaling: 0
+        statFlatIntensity: 0
+        statMultiplier: 0
+        statMultiplierScaleToMagic: 0
+        statMultiplierScaleToPhysical: 0
     statusEffectType: 0
   harmfulEffectsToSelf: []
   beneficialEffectsToTarget: []
