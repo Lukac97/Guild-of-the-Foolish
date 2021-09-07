@@ -7,7 +7,7 @@ using TMPro;
 public class RewardItemSlot : MonoBehaviour
 {
 
-    public Image icon;
+    public ItemIconHandler icon;
     public TextMeshProUGUI quantity;
     public TextMeshProUGUI level;
 
@@ -15,14 +15,14 @@ public class RewardItemSlot : MonoBehaviour
     {
         if (iReward == null)
         {
-            icon.enabled = false;
+            icon.IconSetActive(false);
             quantity.text = "";
             level.text = "";
         }
         else
         {
-            icon.enabled = true;
-            icon.sprite = iReward.item.itemIcon;
+            icon.IconSetActive(true);
+            icon.InitItemIconHandler(iReward.item);
             if (iReward.quantity == 1)
                 quantity.text = "";
             else
@@ -33,14 +33,14 @@ public class RewardItemSlot : MonoBehaviour
     
     public void AssignGoldReward(float amount)
     {
-        icon.enabled = false;
+        icon.IconSetActive(false);
         quantity.text = amount.ToString();
         level.text = "";
     }
 
     public void AssignExperienceReward(float amount)
     {
-        icon.enabled = false;
+        icon.IconSetActive(false);
         quantity.text = amount.ToString();
         level.text = "";
     }

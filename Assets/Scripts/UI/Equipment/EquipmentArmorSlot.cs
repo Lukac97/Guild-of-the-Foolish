@@ -9,7 +9,7 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler
 {
     public ArmorSlot armorSlot;
     public TextMeshProUGUI slotName;
-    public Image itemIcon;
+    public ItemIconHandler itemIcon;
     public CharEquipment.ArmorSlotItem armorSlotItem = null;
 
     private EquipmentSlotController parentController;
@@ -63,13 +63,13 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler
         {
             slotName.gameObject.SetActive(true);
             slotName.text = armorSlot.ToString().Replace("_", " ");
-            itemIcon.enabled = false;
+            itemIcon.IconSetActive(false);
         }
         else
         {
             slotName.gameObject.SetActive(false);
-            itemIcon.enabled = true;
-            itemIcon.sprite = item.itemIcon;
+            itemIcon.IconSetActive(true);
+            itemIcon.InitItemIconHandler(item);
         }
     }
 }

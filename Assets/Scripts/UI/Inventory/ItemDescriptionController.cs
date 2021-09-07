@@ -12,7 +12,7 @@ public class ItemDescriptionController : MonoBehaviour
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemLevel;
     public TextMeshProUGUI itemDescription;
-    public Image icon;
+    public ItemIconHandler icon;
 
     private void Start()
     {
@@ -34,6 +34,6 @@ public class ItemDescriptionController : MonoBehaviour
         itemName.text = itemObject.item.itemName;
         itemLevel.text = itemObject.item.level.ToString();
         itemDescription.text = itemObject.item.itemDescription;
-        icon.sprite = itemObject.item.itemIcon;
+        icon.InitItemIconHandler(itemObject.item);
     }
 }

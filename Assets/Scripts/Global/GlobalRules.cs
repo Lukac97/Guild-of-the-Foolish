@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class GlobalRules : MonoBehaviour
 {
+
     private static GlobalRules _instance;
     public static GlobalRules Instance { get { return _instance; } }
 
     public static int attributePointsPerLevel = 5;
     public static int maxCombatTurns = 20;
     public static int maxCombatSpells = 6;
-    public static Vector2 equipmentAttackMultiplierRange = new Vector2(1, 1.25f);
+    public static float equipmentAttackMultiplierRangeMin = 1.0f;
+    public static float equipmentAttackMultiplierRangeMax = 1.25f;
     private static float levelOneExp = 100.0f;
 
     private void Start()

@@ -23,7 +23,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemName;
-    public Image itemIcon;
+    public ItemIconHandler itemIcon;
     [Space(5)]
     public GameObject attributesPanel;
     public GameObject singleStatPrefab;
@@ -35,7 +35,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
     [SerializeField] private TextMeshProUGUI toEquipName;
     [SerializeField] private TextMeshProUGUI toEquipDesc;
     [SerializeField] private TextMeshProUGUI equipButtonText;
-    [SerializeField] private Image toEquipIcon;
+    [SerializeField] private ItemIconHandler toEquipIcon;
 
     private CharEquipment.ArmorSlotItem armorSlot;
     private CharEquipment.WeaponSlotItem weaponSlot;
@@ -178,7 +178,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
         UpdateItemToEquip();
     }
 
-    private void DisplayItemsDetails(Item item, GameObject parentPanel, Image iconToSet,
+    private void DisplayItemsDetails(Item item, GameObject parentPanel, ItemIconHandler iconToSet,
         TextMeshProUGUI descToSet, TextMeshProUGUI nameToSet)
     {
         foreach (Transform child in parentPanel.transform)
@@ -189,7 +189,7 @@ public class EquipmentSlotPopUp : MonoBehaviour
         if (item == null)
         {
             if (iconToSet != null)
-                iconToSet.enabled = false;
+                iconToSet.IconSetActive(false);
             if (nameToSet != null)
                 nameToSet.text = "";
             if (descToSet != null)
@@ -209,8 +209,8 @@ public class EquipmentSlotPopUp : MonoBehaviour
             }
             if (iconToSet != null)
             {
-                iconToSet.enabled = true;
-                iconToSet.sprite = equippedWeapon.itemIcon;
+                iconToSet.IconSetActive(true);
+                iconToSet.InitItemIconHandler(equippedWeapon);
             }
             if (nameToSet != null)
             {
@@ -262,8 +262,8 @@ public class EquipmentSlotPopUp : MonoBehaviour
             }
             if (iconToSet != null)
             {
-                iconToSet.enabled = true;
-                iconToSet.sprite = equippedArmor.itemIcon;
+                iconToSet.IconSetActive(true);
+                iconToSet.InitItemIconHandler(equippedArmor);
             }
             if (nameToSet != null)
             {

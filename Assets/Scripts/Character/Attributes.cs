@@ -148,4 +148,12 @@ public class Attributes
         luck = attrs.luck;
         return true;
     }
+
+    public void RandomizeAttributes(int lowest, int highest)
+    {
+        strength = Random.Range(lowest, highest);
+        agility = Random.Range(lowest, highest);
+        intellect = Random.Range(lowest, highest);
+        luck = Random.Range(lowest, highest);
+    }
 }

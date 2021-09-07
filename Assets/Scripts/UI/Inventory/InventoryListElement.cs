@@ -8,7 +8,7 @@ using TMPro;
 
 public class InventoryListElement : MonoBehaviour, IPointerClickHandler
 {
-    public Image icon;
+    public ItemIconHandler icon;
 
     public ItemObject itemObject;
     public TextMeshProUGUI quantity;
@@ -33,15 +33,15 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
         if (iObject == null)
         {
             itemObject = null;
-            icon.enabled = false;
+            icon.IconSetActive(false);
             quantity.text = "";
             level.text = "";
         }
         else
         {
-            icon.enabled = true;
+            icon.IconSetActive(true);
             itemObject = iObject;
-            icon.sprite = iObject.item.itemIcon;
+            icon.InitItemIconHandler(iObject.item);
             if (iObject.quantity == 1)
                 quantity.text = "";
             else
@@ -58,15 +58,16 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
 
     public void SetHighlight(bool doHighlight, Color color = default(Color))
     {
-        if(doHighlight)
-        {
-            if (color != null)
-            {
-                icon.color = color;
-                return;
-            }
-        }
-        icon.color = Color.white;
+        //TODO: Implement Highlight
+        //if(doHighlight)
+        //{
+        //    if (color != null)
+        //    {
+        //        icon.color = color;
+        //        return;
+        //    }
+        //}
+        //icon.color = Color.white;
     }
 
     public void OnItemClick()

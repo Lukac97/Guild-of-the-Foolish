@@ -66,17 +66,62 @@ public class GlobalFuncs : MonoBehaviour
         return itemRes;
     }
 
-    public static Item GenerateItemFromMould(ArmorItemMould itemMould)
+    public static Item GenerateItemFromMould(ArmorItemMould itemMould, int level)
     {
         //TODO: Implement logic for generating item based on item mould
         ArmorItem itemRes = new ArmorItem();
+        itemRes.isMoulded = true;
+        itemRes.itemSlot = itemMould.itemSlot;
+        itemRes.armorType = itemMould.armorType;
+        itemRes.level = level;
+        itemRes.attributes = GenerateRandomEquipmentAttributes(level);
+        itemRes.armorValue = GlobalRules.GetEquipmentArmorPointsForLevel(level);
+
+        itemRes.itemName = GenerateItemName(itemMould);
+        //itemRes.itemIcon = new List<Sprite>(GenerateSpriteIcon(itemMould))
         return itemRes;
+    }
+
+    public static Item GenerateItemFromMould(WeaponItemMould itemMould, int level)
+    {
+        //TODO: Implement logic for generating item based on item mould
+        WeaponItem itemRes = new WeaponItem();
+        itemRes.isMoulded = true;
+        itemRes.weaponWielding = itemMould.weaponWielding;
+        itemRes.weaponRange = itemMould.weaponRange;
+        itemRes.weaponType = itemMould.weaponType;
+        itemRes.level = level;
+        itemRes.attributes = GenerateRandomEquipmentAttributes(level);
+        itemRes.armorValue = GlobalRules.GetEquipmentArmorPointsForLevel(level);
+        itemRes.attackDamageMultiplier = Random.Range(GlobalRules.equipmentAttackMultiplierRangeMin, GlobalRules.equipmentAttackMultiplierRangeMax);
+
+        itemRes.itemName = GenerateItemName(itemMould);
+        //itemRes.itemIcon = new List<Sprite>(GenerateSpriteIcon(itemMould))
+        return itemRes;
+    }
+
+    private static Attributes GenerateRandomEquipmentAttributes(int level)
+    {
+        int attributePts = GlobalRules.GetEquipmentAttributePointsForLevel(level);
+        Attributes newAttributes = new Attributes();
+        Attributes rndProportions = new Attributes();
+        rndProportions.RandomizeAttributes(0, 10);
+        newAttributes.ProportionallyAssignPts(rndProportions, attributePts);
+        return newAttributes;
     }
 
     private static string GenerateItemName(ItemMould itemMould)
     {
         //TODO: Create logic for generating random item name
-        return "";
+        string newItemName = itemMould.itemNamePrefix[Random.Range(0, itemMould.itemNamePrefix.Count)] +
+             " " + itemMould.itemNameType[Random.Range(0, itemMould.itemNameType.Count)] +
+            " of " + itemMould.itemNameBonus[Random.Range(0, itemMould.itemNameBonus.Count)];
+        return newItemName;
+    }
+
+    private static List<Sprite> GenerateSpriteIcon(ItemMould itemMould)
+    {
+        return new List<Sprite>();
     }
 
 

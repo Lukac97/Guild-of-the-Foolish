@@ -7,6 +7,8 @@ public class Item
 {
     public string itemName;
     public string itemDescription;
-    public Sprite itemIcon;
+    public List<IconPartWithShadow> itemIcon;
     public int level;
+
+    public bool isMoulded = false;
 }
