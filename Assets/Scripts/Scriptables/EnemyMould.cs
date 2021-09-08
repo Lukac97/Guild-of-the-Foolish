@@ -9,7 +9,7 @@ public class EnemyMould : ScriptableObject
     public Attributes attributesProportion;
     public List<CombatSpell> combatSpells;
     [Header("Possible drops")]
-    public List<Item> possibleItemYields;
+    public List<ItemMould> possibleItemYields;
     public Sprite enemyIcon;
 
     public Attributes CalculateAttributesByLevel(int level, int attributesPerLevel)

@@ -12,38 +12,43 @@ public class ItemIconHandler : MonoBehaviour
 
     public void InitItemIconHandler(Item item)
     {
+        iconParts = new List<GameObject>();
         foreach(Transform child in iconHolder.transform)
         {
             Destroy(child.gameObject);
         }
 
         currentItem = item;
-        foreach(IconPartWithShadow iconPart in currentItem.itemIcon)
+        if (currentItem.itemIcon != null)
         {
-            GameObject gO = Instantiate(iconPartPrefab, iconHolder.transform);
-            Image iconImage = gO.transform.GetChild(0).GetComponent<Image>();
-            if (iconPart.spritePart != null)
+            for (int i = currentItem.itemIcon.Count - 1; i >= 0; i--)
             {
-                iconImage.enabled = true;
-                iconImage.sprite = iconPart.spritePart;
-                iconImage.color = iconPart.partColor;
-            }
-            else
-            {
-                iconImage.enabled = false;
-            }
+                IconPartWithShadow iconPart = currentItem.itemIcon[i];
+                GameObject gO = Instantiate(iconPartPrefab, iconHolder.transform);
+                Image iconImage = gO.transform.GetChild(0).GetComponent<Image>();
+                if (iconPart.spritePart != null)
+                {
+                    iconImage.enabled = true;
+                    iconImage.sprite = iconPart.spritePart;
+                    iconImage.color = iconPart.partColor;
+                }
+                else
+                {
+                    iconImage.enabled = false;
+                }
 
-            Image iconShadow = gO.transform.GetChild(1).GetComponent<Image>();
-            if (iconPart.spritePartShadow != null)
-            {
-                iconShadow.enabled = true;
-                iconShadow.sprite = iconPart.spritePartShadow;
+                Image iconShadow = gO.transform.GetChild(1).GetComponent<Image>();
+                if (iconPart.spritePartShadow != null)
+                {
+                    iconShadow.enabled = true;
+                    iconShadow.sprite = iconPart.spritePartShadow;
+                }
+                else
+                {
+                    iconShadow.enabled = false;
+                }
+                iconParts.Add(gO);
             }
-            else
-            {
-                iconShadow.enabled = false;
-            }
-            iconParts.Add(gO);
         }
     }
 

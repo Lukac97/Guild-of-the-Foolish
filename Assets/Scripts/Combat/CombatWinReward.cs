@@ -28,7 +28,7 @@ public class CombatWinReward
         {
             items = new List<ItemReward>();
             ItemReward tempIR = new ItemReward();
-            tempIR.item = enemyStats.possibleItemYields[Random.Range(0, enemyStats.possibleItemYields.Count)];
+            tempIR.item = GlobalFuncs.GenerateItemFromMould(enemyStats.possibleItemYields[Random.Range(0, enemyStats.possibleItemYields.Count)], enemyStats.level);
             tempIR.quantity = 1;
             items.Add(tempIR);
             goldYield = enemyStats.level * 10;

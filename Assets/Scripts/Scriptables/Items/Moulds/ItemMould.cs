@@ -10,10 +10,10 @@ public class ItemMould : ScriptableObject
         public Sprite spritePart;
         public Sprite spritePartShadow;
         [Space(5)]
-        [Header("0-100")]
+        [Header("0-1")]
         public float colorValueMin;
         public float colorValueMax;
-        [Header("0-100")]
+        [Header("0-1")]
         public float colorSaturationRangeMin;
         public float colorSaturationRangeMax;
     }
@@ -30,7 +30,7 @@ public class ItemMould : ScriptableObject
 
     public string itemDescription;
     [Header("Icon generation")]
-    public List<IconMouldWithShadow> primarySpriteChoice;
-    public List<IconMouldWithShadow> secondarySpriteChoice;
-    public List<IconMouldWithShadow> tertiarySpriteChoice;
+    public List<IconMouldWithShadow> primarySpriteChoices;
+    public List<IconMouldWithShadow> secondarySpriteChoices;
+    public List<IconMouldWithShadow> tertiarySpriteChoices;
 }

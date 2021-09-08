@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac23d05f1eb4c0d42b0f8fa832c9cf9c, type: 3}
+  m_Name: Buckler
+  m_EditorClassIdentifier: 
+  itemNamePrefix:
+  - Ragged
+  - Broken
+  - Shiny
+  - Battle-worn
+  itemNameType:
+  - Buckler
+  - Small Shield
+  itemNameBonus:
+  - Might
+  - Fortitude
+  - Preseverence
+  itemDescription: 
+  primarySpriteChoices:
+  - spritePart: {fileID: 21300000, guid: a8a5699c69e7f824fb77e7c5a38043ec, type: 3}
+    spritePartShadow: {fileID: 21300000, guid: 80068473ff4e72d4bacbd0ccae098a4e, type: 3}
+    colorValueMin: 0
+    colorValueMax: 0
+    colorSaturationRangeMin: 0
+    colorSaturationRangeMax: 0
+  - spritePart: {fileID: 21300000, guid: 5803e0d1a5dcade498bbefbfd5dbaf0d, type: 3}
+    spritePartShadow: {fileID: 21300000, guid: 21d3715ae2c36eb448d22b7b9550506f, type: 3}
+    colorValueMin: 0
+    colorValueMax: 0
+    colorSaturationRangeMin: 0
+    colorSaturationRangeMax: 0
+  - spritePart: {fileID: 21300000, guid: fe1c5b1cabcba1c459a53284bf77310f, type: 3}
+    spritePartShadow: {fileID: 21300000, guid: f09039e647322fc4ba783a7147b83ea2, type: 3}
+    colorValueMin: 0
+    colorValueMax: 0
+    colorSaturationRangeMin: 0
+    colorSaturationRangeMax: 0
+  - spritePart: {fileID: 21300000, guid: 2d925df0a8f8e674abe8d7634f70e785, type: 3}
+    spritePartShadow: {fileID: 21300000, guid: 16a19975d047bba4db6d90280bc0f9fe, type: 3}
+    colorValueMin: 0
+    colorValueMax: 0
+    colorSaturationRangeMin: 0
+    colorSaturationRangeMax: 0
+  - spritePart: {fileID: 21300000, guid: 069b380d9e791184e905d93c4014c921, type: 3}
+    spritePartShadow: {fileID: 21300000, guid: dea00fbeaf58d9e4eabc6fdfee494e2c, type: 3}
+    colorValueMin: 0
+    colorValueMax: 0
+    colorSaturationRangeMin: 0
+    colorSaturationRangeMax: 0
+  - spritePart: {fileID: 21300000, guid: 0f5b416759ad8534c87e5e34a7023959, type: 3}
+    spritePartShadow: {fileID: 21300000, guid: c346131733dc43848bffcbe791fadbab, type: 3}
+    colorValueMin: 0
+    colorValueMax: 0
+    colorSaturationRangeMin: 0
+    colorSaturationRangeMax: 0
+  secondarySpriteChoices:
+  - spritePart: {fileID: 21300000, guid: a967153ec4732ae41bc765daebc34022, type: 3}
+    spritePartShadow: {fileID: 0}
+    colorValueMin: 0
+    colorValueMax: 0
+    colorSaturationRangeMin: 0
+    colorSaturationRangeMax: 0
+  - spritePart: {fileID: 21300000, guid: 83b77d1c2b2ebfc4f8c111a76b06e5e0, type: 3}
+    spritePartShadow: {fileID: 0}
+    colorValueMin: 0
+    colorValueMax: 0
+    colorSaturationRangeMin: 0
+    colorSaturationRangeMax: 0
+  tertiarySpriteChoices: []
+  weaponWielding: 0
+  weaponRange: 0
+  weaponType: 11

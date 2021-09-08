@@ -66,7 +66,19 @@ public class GlobalFuncs : MonoBehaviour
         return itemRes;
     }
 
-    public static Item GenerateItemFromMould(ArmorItemMould itemMould, int level)
+    public static Item GenerateItemFromMould(ItemMould itemMould, int level)
+    {
+        Item newItem = null;
+        if (itemMould.GetType() == typeof(ArmorItemMould))
+            newItem = GenerateItemFromMould((ArmorItemMould)itemMould, level);
+        else if (itemMould.GetType() == typeof(WeaponItemMould))
+            newItem = GenerateItemFromMould((WeaponItemMould)itemMould, level);
+
+        return newItem;
+    }
+
+
+    private static Item GenerateItemFromMould(ArmorItemMould itemMould, int level)
     {
         //TODO: Implement logic for generating item based on item mould
         ArmorItem itemRes = new ArmorItem();
@@ -78,11 +90,11 @@ public class GlobalFuncs : MonoBehaviour
         itemRes.armorValue = GlobalRules.GetEquipmentArmorPointsForLevel(level);
 
         itemRes.itemName = GenerateItemName(itemMould);
-        //itemRes.itemIcon = new List<Sprite>(GenerateSpriteIcon(itemMould))
+        itemRes.itemIcon = new List<IconPartWithShadow>(GenerateSpriteIcon(itemMould));
         return itemRes;
     }
 
-    public static Item GenerateItemFromMould(WeaponItemMould itemMould, int level)
+    private static Item GenerateItemFromMould(WeaponItemMould itemMould, int level)
     {
         //TODO: Implement logic for generating item based on item mould
         WeaponItem itemRes = new WeaponItem();
@@ -96,7 +108,7 @@ public class GlobalFuncs : MonoBehaviour
         itemRes.attackDamageMultiplier = Random.Range(GlobalRules.equipmentAttackMultiplierRangeMin, GlobalRules.equipmentAttackMultiplierRangeMax);
 
         itemRes.itemName = GenerateItemName(itemMould);
-        //itemRes.itemIcon = new List<Sprite>(GenerateSpriteIcon(itemMould))
+        itemRes.itemIcon = new List<IconPartWithShadow>(GenerateSpriteIcon(itemMould));
         return itemRes;
     }
 
@@ -119,11 +131,57 @@ public class GlobalFuncs : MonoBehaviour
         return newItemName;
     }
 
-    private static List<Sprite> GenerateSpriteIcon(ItemMould itemMould)
+    private static List<IconPartWithShadow> GenerateSpriteIcon(ItemMould itemMould)
     {
-        return new List<Sprite>();
+        List<ItemMould.IconMouldWithShadow> iconSpriteMoulds = new List<ItemMould.IconMouldWithShadow>();
+        if (itemMould.primarySpriteChoices.Count > 0)
+            iconSpriteMoulds.Add(itemMould.primarySpriteChoices[Random.Range(0, itemMould.primarySpriteChoices.Count)]);
+        if (itemMould.secondarySpriteChoices.Count > 0)
+            iconSpriteMoulds.Add(itemMould.secondarySpriteChoices[Random.Range(0, itemMould.secondarySpriteChoices.Count)]);
+        if(itemMould.tertiarySpriteChoices.Count > 0)
+            iconSpriteMoulds.Add(itemMould.tertiarySpriteChoices[Random.Range(0, itemMould.tertiarySpriteChoices.Count)]);
+
+        List<IconPartWithShadow> finalIcon = new List<IconPartWithShadow>();
+        foreach(ItemMould.IconMouldWithShadow partMould in iconSpriteMoulds)
+        {
+            IconPartWithShadow iconPart = new IconPartWithShadow();
+            iconPart.spritePart = partMould.spritePart;
+            iconPart.spritePartShadow = partMould.spritePartShadow;
+            iconPart.partColor = GenerateColorForIconPartMould(partMould);
+            finalIcon.Add(iconPart);
+        }
+
+        return finalIcon;
     }
 
+    private static Color GenerateColorForIconPartMould(ItemMould.IconMouldWithShadow iconPartMould)
+    {
+        float H;
+        float S;
+        float V;
+        if(iconPartMould.colorSaturationRangeMin == 0 & iconPartMould.colorSaturationRangeMax == 0)
+        {
+            S = Random.Range(0.2f, 0.8f);
+        }
+        else
+        {
+            S = Random.Range(iconPartMould.colorSaturationRangeMin, iconPartMould.colorSaturationRangeMax);
+        }
+
+        if(iconPartMould.colorValueMin == 0 & iconPartMould.colorValueMax == 0)
+        {
+            V = Random.Range(0.2f, 0.8f);
+        }
+        else
+        {
+            V = Random.Range(iconPartMould.colorValueMin, iconPartMould.colorValueMax);
+        }
+
+        H = Random.Range(0.0f, 1.0f);
+        Color finalColor = Color.HSVToRGB(H, S, V);
+        finalColor.a = 1;
+        return finalColor;
+    }
 
     #endregion Item_Helper
 
