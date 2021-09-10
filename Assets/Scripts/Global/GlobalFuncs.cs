@@ -57,12 +57,18 @@ public class GlobalFuncs : MonoBehaviour
     public static Item GenerateItemFromPredefined(ArmorItemPredefined itemPredef)
     {
         ArmorItem itemRes = new ArmorItem(itemPredef.armorItem);
+
+        itemRes.originItem = itemPredef.armorItem;
+
         return itemRes;
     }
 
     public static Item GenerateItemFromPredefined(WeaponItemPredefined itemPredef)
     {
         WeaponItem itemRes = new WeaponItem(itemPredef.weaponItem);
+
+        itemRes.originItem = itemPredef.weaponItem;
+
         return itemRes;
     }
 
@@ -91,6 +97,9 @@ public class GlobalFuncs : MonoBehaviour
 
         itemRes.itemName = GenerateItemName(itemMould);
         itemRes.itemIcon = new List<IconPartWithShadow>(GenerateSpriteIcon(itemMould));
+
+        itemRes.originItem = itemRes;
+
         return itemRes;
     }
 
@@ -109,6 +118,9 @@ public class GlobalFuncs : MonoBehaviour
 
         itemRes.itemName = GenerateItemName(itemMould);
         itemRes.itemIcon = new List<IconPartWithShadow>(GenerateSpriteIcon(itemMould));
+
+        itemRes.originItem = itemRes;
+
         return itemRes;
     }
 
@@ -133,48 +145,54 @@ public class GlobalFuncs : MonoBehaviour
 
     private static List<IconPartWithShadow> GenerateSpriteIcon(ItemMould itemMould)
     {
+        List<ItemMould.SpriteChoice> allSpriteChoices = new List<ItemMould.SpriteChoice>
+             { itemMould.primarySpriteChoices, itemMould.secondarySpriteChoices, itemMould.tertiarySpriteChoices };
         List<ItemMould.IconMouldWithShadow> iconSpriteMoulds = new List<ItemMould.IconMouldWithShadow>();
-        if (itemMould.primarySpriteChoices.Count > 0)
-            iconSpriteMoulds.Add(itemMould.primarySpriteChoices[Random.Range(0, itemMould.primarySpriteChoices.Count)]);
-        if (itemMould.secondarySpriteChoices.Count > 0)
-            iconSpriteMoulds.Add(itemMould.secondarySpriteChoices[Random.Range(0, itemMould.secondarySpriteChoices.Count)]);
-        if(itemMould.tertiarySpriteChoices.Count > 0)
-            iconSpriteMoulds.Add(itemMould.tertiarySpriteChoices[Random.Range(0, itemMould.tertiarySpriteChoices.Count)]);
+        List<ItemMould.ColorCustomization> iconColorCustomizations = new List<ItemMould.ColorCustomization>();
+        foreach(ItemMould.SpriteChoice spriteChoice in allSpriteChoices)
+        {
+            if (spriteChoice.spriteChoices.Count > 0)
+            {
+                iconSpriteMoulds.Add(spriteChoice.spriteChoices
+                    [Random.Range(0, spriteChoice.spriteChoices.Count)]);
+                iconColorCustomizations.Add(spriteChoice.colorCustomization);
+            }
+        }
 
         List<IconPartWithShadow> finalIcon = new List<IconPartWithShadow>();
-        foreach(ItemMould.IconMouldWithShadow partMould in iconSpriteMoulds)
+        for(int i = 0; i < iconSpriteMoulds.Count; i++)
         {
             IconPartWithShadow iconPart = new IconPartWithShadow();
-            iconPart.spritePart = partMould.spritePart;
-            iconPart.spritePartShadow = partMould.spritePartShadow;
-            iconPart.partColor = GenerateColorForIconPartMould(partMould);
+            iconPart.spritePart = iconSpriteMoulds[i].spritePart;
+            iconPart.spritePartShadow = iconSpriteMoulds[i].spritePartShadow;
+            iconPart.partColor = GenerateColorForIconPartMould(iconSpriteMoulds[i], iconColorCustomizations[i]);
             finalIcon.Add(iconPart);
         }
 
         return finalIcon;
     }
 
-    private static Color GenerateColorForIconPartMould(ItemMould.IconMouldWithShadow iconPartMould)
+    private static Color GenerateColorForIconPartMould(ItemMould.IconMouldWithShadow iconPartMould, ItemMould.ColorCustomization colorC)
     {
         float H;
         float S;
         float V;
-        if(iconPartMould.colorSaturationRangeMin == 0 & iconPartMould.colorSaturationRangeMax == 0)
+        if(colorC.colorSaturationRangeMin == 0 & colorC.colorSaturationRangeMax == 0)
         {
             S = Random.Range(0.2f, 0.8f);
         }
         else
         {
-            S = Random.Range(iconPartMould.colorSaturationRangeMin, iconPartMould.colorSaturationRangeMax);
+            S = Random.Range(colorC.colorSaturationRangeMin, colorC.colorSaturationRangeMax);
         }
 
-        if(iconPartMould.colorValueMin == 0 & iconPartMould.colorValueMax == 0)
+        if(colorC.colorValueMin == 0 & colorC.colorValueMax == 0)
         {
             V = Random.Range(0.2f, 0.8f);
         }
         else
         {
-            V = Random.Range(iconPartMould.colorValueMin, iconPartMould.colorValueMax);
+            V = Random.Range(colorC.colorValueMin, colorC.colorValueMax);
         }
 
         H = Random.Range(0.0f, 1.0f);

@@ -73,9 +73,11 @@ public class GuildInventory : MonoBehaviour
 
     public ItemObject FindItem(Item item)
     {
+        if (item == null)
+            return null;
         foreach(ItemObject child in itemObjects)
         {
-            if (item == child.item)
+            if (item.originItem == child.item.originItem)
                 return child;
         }
         return null;

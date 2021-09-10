@@ -418,7 +418,7 @@ public class CombatHandler : MonoBehaviour
         AppliedIntensityInstance finalDmg = new AppliedIntensityInstance(dmg);
 
         //Calculate resistances
-        float maxRes = 100 + (dmg.originLevel - 1) * 20;
+        float maxRes = GlobalRules.GetMaxResistanceBasedOnAttackLevel(dmg.originLevel);
         if (dmg.primaryIntensityType == PrimaryIntensityType.PHYSICAL)
         {
             float finalRes = combatStats.totalStats.physicalResistance / maxRes;
@@ -429,8 +429,8 @@ public class CombatHandler : MonoBehaviour
         else if (dmg.primaryIntensityType == PrimaryIntensityType.MAGICAL)
         {
             float finalRes = combatStats.totalStats.magicalResistance / maxRes;
-            if (finalRes > 0.9f)
-                finalRes = 0.9f;
+            if (finalRes > 0.95f)
+                finalRes = 0.95f;
             finalDmg.intensity = dmg.intensity * (1 - finalRes);
         }
 

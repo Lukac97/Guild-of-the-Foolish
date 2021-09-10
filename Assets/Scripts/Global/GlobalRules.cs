@@ -35,4 +35,10 @@ public class GlobalRules : MonoBehaviour
     {
         return Mathf.RoundToInt(2 + Mathf.Pow(level, 2) / 5);
     }
+
+    //Get percentage of how much damage should be resisted
+    public static float GetMaxResistanceBasedOnAttackLevel(int level)
+    {
+        return 100 + (level - 1) * 20;
+    }
 }

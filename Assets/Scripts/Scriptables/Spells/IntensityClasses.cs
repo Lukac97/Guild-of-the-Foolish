@@ -63,24 +63,40 @@ public class IntensityInstance
 [System.Serializable]
 public class AppliedIntensityInstance
 {
+    [Tooltip("If this instance was cast by character on themself.")]
     public bool onSelf;
+    [Tooltip("Purpose of intensity (healing, damaging)")]
     public IntensityPurpose intensityPurpose;
+    [Tooltip("Primary type of intensity")]
     public PrimaryIntensityType primaryIntensityType;
+    [Tooltip("Secondary type of intensity")]
     public SecondaryIntensityType secondaryIntensityType;
+    [Tooltip("(Before application) Intensity to try to apply / (After application) Intensity that has been applied")]
     public float intensity;
+    [Tooltip("Level of character which cast this intensity")]
     public int originLevel;
+    [Tooltip("Critical potency of character which cast this intensity")]
     public float originCriticalPotency;
+    [Tooltip("Hit potency of character which cast this intensity")]
     public float originHitPotency;
 
+    [Tooltip("Flat amount of how much targeted stat is affected (increased/decreased).")]
     public float statFlatIntensity;
+    [Tooltip("Amount by which targeted stat is multiplied")]
     public float statMultiplier;
 
+    [Tooltip("If this intensity has been avoided. (useful after applying intensity, to see if attack was avoided)")]
     public bool hasBeenAvoided;
+    [Tooltip("If this intensity is critical. (useful after applying intensity)")]
     public bool isCritical;
 
+    [Tooltip("If this intensity was cast with trustrike.")]
     public bool castWithTruestrike;
+    [Tooltip("If this intensity was cast with precise.")]
     public bool castWithPrecise;
+    [Tooltip("If this intensity was cast with blind.")]
     public bool castWithBlind;
+    [Tooltip("If this intensity was cast with dazed.")]
     public bool castWithDazed;
 
     public AppliedIntensityInstance(IntensityInstance intensityInstance, float _intensity,

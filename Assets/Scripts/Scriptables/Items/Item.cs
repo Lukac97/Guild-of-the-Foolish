@@ -11,4 +11,6 @@ public class Item
     public int level;
 
     public bool isMoulded = false;
+
+    public Item originItem;
 }

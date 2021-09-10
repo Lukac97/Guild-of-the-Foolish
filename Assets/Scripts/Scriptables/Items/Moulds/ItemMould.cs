@@ -5,17 +5,28 @@ using UnityEngine;
 public class ItemMould : ScriptableObject
 {
     [System.Serializable]
-    public class IconMouldWithShadow
+    public class ColorCustomization
     {
-        public Sprite spritePart;
-        public Sprite spritePartShadow;
-        [Space(5)]
         [Header("0-1")]
         public float colorValueMin;
         public float colorValueMax;
         [Header("0-1")]
         public float colorSaturationRangeMin;
         public float colorSaturationRangeMax;
+    }
+
+    [System.Serializable]
+    public class IconMouldWithShadow
+    {
+        public Sprite spritePart;
+        public Sprite spritePartShadow;
+    }
+
+    [System.Serializable]
+    public class SpriteChoice
+    {
+        public List<IconMouldWithShadow> spriteChoices;
+        public ColorCustomization colorCustomization;
     }
 
     [Header("Name generation")]
@@ -30,7 +41,7 @@ public class ItemMould : ScriptableObject
 
     public string itemDescription;
     [Header("Icon generation")]
-    public List<IconMouldWithShadow> primarySpriteChoices;
-    public List<IconMouldWithShadow> secondarySpriteChoices;
-    public List<IconMouldWithShadow> tertiarySpriteChoices;
+    public SpriteChoice primarySpriteChoices;
+    public SpriteChoice secondarySpriteChoices;
+    public SpriteChoice tertiarySpriteChoices;
 }
