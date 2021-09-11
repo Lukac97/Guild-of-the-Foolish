@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GlobalTime : MonoBehaviour
 {
@@ -13,36 +14,64 @@ public class GlobalTime : MonoBehaviour
         }
     }
 
-    public static List<GlobalAction> globalActions;
+    public static List<GlobalAction> globalActions = new List<GlobalAction>();
+    public static int halfCycleNumber = 0;
+
+    [SerializeField] private TextMeshProUGUI cycleNrTxt;
+    [SerializeField] private TextMeshProUGUI dayNightToggle;
 
     private void Awake()
     {
         if (Instance == null)
             _instance = this;
-        globalActions = new List<GlobalAction>();
     }
 
-    private void FixedUpdate()
+    private void Start()
+    {
+        UpdateGlobalTimeText();
+    }
+
+    public void OnClickNextHalfCycle()
     {
         List<GlobalAction> newGlobalActions = new List<GlobalAction>(globalActions);
         foreach(GlobalAction gA in globalActions)
         {
-            if(gA.TimeChanged(Time.deltaTime))
+            if(gA.OnHalfCycleChanged())
             {
                 newGlobalActions.Remove(gA);
             }
         }
         globalActions = new List<GlobalAction>(newGlobalActions);
+        halfCycleNumber++;
+        UpdateGlobalTimeText();
+    }
+
+    private void UpdateGlobalTimeText()
+    {
+        cycleNrTxt.text = Mathf.FloorToInt(halfCycleNumber / 2).ToString();
+        dayNightToggle.text = halfCycleNumber % 2 > 0 ? "N" : "D";
     }
 
     public static void CreateCombatEncounterAction(CombatEncounter cbE)
     {
-        globalActions.Add(new CombatEncounterAction(cbE, 1));
+        CombatEncounterAction newAction = new CombatEncounterAction(cbE, 1);
+        globalActions.Add(newAction);
+        CheckIfActionIsInstant(newAction);
     }
 
     public static void CreateCharacterMoveAction(CharStats charStats, Location loc)
     {
-        globalActions.Add(new CharacterMoveAction(charStats, loc, 1));
+        CharacterMoveAction newAction = new CharacterMoveAction(charStats, loc, 1);
+        globalActions.Add(newAction);
+        CheckIfActionIsInstant(newAction);
+    }
+
+    private static void CheckIfActionIsInstant(GlobalAction gA)
+    {
+        if(gA.CheckIfActionFinished())
+        {
+            globalActions.Remove(gA);
+        }
     }
 
 }

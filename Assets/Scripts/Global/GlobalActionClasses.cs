@@ -5,19 +5,24 @@ using UnityEngine;
 [System.Serializable]
 public class GlobalAction
 {
-    public float duration;
+    public int nrOfHalfCycles;
 
-    public virtual void OnTimeRunOut()
+    public virtual void OnActionFinished()
     {
 
     }
 
-    public bool TimeChanged(float deltaTime)
+    public bool OnHalfCycleChanged()
     {
-        duration -= deltaTime;
-        if(duration <= 0)
+        nrOfHalfCycles -= 1;
+        return CheckIfActionFinished();
+    }
+
+    public bool CheckIfActionFinished()
+    {
+        if (nrOfHalfCycles <= 0)
         {
-            OnTimeRunOut();
+            OnActionFinished();
             return true;
         }
         return false;
@@ -29,7 +34,7 @@ public class CombatEncounterAction : GlobalAction
 {
     public CombatEncounter combatEncounter;
 
-    public override void OnTimeRunOut()
+    public override void OnActionFinished()
     {
         if(combatEncounter != null)
         {
@@ -37,10 +42,10 @@ public class CombatEncounterAction : GlobalAction
         }
     }
 
-    public CombatEncounterAction(CombatEncounter cbEnc, float _duration)
+    public CombatEncounterAction(CombatEncounter cbEnc, int _nrOfHalfCycles)
     {
         combatEncounter = cbEnc;
-        duration = _duration;
+        nrOfHalfCycles = _nrOfHalfCycles;
     }
 }
 
@@ -50,7 +55,7 @@ public class CharacterMoveAction : GlobalAction
     public CharStats charStats;
     public Location loc;
 
-    public override void OnTimeRunOut()
+    public override void OnActionFinished()
     {
         if (charStats != null & loc != null)
         {
@@ -58,11 +63,11 @@ public class CharacterMoveAction : GlobalAction
         }
     }
 
-    public CharacterMoveAction(CharStats _charStats, Location _loc, float _duration)
+    public CharacterMoveAction(CharStats _charStats, Location _loc, int _nrOfHalfCycles)
     {
         charStats = _charStats;
         loc = _loc;
-        duration = _duration;
+        nrOfHalfCycles = _nrOfHalfCycles;
     }
 }
 
