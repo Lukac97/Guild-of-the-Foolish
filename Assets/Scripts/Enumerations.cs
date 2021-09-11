@@ -175,3 +175,23 @@ public enum SecondaryIntensityType
     DARK
 }
 #endregion Spells
+
+#region Consumables
+
+public enum BeneficialConsumableEffectType
+{
+    INCREASE_STRENGTH,
+    INCREASE_AGILITY,
+    INCREASE_INTELLECT,
+    INCREASE_LUCK
+}
+
+public enum HarmfulConsumableEffectType
+{
+    DECREASE_STRENGTH,
+    DECREASE_AGILITY,
+    DECREASE_INTELLECT,
+    DECREASE_LUCK
+}
+
+#endregion Consumables

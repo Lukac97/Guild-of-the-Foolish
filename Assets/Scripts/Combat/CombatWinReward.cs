@@ -31,6 +31,10 @@ public class CombatWinReward
             tempIR.item = GlobalFuncs.GenerateItemFromMould(enemyStats.possibleItemYields[Random.Range(0, enemyStats.possibleItemYields.Count)], enemyStats.level);
             tempIR.quantity = 1;
             items.Add(tempIR);
+            ItemReward consumableIR = new ItemReward();
+            consumableIR.item = GlobalFuncs.GenerateItemFromPredefined(enemyStats.possibleConsumableYields[Random.Range(0, enemyStats.possibleConsumableYields.Count)]);
+            consumableIR.quantity = Random.Range(1, 3);
+            items.Add(consumableIR);
             goldYield = enemyStats.level * 10;
             experienceYield = enemyStats.level * 20;
         }

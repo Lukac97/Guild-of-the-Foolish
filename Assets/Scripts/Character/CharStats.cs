@@ -17,6 +17,7 @@ public class CharStats : MonoBehaviour
     [Space(5)]
     public Attributes charAttributes;
     public Attributes totalAttributes;
+    private Attributes tempAttributes;
 
     [Space(5)]
     public int availablePoints;
@@ -27,6 +28,13 @@ public class CharStats : MonoBehaviour
     private CharEquipment charEquipment;
     private CharCombat charCombat;
 
+    private List<AppliedConsumableEffect> appliedConsumableEffects;
+
+    private void Awake()
+    {
+        
+    }
+
     private void Start()
     {
         charEquipment = GetComponent<CharEquipment>();
@@ -34,6 +42,8 @@ public class CharStats : MonoBehaviour
         //Placeholder until serialization happens
         if(charAttributes.SumOfAllAttributes() == 0)
             charAttributes = new Attributes(characterClass.startingAttributes);
+        if (tempAttributes == null)
+            tempAttributes = new Attributes();
         //End of placeholder
         UpdateTotalAttributes();
     }
@@ -66,7 +76,7 @@ public class CharStats : MonoBehaviour
 
     public void UpdateTotalAttributes()
     {
-        totalAttributes = charAttributes + charEquipment.equipmentAttributes;
+        totalAttributes = charAttributes + charEquipment.equipmentAttributes + tempAttributes;
         charCombat.UpdateCharCombat();
     }
 
@@ -119,5 +129,77 @@ public class CharStats : MonoBehaviour
         availablePoints += GlobalRules.attributePointsPerLevel;
 
         CharactersController.CharactersUpdated.Invoke();
+    }
+
+    public void ApplyConsumableEffect(ConsumableEffect consumableEffect)
+    {
+        AppliedConsumableEffect appliedCE = new AppliedConsumableEffect(consumableEffect);
+        HandleConsumableEffect(appliedCE);
+        appliedConsumableEffects.Add(appliedCE);
+    }
+
+    public void InvokeConsumableEffects()
+    {
+        List<AppliedConsumableEffect> newAppliedConsumableEffects = new List<AppliedConsumableEffect>(appliedConsumableEffects);
+        foreach(AppliedConsumableEffect appliedCE in appliedConsumableEffects)
+        {
+            appliedCE.halfCyclesLeft -= 1;
+            if(appliedCE.halfCyclesLeft <= 0)
+            {
+                HandleConsumableEffect(appliedCE, true);
+                newAppliedConsumableEffects.Remove(appliedCE);
+            }
+        }
+        appliedConsumableEffects = newAppliedConsumableEffects;
+    }
+
+    private void HandleConsumableEffect(AppliedConsumableEffect appliedCE, bool toRemove = false)
+    {
+        if (appliedCE.consumableEffect.GetType() == typeof(BeneficialConsumableEffect))
+        {
+            if (((BeneficialConsumableEffect)appliedCE.consumableEffect).consumableEffectType ==
+                BeneficialConsumableEffectType.INCREASE_STRENGTH)
+            {
+                tempAttributes.strength += appliedCE.consumableEffect.intensity * (toRemove ? -1 : 1);
+            }
+            else if (((BeneficialConsumableEffect)appliedCE.consumableEffect).consumableEffectType ==
+                BeneficialConsumableEffectType.INCREASE_AGILITY)
+            {
+                tempAttributes.agility += appliedCE.consumableEffect.intensity * (toRemove ? -1 : 1);
+            }
+            else if (((BeneficialConsumableEffect)appliedCE.consumableEffect).consumableEffectType ==
+                BeneficialConsumableEffectType.INCREASE_INTELLECT)
+            {
+                tempAttributes.intellect += appliedCE.consumableEffect.intensity * (toRemove ? -1 : 1);
+            }
+            else if (((BeneficialConsumableEffect)appliedCE.consumableEffect).consumableEffectType ==
+                BeneficialConsumableEffectType.INCREASE_LUCK)
+            {
+                tempAttributes.luck += appliedCE.consumableEffect.intensity * (toRemove ? -1 : 1);
+            }
+        }
+        else if (appliedCE.consumableEffect.GetType() == typeof(HarmfulConsumableEffect))
+        {
+            if (((HarmfulConsumableEffect)appliedCE.consumableEffect).consumableEffectType ==
+                HarmfulConsumableEffectType.DECREASE_STRENGTH)
+            {
+                tempAttributes.strength -= appliedCE.consumableEffect.intensity * (toRemove ? -1 : 1);
+            }
+            else if (((HarmfulConsumableEffect)appliedCE.consumableEffect).consumableEffectType ==
+                HarmfulConsumableEffectType.DECREASE_AGILITY)
+            {
+                tempAttributes.agility -= appliedCE.consumableEffect.intensity * (toRemove ? -1 : 1);
+            }
+            else if (((HarmfulConsumableEffect)appliedCE.consumableEffect).consumableEffectType ==
+                HarmfulConsumableEffectType.DECREASE_INTELLECT)
+            {
+                tempAttributes.intellect -= appliedCE.consumableEffect.intensity * (toRemove ? -1 : 1);
+            }
+            else if (((HarmfulConsumableEffect)appliedCE.consumableEffect).consumableEffectType ==
+                HarmfulConsumableEffectType.DECREASE_LUCK)
+            {
+                tempAttributes.luck -= appliedCE.consumableEffect.intensity * (toRemove ? -1 : 1);
+            }
+        }
     }
 }

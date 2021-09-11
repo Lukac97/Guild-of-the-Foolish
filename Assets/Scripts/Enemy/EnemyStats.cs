@@ -15,6 +15,7 @@ public class EnemyStats : MonoBehaviour
 
     [HideInInspector]
     public List<ItemMould> possibleItemYields;
+    public List<ConsumableItemPredefined> possibleConsumableYields;
 
     private EnemyCombat enemyCombat;
     private void Start()
@@ -31,5 +32,6 @@ public class EnemyStats : MonoBehaviour
         level = lvl;
         enemyAttributes = enemyMould.CalculateAttributesByLevel(lvl, GlobalRules.attributePointsPerLevel);
         possibleItemYields = new List<ItemMould>(enemyMould.possibleItemYields);
+        possibleConsumableYields = new List<ConsumableItemPredefined>(enemyMould.possibleConsumableYields);
     }
 }

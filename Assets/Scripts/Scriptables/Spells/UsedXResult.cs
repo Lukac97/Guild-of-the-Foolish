@@ -94,3 +94,14 @@ public class AppliedStatusEffect
 
 }
 
+public class AppliedConsumableEffect
+{
+    public ConsumableEffect consumableEffect;
+    public int halfCyclesLeft;
+
+    public AppliedConsumableEffect(ConsumableEffect _consumableEffect)
+    {
+        consumableEffect = _consumableEffect;
+        halfCyclesLeft = _consumableEffect.halfCycleDuration;
+    }
+}

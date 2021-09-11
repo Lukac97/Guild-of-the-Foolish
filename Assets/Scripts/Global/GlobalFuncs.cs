@@ -72,6 +72,15 @@ public class GlobalFuncs : MonoBehaviour
         return itemRes;
     }
 
+    public static Item GenerateItemFromPredefined(ConsumableItemPredefined itemPredef)
+    {
+        ConsumableItem itemRes = new ConsumableItem(itemPredef.consumableItem);
+
+        itemRes.originItem = itemPredef.consumableItem;
+
+        return itemRes;
+    }
+
     public static Item GenerateItemFromMould(ItemMould itemMould, int level)
     {
         Item newItem = null;

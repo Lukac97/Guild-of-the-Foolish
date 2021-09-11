@@ -10,6 +10,7 @@ public class EnemyMould : ScriptableObject
     public List<CombatSpell> combatSpells;
     [Header("Possible drops")]
     public List<ItemMould> possibleItemYields;
+    public List<ConsumableItemPredefined> possibleConsumableYields;
     public Sprite enemyIcon;
 
     public Attributes CalculateAttributesByLevel(int level, int attributesPerLevel)

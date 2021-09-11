@@ -20,10 +20,14 @@ public class GlobalTime : MonoBehaviour
     [SerializeField] private TextMeshProUGUI cycleNrTxt;
     [SerializeField] private TextMeshProUGUI dayNightToggle;
 
+    public delegate void HalfCycleDelegate();
+    public static HalfCycleDelegate OnNextHalfCycle;
+
     private void Awake()
     {
         if (Instance == null)
             _instance = this;
+        OnNextHalfCycle += UpdateGlobalTimeText;
     }
 
     private void Start()
@@ -43,7 +47,8 @@ public class GlobalTime : MonoBehaviour
         }
         globalActions = new List<GlobalAction>(newGlobalActions);
         halfCycleNumber++;
-        UpdateGlobalTimeText();
+        if (OnNextHalfCycle != null)
+            OnNextHalfCycle.Invoke();
     }
 
     private void UpdateGlobalTimeText()
