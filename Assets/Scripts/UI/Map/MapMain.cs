@@ -15,6 +15,8 @@ public class MapMain : MonoBehaviour
     }
 
     public GameObject nodes;
+    public GameObject nodePortraits;
+    [SerializeField] private GameObject nodePortraitPrefab;
     public World world;
     public GameObject moveButtonPanel;
 
@@ -31,15 +33,50 @@ public class MapMain : MonoBehaviour
 
     private void Awake()
     {
+        GlobalInput.Instance.onChangedSelectedEntity += UpdateMapMain;
         if (Instance == null)
             _instance = this;
     }
 
     void Start()
     {
-        GlobalInput.Instance.onChangedSelectedEntity += UpdateMapMain;
+        InitNodePortraits();
+    }
 
-        EnableMoveButton();
+    private void Update()
+    {
+        UpdateNodePortraits();
+    }
+
+    private void UpdateNodePortraits()
+    {
+        List<NodePortraitHandler> portraits = new List<NodePortraitHandler>(nodePortraits.GetComponentsInChildren<NodePortraitHandler>());
+        for(int i=0; i<portraits.Count; i++)
+        {
+            int sameLocCounter = 0;
+            for(int j=0; j<i; j++)
+            {
+                if(portraits[j].connectedCharacter.location == portraits[i].connectedCharacter.location)
+                {
+                    sameLocCounter += 1;
+                }
+            }
+            portraits[i].UpdateLocation(sameLocCounter);
+        }
+    }
+
+    private void InitNodePortraits()
+    {
+        foreach(Transform child in nodePortraits.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach(GameObject charGO in CharactersController.Instance.characters)
+        {
+            GameObject gO = Instantiate(nodePortraitPrefab, nodePortraits.transform);
+            gO.GetComponent<NodePortraitHandler>().InitNodePortrait(charGO.GetComponent<CharStats>());
+        }
     }
 
 
@@ -53,7 +90,6 @@ public class MapMain : MonoBehaviour
         {
             HighlightSelectedLocation();
         }
-        EnableMoveButton();
     }
 
     public void HighlightLocationOfSelectedChar()
@@ -76,18 +112,6 @@ public class MapMain : MonoBehaviour
         DeHighlightAllLocations();
         lastHighlitedNodes.Add(GlobalInput.Instance.selectedEntity.GetComponent<Location>().connectedNode.gameObject);
         HighlightLocations();
-    }
-
-    public void EnableMoveButton()
-    {
-        if (GlobalInput.CheckIfSelectedCharacter())
-        {
-            moveButtonPanel.SetActive(true);
-        }
-        else
-        {
-            moveButtonPanel.SetActive(false);
-        }
     }
 
     //-------------------------------------------------------------------------------------
