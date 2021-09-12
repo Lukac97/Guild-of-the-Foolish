@@ -28,7 +28,7 @@ public class CharStats : MonoBehaviour
     private CharEquipment charEquipment;
     private CharCombat charCombat;
 
-    private List<AppliedConsumableEffect> appliedConsumableEffects;
+    private List<AppliedConsumableEffect> appliedConsumableEffects = new List<AppliedConsumableEffect>();
 
     private void Awake()
     {
@@ -201,5 +201,6 @@ public class CharStats : MonoBehaviour
                 tempAttributes.luck -= appliedCE.consumableEffect.intensity * (toRemove ? -1 : 1);
             }
         }
+        UpdateTotalAttributes();
     }
 }

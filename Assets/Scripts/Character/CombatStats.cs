@@ -68,39 +68,39 @@ public class CombatStats
         baseStats.criticalPotency = 0;
         baseStats.hitPotency = 0;
         //maxHealth
-        baseStats.maxHealth += attributes.strength * 10.0f;
-        baseStats.maxHealth += attributes.agility * 6.0f;
-        baseStats.maxHealth += attributes.intellect * 4.0f;
+        baseStats.maxHealth += Mathf.Max(0, attributes.strength) * 10.0f;
+        baseStats.maxHealth += Mathf.Max(0, attributes.agility) * 6.0f;
+        baseStats.maxHealth += Mathf.Max(0, attributes.intellect) * 4.0f;
 
         //maxSpellResource
-        baseStats.maxSpellResource += attributes.intellect * 20.0f;
+        baseStats.maxSpellResource += Mathf.Max(0, attributes.intellect) * 20.0f;
 
 
         //----------------------------------------
         //physicalDmg
-        baseStats.physicalDamage += attributes.strength * 0.8f;
-        baseStats.physicalDamage += attributes.agility * 0.8f;
+        baseStats.physicalDamage += Mathf.Max(0, attributes.strength) * 0.8f;
+        baseStats.physicalDamage += Mathf.Max(0, attributes.agility) * 0.8f;
 
         //magicalDmg
-        baseStats.magicalDamage += attributes.intellect * 1.1f;
+        baseStats.magicalDamage += Mathf.Max(0, attributes.intellect) * 1.1f;
 
         //physicalRed
-        baseStats.physicalResistance += attributes.strength * 1.5f;
+        baseStats.physicalResistance += Mathf.Max(0, attributes.strength) * 1.5f;
 
         //magicalRed
-        baseStats.magicalResistance += attributes.intellect * 0.5f;
+        baseStats.magicalResistance += Mathf.Max(0, attributes.intellect) * 0.5f;
 
         //avoidPotency
-        baseStats.avoidPotency += attributes.agility * 0.3f;
-        baseStats.avoidPotency += attributes.luck * 0.7f;
+        baseStats.avoidPotency += Mathf.Max(0, attributes.agility) * 0.3f;
+        baseStats.avoidPotency += Mathf.Max(0, attributes.luck) * 0.7f;
 
         //criticalPotency
-        baseStats.criticalPotency += attributes.agility * 0.7f;
-        baseStats.criticalPotency += attributes.luck * 0.3f;
+        baseStats.criticalPotency += Mathf.Max(0, attributes.agility) * 0.7f;
+        baseStats.criticalPotency += Mathf.Max(0, attributes.luck) * 0.3f;
 
         //criticalPotency
-        baseStats.hitPotency += attributes.agility * 0.5f;
-        baseStats.hitPotency += attributes.luck * 0.5f;
+        baseStats.hitPotency += Mathf.Max(0, attributes.agility) * 0.5f;
+        baseStats.hitPotency += Mathf.Max(0, attributes.luck) * 0.5f;
 
         if (baseStats.maxHealth > 0 & currentHealth > baseStats.maxHealth)
             currentHealth = baseStats.maxHealth;

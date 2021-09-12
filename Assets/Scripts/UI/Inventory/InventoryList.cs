@@ -289,4 +289,15 @@ public class InventoryList : MonoBehaviour
             returnValue = !returnValue;
         return returnValue;
     }
+
+    public void UseClickedItemObject(ItemObject itemObject)
+    {
+        if(itemObject.item.GetType() == typeof(ConsumableItem))
+        {
+            if (GlobalInput.CheckIfSelectedCharacter())
+            {
+                ((ConsumableItem)itemObject.item).UseConsumableOnCharacter(GlobalInput.Instance.selectedEntity.GetComponent<CharStats>());
+            }
+        }
+    }
 }

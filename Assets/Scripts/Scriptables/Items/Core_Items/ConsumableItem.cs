@@ -18,6 +18,10 @@ public class ConsumableItem : Item
 
     public ConsumableItem(ConsumableItem _consumableItem)
     {
+        itemName = _consumableItem.itemName;
+        itemDescription = _consumableItem.itemDescription;
+        itemIcon = _consumableItem.itemIcon;
+        level = _consumableItem.level;
         healthRestorationFlat = _consumableItem.healthRestorationFlat;
         healthRestorationPct = _consumableItem.healthRestorationPct;
         resourceRestorationFlat = _consumableItem.resourceRestorationFlat;
@@ -46,6 +50,8 @@ public class ConsumableItem : Item
         {
             charStats.ApplyConsumableEffect(hEf);
         }
+
+        GuildInventory.Instance.RemoveItemFromInventory(this);
 
         return true;
     }

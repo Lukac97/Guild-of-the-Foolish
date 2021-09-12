@@ -10,17 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30ef40babf87cad4fa5e9939d57887d3, type: 3}
-  m_Name: HealthPot
+  m_Name: Strength potion
   m_EditorClassIdentifier: 
   consumableItem:
-    itemName: 
+    itemName: Strength potion
     itemDescription: 
     itemIcon: []
     level: 0
     isMoulded: 0
-    healthRestorationFlat: 20
+    healthRestorationFlat: 0
     healthRestorationPct: 0
     resourceRestorationFlat: 0
     resourceRestorationPct: 0
-    beneficialConsumableEffects: []
+    beneficialConsumableEffects:
+    - halfCycleDuration: 2
+      intensity: 7
+      consumableEffectType: 0
     harmfulConsumableEffects: []
