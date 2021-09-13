@@ -89,7 +89,7 @@ public class CombatWindowController : MonoBehaviour
         }
 
         //SetActive slots
-        if(currentEncounter.combatReward.goldYield <= 0 & currentEncounter.combatReward.experienceYield <= 0)
+        if(currentEncounter.combatReward.goldYield <= 0 && currentEncounter.combatReward.experienceYield <= 0)
         {
             goldExpPrizeSlot.SetActive(false);
         }

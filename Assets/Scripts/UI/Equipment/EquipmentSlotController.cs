@@ -61,7 +61,7 @@ public class EquipmentSlotController : MonoBehaviour
                     break;
                 }
             }
-            if(eqSlot != null & leftArmorSlots.Contains(eqSlot))
+            if(eqSlot != null && leftArmorSlots.Contains(eqSlot))
             {
                 eqSlot.gameObject.SetActive(true);
                 eqSlot.SetItemSlot(armorSlotItem);

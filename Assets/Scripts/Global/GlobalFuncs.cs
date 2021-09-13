@@ -186,7 +186,7 @@ public class GlobalFuncs : MonoBehaviour
         float H;
         float S;
         float V;
-        if(colorC.colorSaturationRangeMin == 0 & colorC.colorSaturationRangeMax == 0)
+        if(colorC.colorSaturationRangeMin == 0 && colorC.colorSaturationRangeMax == 0)
         {
             S = Random.Range(0.2f, 0.8f);
         }
@@ -195,7 +195,7 @@ public class GlobalFuncs : MonoBehaviour
             S = Random.Range(colorC.colorSaturationRangeMin, colorC.colorSaturationRangeMax);
         }
 
-        if(colorC.colorValueMin == 0 & colorC.colorValueMax == 0)
+        if(colorC.colorValueMin == 0 && colorC.colorValueMax == 0)
         {
             V = Random.Range(0.2f, 0.8f);
         }

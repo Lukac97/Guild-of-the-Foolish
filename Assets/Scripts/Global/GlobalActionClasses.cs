@@ -57,7 +57,7 @@ public class CharacterMoveAction : GlobalAction
 
     public override void OnActionFinished()
     {
-        if (charStats != null & loc != null)
+        if (charStats != null && loc != null)
         {
             charStats.ChangeLocation(loc);
         }

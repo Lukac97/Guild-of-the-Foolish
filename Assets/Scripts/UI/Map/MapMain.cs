@@ -31,15 +31,20 @@ public class MapMain : MonoBehaviour
     [HideInInspector]
     public bool moveActivated = false;
 
+    public float portraitIconSize;
+
     private void Awake()
     {
         GlobalInput.Instance.onChangedSelectedEntity += UpdateMapMain;
         if (Instance == null)
             _instance = this;
+
     }
 
     void Start()
     {
+        Vector2 scrollsize = transform.parent.GetComponent<RectTransform>().rect.size;
+        portraitIconSize = Mathf.Min(scrollsize.x / 8, scrollsize.y / 8);
         InitNodePortraits();
     }
 

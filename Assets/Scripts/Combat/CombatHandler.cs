@@ -90,7 +90,7 @@ public class CombatHandler : MonoBehaviour
         List<EquippedCombatSpell> availableSpells = new List<EquippedCombatSpell>();
         foreach (EquippedCombatSpell spell in combatSpells)
         {
-            if (!spell.IsOnCooldown() & HasEnoughSpellResource(spell) & spell.combatSpell != null)
+            if (!spell.IsOnCooldown() && HasEnoughSpellResource(spell) && spell.combatSpell != null)
                 availableSpells.Add(spell);
         }
 
@@ -385,7 +385,7 @@ public class CombatHandler : MonoBehaviour
 
     public void DispellStatusEffectsOfType(BeneficialStatusEffectType statusType)
     {
-        statusEffects.RemoveAll(s => (s.GetType() == typeof(BeneficialStatusEffect) & ((BeneficialStatusEffect)s.statusEffect).statusEffectType == statusType));
+        statusEffects.RemoveAll(s => (s.GetType() == typeof(BeneficialStatusEffect) && ((BeneficialStatusEffect)s.statusEffect).statusEffectType == statusType));
     }
 
     public void ClearAllStatusEffects()
