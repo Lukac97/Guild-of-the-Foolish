@@ -46,27 +46,13 @@ public class NodePortraitHandler : MonoBehaviour
                 new Vector3(mapNodeLocalPos.x, mapNodeLocalPos.y + mapMain.portraitIconSize / 2, mapNodeLocalPos.z)).y;
         if (CheckIfNodeInRange())
         {
-            if (isOutOfRange)
-            {
-                isOutOfRange = false;
-                GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
-                transform.localPosition = new Vector3(mapNode.transform.localPosition.x,
-                    mapNode.transform.localPosition.y + mapNode.GetComponent<RectTransform>().sizeDelta.y / 2 + (1 + 2 * spot) * GetComponent<RectTransform>().sizeDelta.y / 2,
-                    mapNode.transform.localPosition.z);
-            }
+            GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
+            transform.localPosition = new Vector3(mapNode.transform.localPosition.x,
+                mapNode.transform.localPosition.y + mapNode.GetComponent<RectTransform>().sizeDelta.y / 2 + (1 + 2 * spot) * GetComponent<RectTransform>().sizeDelta.y / 2,
+                mapNode.transform.localPosition.z);
         }
         else
         {
-            isOutOfRange = true;
-            //if (lastPosition == null || lastPosition != transform.position)
-            //{
-            //    Vector2? newPos = new Vector2(GetIntersectionPointWithRect(scrollRect.position, mapNode.transform.position);
-            //    if (newPos != null)
-            //        transform.position = (Vector3)newPos;
-            //    isOutOfRange = true;
-            //    lastPosition = transform.position;
-            //}
-
             Vector3 newPosition = new Vector3();
             float pivotX = 0;
             float pivotY = 0;

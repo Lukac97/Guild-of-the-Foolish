@@ -30,7 +30,8 @@ public class MapNode : MonoBehaviour
         }
         else
         {
-            GlobalInput.Instance.setSelectedEntity(location.gameObject);
+            DetailedLocationInfo.Instance.OpenDetailedLocationInfo(location);
+            //GlobalInput.Instance.setSelectedEntity(location.gameObject);
         }
     }
 }
