@@ -214,6 +214,15 @@ public class GlobalFuncs : MonoBehaviour
 
     #region UI_Helper
 
+    public static void SetActiveCanvasGroup(CanvasGroup canvasGroup, bool activate)
+    {
+        if (canvasGroup == null)
+            return;
+        canvasGroup.alpha = activate ? 1 : 0;
+        canvasGroup.blocksRaycasts = activate;
+        canvasGroup.interactable = activate;
+    }
+
     //Returns cell size
     public static int PackGridLayoutSquare(GameObject gridPanel, int itemsPerPage, int fixedCellSize = 0,
         float spacingPercentage = 0.2f)
