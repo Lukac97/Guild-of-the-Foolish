@@ -16,9 +16,11 @@ public class CmbStatsView : MonoBehaviour
     public TextMeshProUGUI avoidPotencyValue;
     public TextMeshProUGUI criticalPotencyValue;
 
+    private CharStats currentChar = null;
+
     private void Awake()
     {
-        CharTabMain.CharTabChangedChar += ChangeInformation;
+        GlobalInput.Instance.onChangedSelectedEntity += ChangeInformation;
         CharactersController.CharactersUpdated += ChangeInformation;
         CharactersController.CharactersResourcesUpdated += ChangeInformation;
     }
@@ -30,7 +32,12 @@ public class CmbStatsView : MonoBehaviour
 
     public void ChangeInformation()
     {
-        if(CharTabMain.Instance.currentChar == null)
+        if (GlobalInput.CheckIfSelectedCharacter())
+            currentChar = GlobalInput.Instance.selectedEntity.GetComponent<CharStats>();
+        else
+            currentChar = null;
+
+        if (currentChar == null)
         {
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
@@ -40,7 +47,7 @@ public class CmbStatsView : MonoBehaviour
         canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
-        CharCombat charCombat = CharTabMain.Instance.currentChar.GetComponent<CharCombat>();
+        CharCombat charCombat = currentChar.GetComponent<CharCombat>();
         healthValue.text = charCombat.combatStats.currentHealth.ToString("0")
             + " / " + charCombat.combatStats.baseStats.maxHealth.ToString("0");
         spellResourceValue.text = charCombat.combatStats.currentSpellResource.ToString("0")

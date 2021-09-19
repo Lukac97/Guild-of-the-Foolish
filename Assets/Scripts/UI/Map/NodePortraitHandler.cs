@@ -15,7 +15,6 @@ public class NodePortraitHandler : MonoBehaviour
     private RectTransform scrollRect;
     private Vector3[] scrollRectPoints;
 
-    private bool isOutOfRange;
     private float artiMapNodeY;
     private void Awake()
     {
@@ -27,7 +26,6 @@ public class NodePortraitHandler : MonoBehaviour
         GetComponent<RectTransform>().sizeDelta = new Vector2(mapMain.portraitIconSize, mapMain.portraitIconSize);
         connectedCharacter = charStats;
         charIcon.sprite = charStats.characterClass.classIcon;
-        isOutOfRange = true;
         scrollRectPoints = new Vector3[4];
         scrollRect = mapMain.transform.parent.GetComponent<RectTransform>();
         scrollRect.GetWorldCorners(scrollRectPoints);

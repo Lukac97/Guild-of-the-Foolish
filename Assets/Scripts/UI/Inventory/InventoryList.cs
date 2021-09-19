@@ -299,5 +299,12 @@ public class InventoryList : MonoBehaviour
                 ((ConsumableItem)itemObject.item).UseConsumableOnCharacter(GlobalInput.Instance.selectedEntity.GetComponent<CharStats>());
             }
         }
+        else if (itemObject.item.GetType() == typeof(WeaponItem) | itemObject.item.GetType() == typeof(ArmorItem))
+        {
+            if (GlobalInput.CheckIfSelectedCharacter())
+            {
+                GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().EquipItem(itemObject);
+            }
+        }
     }
 }

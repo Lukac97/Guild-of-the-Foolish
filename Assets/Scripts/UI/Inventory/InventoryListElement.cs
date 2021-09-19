@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class InventoryListElement : MonoBehaviour, IPointerClickHandler
+public class InventoryListElement : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public ItemIconHandler icon;
 
@@ -16,6 +16,7 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
     [Space(6)]
     public UnityEvent<ItemObject> SingleClickEvent;
     public UnityEvent<ItemObject> DoubleClickEvent;
+
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount == 1)
@@ -26,6 +27,16 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
         {
             OnItemDoubleClick();
         }
+    }
+
+    public virtual void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.ShowItemDetailsDisplay(this, false);
+    }
+
+    public virtual void OnPointerExit(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.HideItemDetailsDisplay();
     }
 
     public void AssignItemObject(ItemObject iObject)
@@ -75,12 +86,16 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler
         if (SingleClickEvent != null)
         {
             SingleClickEvent.Invoke((ItemObject)itemObject);
+            HoveringInfoDisplay.Instance.ShowItemDetailsDisplay(this, false);
         }
     }
 
     public void OnItemDoubleClick()
     {
         if (DoubleClickEvent != null)
+        {
             DoubleClickEvent.Invoke((ItemObject)itemObject);
+            HoveringInfoDisplay.Instance.ShowItemDetailsDisplay(this, false);
+        }
     }
 }

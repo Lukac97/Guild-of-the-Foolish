@@ -84,6 +84,104 @@ public class CharEquipment : MonoBehaviour
         equipmentAttributes = eqAttr;
     }
 
+    #region BestSlot
+    public List<WeaponSlotItem> FindBestSlotToEquipItem(WeaponItem weaponItem)
+    {
+        List<WeaponSlotItem> bestSlots = new List<WeaponSlotItem>();
+        List<WeaponSlot> viableSlots = new List<WeaponSlot>();
+        if(weaponItem.weaponWielding == WeaponWielding.MAIN_HAND)
+        {
+            viableSlots.Add(WeaponSlot.MAIN_HAND);
+        }
+        else if (weaponItem.weaponWielding == WeaponWielding.OFF_HAND)
+        {
+            viableSlots.Add(WeaponSlot.OFF_HAND);
+        }
+        else if (weaponItem.weaponWielding == WeaponWielding.ONE_HANDED)
+        {
+            viableSlots.Add(WeaponSlot.OFF_HAND);
+            viableSlots.Add(WeaponSlot.MAIN_HAND);
+        }
+        else if (weaponItem.weaponWielding == WeaponWielding.TWO_HANDED)
+        {
+            //FIRST ELEMENT WILL BE MAIN HAND
+            bestSlots.Add(weaponSlots[0]);
+            if(weaponSlots[1].slot == WeaponSlot.MAIN_HAND)
+            {
+                bestSlots.Insert(0, weaponSlots[1]);
+            }
+            else
+            {
+                bestSlots.Add(weaponSlots[1]);
+            }
+            return bestSlots;
+        }
+
+        foreach (WeaponSlotItem weaponSlotItem in weaponSlots)
+        {
+            if (!viableSlots.Contains(weaponSlotItem.slot))
+                continue;
+            if (GlobalFuncs.CheckIfWorse(weaponSlotItem.item, weaponItem))
+            {
+                bestSlots.Add(weaponSlotItem);
+            }
+        }
+
+        while(bestSlots.Count > 1)
+        {
+            if(GlobalFuncs.CheckIfWorse(bestSlots[0].item, bestSlots[1].item))
+            {
+                bestSlots.RemoveAt(1);
+            }
+            else
+            {
+                bestSlots.RemoveAt(0);
+            }
+        }
+
+        return bestSlots;
+    }
+
+    public List<ArmorSlotItem> FindBestSlotToEquipItem(ArmorItem armorItem)
+    {
+        List<ArmorSlotItem> bestSlots = new List<ArmorSlotItem>();
+        foreach(ArmorSlotItem armorSlotItem in armorSlots)
+        {
+            if (GlobalFuncs.CheckIfWorse(armorSlotItem.item, armorItem))
+            {
+                bestSlots.Add(armorSlotItem);
+            }
+        }
+
+        while(bestSlots.Count > 1)
+        {
+            if(GlobalFuncs.CheckIfWorse(bestSlots[0].item, bestSlots[1].item))
+            {
+                bestSlots.RemoveAt(1);
+            }
+            else
+            {
+                bestSlots.RemoveAt(0);
+            }
+        }
+
+        return bestSlots;
+    }
+    #endregion BestSlot
+
+    public bool EquipItem(ItemObject itemObject)
+    {
+        if(itemObject.item.GetType() == typeof(WeaponItem))
+        {
+            return EquipItem(itemObject, FindBestSlotToEquipItem((WeaponItem)itemObject.item)[0]);
+        }
+        else if (itemObject.item.GetType() == typeof(ArmorItem))
+        {
+            return EquipItem(itemObject, FindBestSlotToEquipItem((ArmorItem)itemObject.item)[0]);
+        }
+        return false;
+    }
+
     public bool EquipItem(ItemObject itemObject, ArmorSlotItem armorSlotItem)
     {
         return EquipItem(itemObject, armorSlotItem, null);

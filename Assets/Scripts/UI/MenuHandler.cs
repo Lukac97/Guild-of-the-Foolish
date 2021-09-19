@@ -14,6 +14,7 @@ public class MenuHandler : MonoBehaviour
 
     public SingularMenu inventoryMenu;
     public SingularMenu equipmentMenu;
+    public SingularMenu attributesMenu;
     public SingularMenu spellMenu;
 
     private void Start()
@@ -68,6 +69,21 @@ public class MenuHandler : MonoBehaviour
         }
     }
 
+    public void HandleAttributesMenu(bool forceOpen = false)
+    {
+        if (forceOpen | !attributesMenu.isActive)
+        {
+            CloseAllRightOrLeftMenus(attributesMenu.rightMenu);
+            GlobalFuncs.SetActiveCanvasGroup(attributesMenu.menuCanvasGroup, true);
+            attributesMenu.isActive = true;
+        }
+        else
+        {
+            GlobalFuncs.SetActiveCanvasGroup(attributesMenu.menuCanvasGroup, false);
+            attributesMenu.isActive = false;
+        }
+    }
+
     private void CloseAllRightOrLeftMenus(bool closeRight)
     {
         if (inventoryMenu.rightMenu == closeRight)
@@ -79,6 +95,11 @@ public class MenuHandler : MonoBehaviour
         {
             GlobalFuncs.SetActiveCanvasGroup(equipmentMenu.menuCanvasGroup, false);
             equipmentMenu.isActive = false;
+        }
+        if (attributesMenu.rightMenu == closeRight)
+        {
+            GlobalFuncs.SetActiveCanvasGroup(attributesMenu.menuCanvasGroup, false);
+            attributesMenu.isActive = false;
         }
         if (spellMenu.rightMenu == closeRight)
         {

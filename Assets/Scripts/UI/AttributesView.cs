@@ -29,7 +29,7 @@ public class AttributesView : MonoBehaviour
     private void Awake()
     {
         CharactersController.CharactersUpdated += UpdateAttributesView;
-        CharTabMain.CharTabChangedChar += UpdateAttributesView;
+        GlobalInput.Instance.onChangedSelectedEntity += UpdateAttributesView;
     }
 
     private void Start()
@@ -39,7 +39,12 @@ public class AttributesView : MonoBehaviour
 
     public void UpdateAttributesView()
     {
-        if (CharTabMain.Instance.currentChar == null)
+        if (GlobalInput.CheckIfSelectedCharacter())
+            currentChar = GlobalInput.Instance.selectedEntity.GetComponent<CharStats>();
+        else
+            currentChar = null;
+
+        if (currentChar == null)
         {
             bodyPanel.alpha = 0;
             bodyPanel.interactable = false;
@@ -56,7 +61,6 @@ public class AttributesView : MonoBehaviour
         bodyPanel.alpha = 1;
         bodyPanel.interactable = true;
         bodyPanel.blocksRaycasts = true;
-        currentChar = CharTabMain.Instance.currentChar.GetComponent<CharStats>();
         if (currentChar.availablePoints > 0)
         {
             attributesTitle.text = defaultTitle + " (" + currentChar.availablePoints.ToString() + ")";

@@ -68,6 +68,6 @@ MonoBehaviour:
       colorValueMax: 0
       colorSaturationRangeMin: 0
       colorSaturationRangeMax: 0
-  weaponWielding: 0
+  weaponWielding: 3
   weaponRange: 0
   weaponType: 11
