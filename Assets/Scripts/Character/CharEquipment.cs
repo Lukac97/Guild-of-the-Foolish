@@ -119,12 +119,8 @@ public class CharEquipment : MonoBehaviour
 
         foreach (WeaponSlotItem weaponSlotItem in weaponSlots)
         {
-            if (!viableSlots.Contains(weaponSlotItem.slot))
-                continue;
-            if (GlobalFuncs.CheckIfWorse(weaponSlotItem.item, weaponItem))
-            {
+            if (viableSlots.Contains(weaponSlotItem.slot))
                 bestSlots.Add(weaponSlotItem);
-            }
         }
 
         while(bestSlots.Count > 1)

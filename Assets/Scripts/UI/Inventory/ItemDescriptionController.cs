@@ -15,16 +15,15 @@ public class ItemDescriptionController : MonoBehaviour
     public TextMeshProUGUI itemDescription;
     public ItemIconHandler icon;
 
-    private ItemObject currentItemObject = null;
-
+    private Item currentItem = null;
     private void Start()
     {
         UpdateSelectedItem();
     }
 
-    public void ShowItemDescription(ItemObject itemObject)
+    public void ShowItemDescription(Item item)
     {
-        currentItemObject = itemObject;
+        currentItem = item;
         GetComponent<CanvasGroup>().alpha = 1;
         GetComponent<CanvasGroup>().interactable = false;
         GetComponent<CanvasGroup>().blocksRaycasts = false;
@@ -40,7 +39,7 @@ public class ItemDescriptionController : MonoBehaviour
 
     private void UpdateSelectedItem()
     {
-        if(currentItemObject == null)
+        if(currentItem == null)
         {
             itemNamePanel.SetActive(false);
             itemDescriptionPanel.SetActive(false);
@@ -48,20 +47,20 @@ public class ItemDescriptionController : MonoBehaviour
         }
         itemNamePanel.SetActive(true);
         itemDescriptionPanel.SetActive(true);
-        itemName.text = currentItemObject.item.itemName;
-        itemLevel.text = currentItemObject.item.level.ToString();
-        itemDescription.text = currentItemObject.item.itemDescription;
-        icon.InitItemIconHandler(currentItemObject.item);
+        itemName.text = currentItem.itemName;
+        itemLevel.text = currentItem.level.ToString();
+        itemDescription.text = currentItem.itemDescription;
+        icon.InitItemIconHandler(currentItem);
 
         foreach(SingleEqStat child in itemStatsPanel.GetComponentsInChildren<SingleEqStat>())
         {
             Destroy(child.gameObject);
         }
 
-        if (currentItemObject.item is WeaponItem)
+        if (currentItem is WeaponItem)
         {
             itemStatsPanel.SetActive(true);
-            WeaponItem equippedWeapon = (WeaponItem)currentItemObject.item;
+            WeaponItem equippedWeapon = (WeaponItem)currentItem;
 
             if (equippedWeapon.attackDamageMultiplier != 0)
             {
@@ -95,10 +94,10 @@ public class ItemDescriptionController : MonoBehaviour
                 gO.GetComponent<SingleEqStat>().SetText("LUK", equippedWeapon.attributes.luck);
             }
         }
-        else if (currentItemObject.item is ArmorItem)
+        else if (currentItem is ArmorItem)
         {
             itemStatsPanel.SetActive(true);
-            ArmorItem equippedArmor = (ArmorItem)currentItemObject.item;
+            ArmorItem equippedArmor = (ArmorItem)currentItem;
 
             if (equippedArmor.armorValue != 0)
             {

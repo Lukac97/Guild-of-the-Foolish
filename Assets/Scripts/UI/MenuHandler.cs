@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class MenuHandler : MonoBehaviour
 {
+    private static MenuHandler _instance;
+    public static MenuHandler Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+
     [System.Serializable]
     public class SingularMenu
     {
@@ -16,6 +25,12 @@ public class MenuHandler : MonoBehaviour
     public SingularMenu equipmentMenu;
     public SingularMenu attributesMenu;
     public SingularMenu spellMenu;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            _instance = this;
+    }
 
     private void Start()
     {
