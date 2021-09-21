@@ -8,8 +8,20 @@ public class CharEquipment : MonoBehaviour
     public class WeaponSlotItem
     {
         public WeaponSlot slot;
-        public WeaponItem item;
+        private WeaponItem _item = null;
+        public WeaponItem item
+        {
+            get
+            {
+                return _item;
+            }
+            set
+            {
+                _item = value;
+            }
+        }
         public bool isFakeEquipped;
+
 
         public WeaponSlotItem(WeaponSlot _slot)
         {
@@ -23,7 +35,18 @@ public class CharEquipment : MonoBehaviour
     public class ArmorSlotItem
     {
         public ArmorSlot slot;
-        public ArmorItem item;
+        private ArmorItem _item = null;
+        public ArmorItem item
+        {
+            get
+            {
+                return _item;
+            }
+            set
+            {
+                _item = value;
+            }
+        }
 
         public ArmorSlotItem(ArmorSlot _slot)
         {

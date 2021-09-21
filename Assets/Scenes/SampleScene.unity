@@ -3373,7 +3373,7 @@ PrefabInstance:
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 140.8989
       objectReference: {fileID: 0}
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
@@ -10487,7 +10487,7 @@ PrefabInstance:
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 140.8989
       objectReference: {fileID: 0}
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
@@ -18197,7 +18197,7 @@ PrefabInstance:
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 140.8989
       objectReference: {fileID: 0}
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
@@ -26968,7 +26968,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 991112663}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -45442,7 +45442,7 @@ PrefabInstance:
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 140.8989
       objectReference: {fileID: 0}
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
@@ -52301,7 +52301,7 @@ PrefabInstance:
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 140.8989
       objectReference: {fileID: 0}
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
@@ -58727,7 +58727,7 @@ PrefabInstance:
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 140.8989
       objectReference: {fileID: 0}
     - target: {fileID: 1644576185061250142, guid: 66da2c6c17eaf364e9112f9eecf841f3,
         type: 3}

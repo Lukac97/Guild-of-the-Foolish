@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler
+public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public WeaponSlot weaponSlot;
     public TextMeshProUGUI slotName;
@@ -25,19 +25,29 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public virtual void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.ShowItemDetailsDisplay(this, true);
+    }
+
+    public virtual void OnPointerExit(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.HideItemDetailsDisplay();
+    }
+
     public void OnItemClick()
     {
-        if (weaponSlotItem != null)
-        {
-            EquipmentSlotPopUp.Instance.OpenEquipmentSlot(CharTabMain.Instance.currentChar, weaponSlotItem);
-        }
+        //if (weaponSlotItem != null)
+        //{
+        //    EquipmentSlotPopUp.Instance.OpenEquipmentSlot(CharTabMain.Instance.currentChar, weaponSlotItem);
+        //}
     }
 
     public void OnItemDoubleClick()
     {
-        //CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
-        //if (charEq != null)
-        //   charEq.UnequipSlot(weaponSlotItem);
+        CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
+        if (charEq != null)
+            charEq.UnequipSlot(weaponSlotItem);
     }
 
     public void SetItemSlot(CharEquipment.WeaponSlotItem slotItem)

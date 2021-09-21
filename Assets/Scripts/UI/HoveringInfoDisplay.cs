@@ -33,23 +33,49 @@ public class HoveringInfoDisplay : MonoBehaviour
         HideItemDetailsDisplay();
     }
 
+    public void ShowItemDetailsDisplay(EquipmentArmorSlot eqSlot, bool toTheRight)
+    {
+        if (eqSlot.armorSlotItem == null)
+        {
+            HideItemDetailsDisplay();
+            return;
+        }
+        ShowItemDetailsDisplay(eqSlot.GetComponent<RectTransform>(), eqSlot.armorSlotItem.item, toTheRight, false);
+    }
+
+    public void ShowItemDetailsDisplay(EquipmentWeaponSlot eqSlot, bool toTheRight)
+    {
+        if (eqSlot.weaponSlotItem == null)
+        {
+            HideItemDetailsDisplay();
+            return;
+        }
+        ShowItemDetailsDisplay(eqSlot.GetComponent<RectTransform>(), eqSlot.weaponSlotItem.item, toTheRight, false);
+    }
+
     public void ShowItemDetailsDisplay(InventoryListElement iListEl, bool toTheRight)
     {
         if (iListEl.itemObject == null)
+        {
+            HideItemDetailsDisplay();
             return;
+        }
+        ShowItemDetailsDisplay(iListEl.GetComponent<RectTransform>(), iListEl.itemObject.item, toTheRight, true);
+    }
 
+    private void ShowItemDetailsDisplay(RectTransform hoveredObject, Item item, bool toTheRight, bool fromInventory)
+    {
         // Regular item details showing
         hoveringInfoRectTransform[0].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
             GetComponent<RectTransform>().rect.height * 0.3f);
 
-        RectTransform iListElRectTransform = iListEl.GetComponent<RectTransform>();
         Vector2 idealPosition = new Vector2(
-                iListElRectTransform.localPosition.x + iListElRectTransform.rect.width / 2 * (toTheRight ? 1 : -1),
-                iListElRectTransform.localPosition.y + iListElRectTransform.rect.height / 2);
+                hoveredObject.localPosition.x + hoveredObject.rect.width / 2 * (toTheRight ? 1 : -1),
+                hoveredObject.localPosition.y + hoveredObject.rect.height / 2);
 
         //Transform to world space
-        idealPosition = iListElRectTransform.parent.TransformPoint(idealPosition);
-        itemDescController[0].ShowItemDescription(iListEl.itemObject.item);
+        idealPosition = hoveredObject.parent.TransformPoint(idealPosition);
+        itemDescController[0].ShowItemDescription(item);
 
         //Set position after full creation
         hoveringInfoRectTransform[0].position = idealPosition;
@@ -59,52 +85,51 @@ public class HoveringInfoDisplay : MonoBehaviour
 
         hoveringInfoRectTransform[0].localPosition = newPosition;
 
-        //Check if equipment comparison details should be displayed
-        if (!MenuHandler.Instance.equipmentMenu.isActive)
-            return;
+        //Additional descriptions
 
-        if (!GlobalInput.CheckIfSelectedCharacter())
-            return;
+        CharEquipment charEquipment = GlobalInput.CheckIfSelectedCharacter() ? 
+            GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>() : null;
 
-        CharEquipment charEquipment = GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>();
+        int hideCounter = 0;
 
-        if (iListEl.itemObject.item.GetType() == typeof(ArmorItem))
+        if (MenuHandler.Instance.equipmentMenu.isActive & fromInventory & charEquipment != null)
         {
-            List<CharEquipment.ArmorSlotItem> itemSlots = charEquipment.FindBestSlotToEquipItem((ArmorItem)iListEl.itemObject.item);
-            for (int i = 0; i < Mathf.Min(itemSlots.Count, 2); i++)
+            if (item.GetType() == typeof(ArmorItem))
             {
-                hoveringInfoRectTransform[i+1].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
-                    GetComponent<RectTransform>().rect.height * 0.3f);
-                newPosition = new Vector2(
-                    hoveringInfoRectTransform[0].localPosition.x +
-                        (hoveringInfoRectTransform[0].rect.width / 2 + hoveringInfoRectTransform[i+1].rect.width / 2) * (toTheRight ? 1 : -1),
-                    hoveringInfoRectTransform[0].localPosition.y);
-                hoveringInfoRectTransform[i+1].localPosition = newPosition;
-                itemDescController[i + 1].ShowItemDescription(itemSlots[i].item);
+                List<CharEquipment.ArmorSlotItem> itemSlots = charEquipment.FindBestSlotToEquipItem((ArmorItem)item);
+                for (int i = 0; i < Mathf.Min(itemSlots.Count, 2); i++)
+                {
+                    hoveringInfoRectTransform[i + 1].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
+                        GetComponent<RectTransform>().rect.height * 0.3f);
+                    newPosition = new Vector2(
+                        hoveringInfoRectTransform[0].localPosition.x +
+                            (hoveringInfoRectTransform[0].rect.width / 2 + hoveringInfoRectTransform[i + 1].rect.width / 2) * (toTheRight ? 1 : -1),
+                        hoveringInfoRectTransform[0].localPosition.y);
+                    hoveringInfoRectTransform[i + 1].localPosition = newPosition;
+                    itemDescController[i + 1].ShowItemDescription(itemSlots[i].item);
+                }
+                hideCounter = Mathf.Min(itemSlots.Count, 2);
             }
-            for (int i = Mathf.Min(itemSlots.Count, 2); i < 2; i++)
+            else if (item.GetType() == typeof(WeaponItem))
             {
-                itemDescController[i + 1].HideItemDescription();
+                List<CharEquipment.WeaponSlotItem> itemSlots = charEquipment.FindBestSlotToEquipItem((WeaponItem)item);
+                for (int i = 0; i < Mathf.Min(itemSlots.Count, 2); i++)
+                {
+                    hoveringInfoRectTransform[i + 1].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
+                        GetComponent<RectTransform>().rect.height * 0.3f);
+                    newPosition = new Vector2(
+                        hoveringInfoRectTransform[0].localPosition.x +
+                            (hoveringInfoRectTransform[0].sizeDelta.x / 2 + hoveringInfoRectTransform[i + 1].sizeDelta.x * (1 + 2 * i) / 2) * (toTheRight ? 1 : -1),
+                        hoveringInfoRectTransform[0].localPosition.y);
+                    hoveringInfoRectTransform[i + 1].localPosition = newPosition;
+                    itemDescController[i + 1].ShowItemDescription(itemSlots[i].item);
+                }
             }
         }
-        else if (iListEl.itemObject.item.GetType() == typeof(WeaponItem))
+
+        for (int i = hideCounter; i < 2; i++)
         {
-            List<CharEquipment.WeaponSlotItem> itemSlots = charEquipment.FindBestSlotToEquipItem((WeaponItem)iListEl.itemObject.item);
-            for (int i = 0; i < Mathf.Min(itemSlots.Count, 2); i++)
-            {
-                hoveringInfoRectTransform[i + 1].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
-                    GetComponent<RectTransform>().rect.height * 0.3f);
-                newPosition = new Vector2(
-                    hoveringInfoRectTransform[0].localPosition.x +
-                        (hoveringInfoRectTransform[0].sizeDelta.x / 2 + hoveringInfoRectTransform[i + 1].sizeDelta.x * (1 + 2 * i) / 2) * (toTheRight ? 1 : -1),
-                    hoveringInfoRectTransform[0].localPosition.y);
-                hoveringInfoRectTransform[i + 1].localPosition = newPosition;
-                itemDescController[i + 1].ShowItemDescription(itemSlots[i].item);
-            }
-            for (int i = Mathf.Min(itemSlots.Count, 2); i < 2; i++)
-            {
-                itemDescController[i + 1].HideItemDescription();
-            }
+            itemDescController[i + 1].HideItemDescription();
         }
     }
 

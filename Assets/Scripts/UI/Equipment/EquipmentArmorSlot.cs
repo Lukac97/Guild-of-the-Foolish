@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler
+public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public ArmorSlot armorSlot;
     public TextMeshProUGUI slotName;
@@ -30,19 +30,29 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public virtual void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.ShowItemDetailsDisplay(this, true);
+    }
+
+    public virtual void OnPointerExit(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.HideItemDetailsDisplay();
+    }
+
     public void OnItemClick()
     {
-        if (armorSlotItem != null)
-        {
-            EquipmentSlotPopUp.Instance.OpenEquipmentSlot(CharTabMain.Instance.currentChar, armorSlotItem);
-        }
+        //if (armorSlotItem != null)
+        //{
+        //    EquipmentSlotPopUp.Instance.OpenEquipmentSlot(CharTabMain.Instance.currentChar, armorSlotItem);
+        //}
     }
 
     public void OnItemDoubleClick()
     {
-        //CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
-        //if(charEq != null)
-        //    charEq.UnequipSlot(armorSlotItem);
+        CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
+        if (charEq != null)
+            charEq.UnequipSlot(armorSlotItem);
     }
 
 
