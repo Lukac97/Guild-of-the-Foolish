@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class InventoryListElement : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class InventoryListElement : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     public ItemIconHandler icon;
 
@@ -17,6 +17,7 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler, IPointe
     public UnityEvent<ItemObject> SingleClickEvent;
     public UnityEvent<ItemObject> DoubleClickEvent;
 
+    private Vector2 localStartDragPos;
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount == 1)
@@ -37,6 +38,27 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler, IPointe
     public virtual void OnPointerExit(PointerEventData pointerEventData)
     {
         HoveringInfoDisplay.Instance.HideItemDetailsDisplay();
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        icon.SetIconTransparency(0.4f);
+        localStartDragPos = GetComponent<RectTransform>().position;
+        DraggingIconHandler.Instance.StartDraggingObject(this);
+        DraggingIconHandler.Instance.UpdateObjectDrag(localStartDragPos);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        localStartDragPos += eventData.delta / DraggingIconHandler.Instance.canvas.scaleFactor;
+        DraggingIconHandler.Instance.UpdateObjectDrag(transform.TransformPoint(localStartDragPos));
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        icon.SetIconTransparency(1f);
+
+        DraggingIconHandler.Instance.StopObjectDrag();
     }
 
     public void AssignItemObject(ItemObject iObject)

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
     public WeaponSlot weaponSlot;
     public TextMeshProUGUI slotName;
@@ -33,6 +33,20 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointer
     public virtual void OnPointerExit(PointerEventData pointerEventData)
     {
         HoveringInfoDisplay.Instance.HideItemDetailsDisplay();
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        if (!GlobalInput.CheckIfSelectedCharacter())
+            return;
+        if (eventData.pointerDrag != null)
+        {
+            InventoryListElement iLEl = eventData.pointerDrag.GetComponent<InventoryListElement>();
+            if ((iLEl != null) & (iLEl.itemObject.item != null))
+            {
+                GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().EquipItem(iLEl.itemObject, weaponSlotItem);
+            }
+        }
     }
 
     public void OnItemClick()

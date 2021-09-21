@@ -19,6 +19,9 @@ public class ItemIconHandler : MonoBehaviour
         }
 
         currentItem = item;
+        if (currentItem == null)
+            return;
+
         if (currentItem.itemIcon != null)
         {
             for (int i = currentItem.itemIcon.Count - 1; i >= 0; i--)
@@ -68,5 +71,4 @@ public class ItemIconHandler : MonoBehaviour
     {
         iconHolder.SetActive(setActive);
     }
-
 }

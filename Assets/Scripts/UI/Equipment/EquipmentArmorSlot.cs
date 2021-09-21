@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
     public ArmorSlot armorSlot;
     public TextMeshProUGUI slotName;
@@ -38,6 +38,20 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler, IPointerE
     public virtual void OnPointerExit(PointerEventData pointerEventData)
     {
         HoveringInfoDisplay.Instance.HideItemDetailsDisplay();
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        if (!GlobalInput.CheckIfSelectedCharacter())
+            return;
+        if (eventData.pointerDrag != null)
+        {
+            InventoryListElement iLEl = eventData.pointerDrag.GetComponent<InventoryListElement>();
+            if ((iLEl != null) & (iLEl.itemObject.item != null))
+            {
+                GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().EquipItem(iLEl.itemObject, armorSlotItem);
+            }
+        }
     }
 
     public void OnItemClick()

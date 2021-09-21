@@ -124,6 +124,7 @@ public class HoveringInfoDisplay : MonoBehaviour
                     hoveringInfoRectTransform[i + 1].localPosition = newPosition;
                     itemDescController[i + 1].ShowItemDescription(itemSlots[i].item);
                 }
+                hideCounter = Mathf.Min(itemSlots.Count, 2);
             }
         }
 
