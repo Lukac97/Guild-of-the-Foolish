@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDropHandler
+public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,
+    IDropHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     public WeaponSlot weaponSlot;
     public TextMeshProUGUI slotName;
@@ -13,6 +14,8 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointer
     public CharEquipment.WeaponSlotItem weaponSlotItem = null;
 
     private EquipmentSlotController parentController;
+    private Vector2 localStartDragPos;
+
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount == 1)
@@ -35,6 +38,42 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointer
         HoveringInfoDisplay.Instance.HideItemDetailsDisplay();
     }
 
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (!ItemExistsCheck())
+            return;
+
+        itemIcon.SetIconTransparency(0.4f);
+        localStartDragPos = GetComponent<RectTransform>().position;
+        DraggingIconHandler.Instance.StartDraggingObject(this);
+        DraggingIconHandler.Instance.UpdateObjectDrag(localStartDragPos);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (!ItemExistsCheck())
+            return;
+
+        localStartDragPos += eventData.delta / DraggingIconHandler.Instance.canvas.scaleFactor;
+        DraggingIconHandler.Instance.UpdateObjectDrag(transform.TransformPoint(localStartDragPos));
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        itemIcon.SetIconTransparency(1f);
+        DraggingIconHandler.Instance.StopObjectDrag();
+    }
+
+    private bool ItemExistsCheck()
+    {
+        if (weaponSlotItem == null)
+            return false;
+        if (weaponSlotItem.item == null)
+            return false;
+
+        return true;
+    }
+
     public void OnDrop(PointerEventData eventData)
     {
         if (!GlobalInput.CheckIfSelectedCharacter())
@@ -42,8 +81,23 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointer
         if (eventData.pointerDrag != null)
         {
             InventoryListElement iLEl = eventData.pointerDrag.GetComponent<InventoryListElement>();
-            if ((iLEl != null) & (iLEl.itemObject.item != null))
+            if (iLEl == null)
             {
+                EquipmentWeaponSlot wSlot = eventData.pointerDrag.GetComponent<EquipmentWeaponSlot>();
+                if (wSlot == null)
+                    return;
+                if (!GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().
+                    IsCorrectItemSlot(wSlot.weaponSlotItem.item, weaponSlotItem))
+                    return;
+                else if(wSlot.weaponSlotItem.item != null)
+                {
+                    ItemObject newItemObject = GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().UnequipSlot(wSlot.weaponSlotItem);
+                    GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().EquipItem(newItemObject, weaponSlotItem);
+                }
+            }
+            else if (iLEl.itemObject.item != null)
+            {
+
                 GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().EquipItem(iLEl.itemObject, weaponSlotItem);
             }
         }

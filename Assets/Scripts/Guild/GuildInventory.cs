@@ -29,10 +29,10 @@ public class GuildInventory : MonoBehaviour
     }
 
 
-    public void AddItemToInventory(Item item, int quant = 1)
+    public ItemObject AddItemToInventory(Item item, int quant = 1)
     {
         if (quant <= 0)
-            return;
+            return null;
         ItemObject itemObject = FindItem(item);
         if (itemObject == null)
         {
@@ -46,6 +46,8 @@ public class GuildInventory : MonoBehaviour
             itemObject.quantity += quant;
         }
         InventoryChanged.Invoke();
+
+        return itemObject != null ? itemObject : itemObjects[itemObjects.Count - 1];
     }
 
     public void RemoveItemFromInventory(Item item, int quant = 1)

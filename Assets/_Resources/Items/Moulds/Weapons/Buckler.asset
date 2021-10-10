@@ -27,6 +27,17 @@ MonoBehaviour:
   itemDescription: 
   primarySpriteChoices:
     spriteChoices:
+    - spritePart: {fileID: 21300000, guid: 83b77d1c2b2ebfc4f8c111a76b06e5e0, type: 3}
+      spritePartShadow: {fileID: 0}
+    - spritePart: {fileID: 21300000, guid: a967153ec4732ae41bc765daebc34022, type: 3}
+      spritePartShadow: {fileID: 0}
+    colorCustomization:
+      colorValueMin: 0.1
+      colorValueMax: 0.9
+      colorSaturationRangeMin: 0.05
+      colorSaturationRangeMax: 0.3
+  secondarySpriteChoices:
+    spriteChoices:
     - spritePart: {fileID: 21300000, guid: a8a5699c69e7f824fb77e7c5a38043ec, type: 3}
       spritePartShadow: {fileID: 21300000, guid: 80068473ff4e72d4bacbd0ccae098a4e,
         type: 3}
@@ -45,17 +56,6 @@ MonoBehaviour:
     - spritePart: {fileID: 21300000, guid: 0f5b416759ad8534c87e5e34a7023959, type: 3}
       spritePartShadow: {fileID: 21300000, guid: c346131733dc43848bffcbe791fadbab,
         type: 3}
-    colorCustomization:
-      colorValueMin: 0.1
-      colorValueMax: 0.9
-      colorSaturationRangeMin: 0.05
-      colorSaturationRangeMax: 0.3
-  secondarySpriteChoices:
-    spriteChoices:
-    - spritePart: {fileID: 21300000, guid: 83b77d1c2b2ebfc4f8c111a76b06e5e0, type: 3}
-      spritePartShadow: {fileID: 0}
-    - spritePart: {fileID: 21300000, guid: a967153ec4732ae41bc765daebc34022, type: 3}
-      spritePartShadow: {fileID: 0}
     colorCustomization:
       colorValueMin: 0.4
       colorValueMax: 0.9

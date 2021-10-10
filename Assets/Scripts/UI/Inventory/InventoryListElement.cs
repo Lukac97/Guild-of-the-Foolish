@@ -42,6 +42,9 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler, IPointe
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!ItemExistsCheck())
+            return;
+
         icon.SetIconTransparency(0.4f);
         localStartDragPos = GetComponent<RectTransform>().position;
         DraggingIconHandler.Instance.StartDraggingObject(this);
@@ -50,6 +53,9 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler, IPointe
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!ItemExistsCheck())
+            return;
+
         localStartDragPos += eventData.delta / DraggingIconHandler.Instance.canvas.scaleFactor;
         DraggingIconHandler.Instance.UpdateObjectDrag(transform.TransformPoint(localStartDragPos));
     }
@@ -59,6 +65,16 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler, IPointe
         icon.SetIconTransparency(1f);
 
         DraggingIconHandler.Instance.StopObjectDrag();
+    }
+
+    private bool ItemExistsCheck()
+    {
+        if (itemObject == null)
+            return false;
+        if (itemObject.item == null)
+            return false;
+
+        return true;
     }
 
     public void AssignItemObject(ItemObject iObject)

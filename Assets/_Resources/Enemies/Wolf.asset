@@ -22,6 +22,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cf26cdc197160784fa2bc8d7b33348c3, type: 2}
   possibleItemYields:
   - {fileID: 11400000, guid: ccb1b8924e1122143a5e211cee182f4d, type: 2}
+  - {fileID: 11400000, guid: 65eddead2694cb948bfd8fd73b52f639, type: 2}
+  - {fileID: 11400000, guid: e3c80eab540e53445ae1901ed8304ef5, type: 2}
   possibleConsumableYields:
   - {fileID: 11400000, guid: 0eda07a9b263e3147915ade127d68e40, type: 2}
   enemyIcon: {fileID: 21300000, guid: a1a6092733753504c8e9247a29baf953, type: 3}

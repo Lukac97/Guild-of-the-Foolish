@@ -217,7 +217,18 @@ public class CharEquipment : MonoBehaviour
         Item equipmentItem = itemObject.item;
         if (!CanEquipItem(equipmentItem))
             return false;
-        //
+
+        if (armorSlotItem != null)
+        {
+            if (!IsCorrectItemSlot(equipmentItem, armorSlotItem))
+                return false;
+        }
+        else
+        {
+            if (!IsCorrectItemSlot(equipmentItem, weaponSlotItem))
+                return false;
+        }
+
         GuildInventory.Instance.RemoveItemFromInventory(equipmentItem);
         if (armorSlotItem != null)
             EquipItem((ArmorItem)equipmentItem, armorSlotItem);
@@ -227,6 +238,36 @@ public class CharEquipment : MonoBehaviour
             return false;
         NotifyAfterEquipping(true);
         return true;
+    }
+
+    public bool IsCorrectItemSlot(Item itemToEquip, ArmorSlotItem armorSlotItem)
+    {
+        if (itemToEquip.GetType() != typeof(ArmorItem))
+            return false;
+
+        if (((ArmorItem)itemToEquip).itemSlot == armorSlotItem.slot)
+            return true;
+        return false;
+    }
+
+    public bool IsCorrectItemSlot(Item itemToEquip, WeaponSlotItem weaponSlotItem)
+    {
+        if (itemToEquip.GetType() != typeof(WeaponItem))
+            return false;
+
+        WeaponItem wItem = (WeaponItem)itemToEquip;
+
+        //Two handed occupy both main and off hand, One handed can occupy either
+        if (wItem.weaponWielding == WeaponWielding.TWO_HANDED | wItem.weaponWielding == WeaponWielding.ONE_HANDED)
+            return true;
+
+        if (wItem.weaponWielding == WeaponWielding.MAIN_HAND & weaponSlotItem.slot == WeaponSlot.MAIN_HAND)
+            return true;
+
+        if (wItem.weaponWielding == WeaponWielding.OFF_HAND & weaponSlotItem.slot == WeaponSlot.OFF_HAND)
+            return true;
+
+        return false;
     }
 
     public bool CanEquipItem(Item itemToCheck)
@@ -260,8 +301,7 @@ public class CharEquipment : MonoBehaviour
     {
         if (slotItem == null)
             return false;
-        if (!UnequipSlot(slotItem, true))
-            return false;
+        UnequipSlot(slotItem, true);
         slotItem.item = armor;
         return true;
     }
@@ -270,8 +310,7 @@ public class CharEquipment : MonoBehaviour
     {
         if (slotItem == null)
             return false;
-        if (!UnequipSlot(slotItem, true))
-            return false;
+        UnequipSlot(slotItem, true);
         if (weapon.weaponWielding == WeaponWielding.MAIN_HAND)
         {
             if (slotItem.slot != WeaponSlot.MAIN_HAND)
@@ -342,8 +381,7 @@ public class CharEquipment : MonoBehaviour
                     finalSlot = occSlot;
             }
 
-            if (!UnequipSlot(finalSlot, true))
-                return false;
+            UnequipSlot(finalSlot, true);
             finalSlot.item = armor;
             return true;
         }
@@ -436,21 +474,25 @@ public class CharEquipment : MonoBehaviour
     }
     #endregion Specific Equips
 
-    public bool UnequipSlot(ArmorSlotItem armorSlot, bool equip=false)
+    public ItemObject UnequipSlot(ArmorSlotItem armorSlot, bool equip=false)
     {
         if (armorSlot.item == null)
-            return true;
-        GuildInventory.Instance.AddItemToInventory(armorSlot.item);
+        {
+            return null;
+        }
+        ItemObject createdItemObject = GuildInventory.Instance.AddItemToInventory(armorSlot.item);
         armorSlot.item = null;
         NotifyAfterEquipping(!equip);
-        return true;
+        return createdItemObject;
     }
 
-    public bool UnequipSlot(WeaponSlotItem weaponSlot, bool equip = false)
+    public ItemObject UnequipSlot(WeaponSlotItem weaponSlot, bool equip = false)
     {
         if (weaponSlot.item == null)
-            return true;
-        GuildInventory.Instance.AddItemToInventory(weaponSlot.item);
+        {
+            return null;
+        }
+        ItemObject createdItemObject = GuildInventory.Instance.AddItemToInventory(weaponSlot.item);
         if(weaponSlot.item.weaponWielding == WeaponWielding.TWO_HANDED)
         {
             //clear both slots when two handed
@@ -462,6 +504,6 @@ public class CharEquipment : MonoBehaviour
         else
             weaponSlot.item = null;
         NotifyAfterEquipping(!equip);
-        return true;
+        return createdItemObject;
     }
 }

@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b0cfe1e6cc4fa4f9a1b7ed99d06a7d, type: 3}
+  m_Name: breastplate1
+  m_EditorClassIdentifier: 
+  itemNamePrefix:
+  - Strong
+  - Reinforced
+  - Battered
+  - Cracked
+  itemNameType:
+  - Breastplate
+  itemNameBonus:
+  - Might
+  - Honor
+  itemDescription: Basic breastplate.
+  primarySpriteChoices:
+    spriteChoices:
+    - spritePart: {fileID: 21300000, guid: 0b4bcd77a0afc6d43a4045c9a88fe150, type: 3}
+      spritePartShadow: {fileID: 0}
+    colorCustomization:
+      colorValueMin: 0.7
+      colorValueMax: 0.9
+      colorSaturationRangeMin: 0.05
+      colorSaturationRangeMax: 0.4
+  secondarySpriteChoices:
+    spriteChoices:
+    - spritePart: {fileID: 21300000, guid: d8ab56263b655484e9bdc080bd86b058, type: 3}
+      spritePartShadow: {fileID: 21300000, guid: d107899fa4521ef4b8765f3dab42e96f,
+        type: 3}
+    - spritePart: {fileID: 21300000, guid: f011251fd0d308d428b65c8974581a7a, type: 3}
+      spritePartShadow: {fileID: 21300000, guid: d107899fa4521ef4b8765f3dab42e96f,
+        type: 3}
+    - spritePart: {fileID: 21300000, guid: 8f5bb36ba753ae542a5fb1d13b51e939, type: 3}
+      spritePartShadow: {fileID: 21300000, guid: d107899fa4521ef4b8765f3dab42e96f,
+        type: 3}
+    colorCustomization:
+      colorValueMin: 0.6
+      colorValueMax: 0.9
+      colorSaturationRangeMin: 0.5
+      colorSaturationRangeMax: 0.9
+  tertiarySpriteChoices:
+    spriteChoices: []
+    colorCustomization:
+      colorValueMin: 0
+      colorValueMax: 0
+      colorSaturationRangeMin: 0
+      colorSaturationRangeMax: 0
+  itemSlot: 2
+  armorType: 5

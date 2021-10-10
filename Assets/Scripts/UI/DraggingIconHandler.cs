@@ -35,9 +35,24 @@ public class DraggingIconHandler : MonoBehaviour
 
     public void StartDraggingObject(InventoryListElement iLElement)
     {
-        iconBeingDragged.InitItemIconHandler(iLElement.itemObject.item);
+        StartDraggingObject(iLElement.itemObject.item, iLElement.GetComponent<RectTransform>());
+    }
+
+    public void StartDraggingObject(EquipmentWeaponSlot wSlot)
+    {
+        StartDraggingObject(wSlot.weaponSlotItem.item, wSlot.GetComponent<RectTransform>());
+    }
+
+    public void StartDraggingObject(EquipmentArmorSlot aSlot)
+    {
+        StartDraggingObject(aSlot.armorSlotItem.item, aSlot.GetComponent<RectTransform>());
+    }
+
+    private void StartDraggingObject(Item item, RectTransform rectTransform)
+    {
+        iconBeingDragged.InitItemIconHandler(item);
         iconBeingDragged.IconSetActive(true);
-        iconBeingDragged.GetComponent<RectTransform>().position = iLElement.GetComponent<RectTransform>().position;
+        iconBeingDragged.GetComponent<RectTransform>().position = rectTransform.position;
         GlobalFuncs.SetActiveCanvasGroup(dragObjectCanvasGroup, true);
     }
 

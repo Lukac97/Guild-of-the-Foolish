@@ -24,7 +24,7 @@ public class ItemIconHandler : MonoBehaviour
 
         if (currentItem.itemIcon != null)
         {
-            for (int i = currentItem.itemIcon.Count - 1; i >= 0; i--)
+            for (int i = 0; i < currentItem.itemIcon.Count; i++)
             {
                 IconPartWithShadow iconPart = currentItem.itemIcon[i];
                 GameObject gO = Instantiate(iconPartPrefab, iconHolder.transform);

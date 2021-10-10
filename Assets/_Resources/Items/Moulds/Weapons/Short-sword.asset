@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac23d05f1eb4c0d42b0f8fa832c9cf9c, type: 3}
+  m_Name: Short-sword
+  m_EditorClassIdentifier: 
+  itemNamePrefix:
+  - Broken
+  - Crooked
+  - Excellent
+  - Bloody
+  itemNameType:
+  - Short-sword
+  - Blade
+  - Short-blade
+  - Arming sword
+  - Sword
+  itemNameBonus:
+  - Vigilance
+  - Honor
+  - Bravery
+  - Slaughter
+  itemDescription: A sword every blacksmith should be able to make.
+  primarySpriteChoices:
+    spriteChoices:
+    - spritePart: {fileID: 21300000, guid: 38d5b3bbc4fafae47a1d78e78995934c, type: 3}
+      spritePartShadow: {fileID: 21300000, guid: 787277680af850c43b7843905996b8eb,
+        type: 3}
+    colorCustomization:
+      colorValueMin: 0.8
+      colorValueMax: 1
+      colorSaturationRangeMin: 0.05
+      colorSaturationRangeMax: 0.3
+  secondarySpriteChoices:
+    spriteChoices:
+    - spritePart: {fileID: 21300000, guid: 7ba11e4a5241dd344925e1c4cf30af31, type: 3}
+      spritePartShadow: {fileID: 21300000, guid: 13e152eba85d3674a96c0d7de0b76916,
+        type: 3}
+    colorCustomization:
+      colorValueMin: 0.2
+      colorValueMax: 0.5
+      colorSaturationRangeMin: 0.2
+      colorSaturationRangeMax: 0.9
+  tertiarySpriteChoices:
+    spriteChoices: []
+    colorCustomization:
+      colorValueMin: 0
+      colorValueMax: 0
+      colorSaturationRangeMin: 0
+      colorSaturationRangeMax: 0
+  weaponWielding: 0
+  weaponRange: 0
+  weaponType: 3
