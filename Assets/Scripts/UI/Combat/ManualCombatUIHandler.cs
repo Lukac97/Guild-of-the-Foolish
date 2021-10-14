@@ -175,8 +175,16 @@ public class ManualCombatUIHandler : MonoBehaviour
         {
             if (spellCounter >= usableSpellDisplays.Count)
                 break;
-            usableSpellDisplays[spellCounter].
-                InitUsableSpellDisplay(combatEncounter.character.combatHandler.combatSpells[spellCounter]);
+            if (combatEncounter.character.combatHandler.combatSpells[spellCounter].combatSpell != null)
+            {
+                usableSpellDisplays[spellCounter].
+                    InitUsableSpellDisplay(combatEncounter.character.combatHandler.combatSpells[spellCounter]);
+            }
+            else
+            {
+                usableSpellDisplays[spellCounter].
+                    InitUsableSpellDisplay(null);
+            }
             //CombatHandler.EquippedCombatSpell eqSpell in combatEncounter.character.combatHandler.combatSpells
             //if (eqSpell.combatSpell != null)
             //{

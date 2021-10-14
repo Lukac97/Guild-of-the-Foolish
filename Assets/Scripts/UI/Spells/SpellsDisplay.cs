@@ -16,11 +16,6 @@ public class SpellsDisplay : MonoBehaviour
     public TextMeshProUGUI pageNumberMesh;
     public Button previousPage;
 
-    [Header("On spell click events")]
-    [Space(3)]
-    public UnityEvent<CombatSpell> SingleClickEvent;
-    public UnityEvent<CombatSpell> DoubleClickEvent;
-
     [HideInInspector]
     public CharCombat selectedCharacterCombat;
     [HideInInspector]
@@ -39,7 +34,7 @@ public class SpellsDisplay : MonoBehaviour
 
     private void Start()
     {
-        CharTabMain.CharTabChangedChar += UpdateSpellDisplay;
+        GlobalInput.Instance.onChangedSelectedEntity += UpdateSpellDisplay;
         CharactersController.ChangedChosenSpells += UpdateSpellDisplay;
         singleSpellDisplays = new List<SingleSpellDisplay>();
         foreach (Transform child in spellPanel.transform)
@@ -50,19 +45,21 @@ public class SpellsDisplay : MonoBehaviour
 
     public void UpdateSpellDisplay()
     {
-        if (CharTabMain.Instance.currentChar == null)
+        if (!GlobalInput.CheckIfSelectedCharacter())
         {
             HideAllSpellSlots();
             return;
         }
 
-        selectedCharacterCombat = CharTabMain.Instance.currentChar.GetComponent<CharCombat>();
+        selectedCharacterCombat = GlobalInput.Instance.selectedEntity.GetComponent<CharCombat>();
         selectedCharacterStats = selectedCharacterCombat.GetComponent<CharStats>();
         allCombatSpells = new List<CombatSpell>();
 
         allCombatSpells.AddRange(selectedCharacterStats.characterClass.combatSpells);
-        foreach(CombatHandler.EquippedCombatSpell eqCbSpell in selectedCharacterCombat.combatSpells)
+        foreach (CombatHandler.EquippedCombatSpell eqCbSpell in selectedCharacterCombat.combatSpells)
+        {
             allCombatSpells.Remove(eqCbSpell.combatSpell);
+        }
 
         totalSpellCount = allCombatSpells.Count;
         maxPageNumber = 1 + totalSpellCount / itemsPerPage;
@@ -78,12 +75,10 @@ public class SpellsDisplay : MonoBehaviour
             if (startCnt < totalSpellCount)
             {
                 ssd.InitSingleSpellDisplay(allCombatSpells[startCnt]);
-                ssd.AssignEvents(SingleClickEvent, DoubleClickEvent);
             }
             else
             {
                 ssd.InitSingleSpellDisplay(null);
-                ssd.AssignEvents(SingleClickEvent, DoubleClickEvent);
             }
             startCnt += 1;
         }

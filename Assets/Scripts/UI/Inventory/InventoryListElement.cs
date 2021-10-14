@@ -62,8 +62,10 @@ public class InventoryListElement : MonoBehaviour, IPointerClickHandler, IPointe
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        icon.SetIconTransparency(1f);
+        if (!ItemExistsCheck())
+            return;
 
+        icon.SetIconTransparency(1f);
         DraggingIconHandler.Instance.StopObjectDrag();
     }
 

@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler
+public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler,
+    IDropHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
 
     public TextMeshProUGUI level;
@@ -14,6 +15,7 @@ public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler
 
     private CharCombat chosenCharCombat;
     private int chosenSpellIdx;
+    private Vector2 localStartDragPos;
 
     public void InitSingleSpellDisplay(CharCombat chosenCombat, int spellIdx)
     {
@@ -36,6 +38,61 @@ public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler
         spellCost.text = chosenCharCombat.combatSpells[chosenSpellIdx].combatSpell.spellCost.ToString();
         spellIcon.sprite = chosenCharCombat.combatSpells[chosenSpellIdx].combatSpell.spellIcon;
     }
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (!SpellSlotOccupied())
+            return;
+        SetIconTransparency(0.4f);
+        localStartDragPos = GetComponent<RectTransform>().position;
+        DraggingIconHandler.Instance.StartDraggingObject(this);
+        DraggingIconHandler.Instance.UpdateObjectDrag(localStartDragPos);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (!SpellSlotOccupied())
+            return;
+        localStartDragPos += eventData.delta / DraggingIconHandler.Instance.canvas.scaleFactor;
+        DraggingIconHandler.Instance.UpdateObjectDrag(transform.TransformPoint(localStartDragPos));
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (SpellSlotOccupied())
+            SetIconTransparency(1f);
+        DraggingIconHandler.Instance.StopObjectDrag();
+    }
+
+    private bool SpellSlotOccupied()
+    {
+        return GlobalInput.CheckIfSelectedCharacter() ?
+            GlobalInput.Instance.selectedEntity.GetComponent<CharCombat>().combatSpells[chosenSpellIdx].combatSpell != null : false;
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        if (!GlobalInput.CheckIfSelectedCharacter())
+            return;
+        if (eventData.pointerDrag != null)
+        {
+            SingleSpellDisplay ssDisplay = eventData.pointerDrag.GetComponent<SingleSpellDisplay>();
+            if (ssDisplay == null)
+            {
+                SingleChosenSpellDisplay sChosenDisplay = eventData.pointerDrag.GetComponent<SingleChosenSpellDisplay>();
+                if (sChosenDisplay != null)
+                {
+                    if (!sChosenDisplay.SpellSlotOccupied())
+                        return;
+                    GlobalInput.Instance.selectedEntity.GetComponent<CharCombat>().SwapCombatSpellSlots(
+                        sChosenDisplay.chosenSpellIdx, chosenSpellIdx);
+                }
+            }
+            else if (ssDisplay.linkedSpell != null)
+            {
+                GlobalInput.Instance.selectedEntity.GetComponent<CharCombat>().AddCombatSpellToSlot(ssDisplay.linkedSpell, chosenSpellIdx);
+            }
+        }
+    }
 
     public virtual void OnPointerClick(PointerEventData eventData)
     {
@@ -51,15 +108,12 @@ public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler
 
     public void OnSpellClick()
     {
-        SpellSlotPopUp.Instance.OpenSpellSlot(chosenCharCombat, chosenSpellIdx);
+        //SpellSlotPopUp.Instance.OpenSpellSlot(chosenCharCombat, chosenSpellIdx);
     }
 
     public void OnSpellDoubleClick()
     {
-        //if (spellsDisplay.forChosen)
-        //    spellsDisplay.selectedCharacterCombat.RemoveCombatSpell(linkedSpell);
-        //else
-        //    spellsDisplay.selectedCharacterCombat.AddCombatSpell(linkedSpell);
+        chosenCharCombat.RemoveCombatSpellFromSlot(chosenSpellIdx);
     }
 
     public void ShowSpellSlot(bool doShow)
@@ -67,5 +121,11 @@ public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler
         level.enabled = doShow;
         spellCost.enabled = doShow;
         spellIcon.color = new Color(spellIcon.color.r, spellIcon.color.g, spellIcon.color.b, doShow ? 1 : 0);
+    }
+
+    private void SetIconTransparency(float tVal)
+    {
+        Color clr = spellIcon.color;
+        spellIcon.color = new Color(clr.r, clr.g, clr.b, tVal);
     }
 }

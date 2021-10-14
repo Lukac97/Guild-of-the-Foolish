@@ -82,7 +82,7 @@ public class CombatHandler : MonoBehaviour
     protected virtual void NotifyResourcesUpdated()
     {
     }
-    
+
     //For overriding
     public virtual UsedSpellResult ChooseSpell(CombatHandler enemy)
     {

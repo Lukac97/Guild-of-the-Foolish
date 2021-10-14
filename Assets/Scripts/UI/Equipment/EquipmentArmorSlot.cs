@@ -64,6 +64,9 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler, IPointerE
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!ItemExistsCheck())
+            return;
+
         itemIcon.SetIconTransparency(1f);
         DraggingIconHandler.Instance.StopObjectDrag();
     }
@@ -88,7 +91,7 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler, IPointerE
             if (iLEl == null)
             {
                 EquipmentArmorSlot aSlot = eventData.pointerDrag.GetComponent<EquipmentArmorSlot>();
-                if (aSlot == null)
+                if (aSlot == null | aSlot.armorSlotItem == null | aSlot.armorSlotItem.item == null)
                     return;
                 if (!GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().
                     IsCorrectItemSlot(aSlot.armorSlotItem.item, armorSlotItem))
@@ -99,7 +102,7 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler, IPointerE
                     GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().EquipItem(newItemObject, armorSlotItem);
                 }
             }
-            else if (iLEl.itemObject.item != null)
+            else if (iLEl.itemObject != null & iLEl.itemObject.item != null)
             {
                 GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>().EquipItem(iLEl.itemObject, armorSlotItem);
             }

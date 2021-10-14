@@ -6,7 +6,8 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
+public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler,
+    IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     public CanvasGroup canvasGroup;
 
@@ -15,15 +16,32 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
     public Image spellIcon;
     public CombatSpell linkedSpell;
 
-    [Space(6)]
-    public UnityEvent<CombatSpell> SingleClickEvent;
-    public UnityEvent<CombatSpell> DoubleClickEvent;
-
     private SpellsDisplay spellsDisplay;
+    private Vector2 localStartDragPos;
 
     private void Start()
     {
         spellsDisplay = GetComponentInParent<SpellsDisplay>();
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        SetIconTransparency(0.4f);
+        localStartDragPos = GetComponent<RectTransform>().position;
+        DraggingIconHandler.Instance.StartDraggingObject(this);
+        DraggingIconHandler.Instance.UpdateObjectDrag(localStartDragPos);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        localStartDragPos += eventData.delta / DraggingIconHandler.Instance.canvas.scaleFactor;
+        DraggingIconHandler.Instance.UpdateObjectDrag(transform.TransformPoint(localStartDragPos));
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        SetIconTransparency(1f);
+        DraggingIconHandler.Instance.StopObjectDrag();
     }
 
     public void InitSingleSpellDisplay(CombatSpell combatSpell)
@@ -40,12 +58,6 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
         spellIcon.sprite = combatSpell.spellIcon;
     }
 
-    public void AssignEvents(UnityEvent<CombatSpell> _single, UnityEvent<CombatSpell> _double)
-    {
-        SingleClickEvent = _single;
-        DoubleClickEvent = _double;
-    }
-
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount == 1)
@@ -60,18 +72,13 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
 
     public void OnSpellClick()
     {
-        if (SingleClickEvent != null)
-        {
-            SingleClickEvent.Invoke((CombatSpell)linkedSpell);
-        }
     }
 
     public void OnSpellDoubleClick()
     {
-        if (DoubleClickEvent != null)
-        {
-            DoubleClickEvent.Invoke((CombatSpell)linkedSpell);
-        }
+        if (!GlobalInput.CheckIfSelectedCharacter())
+            return;
+        GlobalInput.Instance.selectedEntity.GetComponent<CharCombat>().AddCombatSpell(linkedSpell);
     }
 
     public void ShowSpellSlot(bool doShow)
@@ -79,5 +86,11 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler
         canvasGroup.alpha = doShow ? 1 : 0;
         canvasGroup.blocksRaycasts = doShow;
         canvasGroup.interactable = doShow;
+    }
+
+    private void SetIconTransparency(float tVal)
+    {
+        Color clr = spellIcon.color;
+        spellIcon.color = new Color(clr.r, clr.g, clr.b, tVal);
     }
 }

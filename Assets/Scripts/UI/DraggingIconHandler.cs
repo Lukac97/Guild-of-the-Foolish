@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DraggingIconHandler : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class DraggingIconHandler : MonoBehaviour
 
     [SerializeField] private CanvasGroup dragObjectCanvasGroup;
     [SerializeField] private ItemIconHandler iconBeingDragged;
+    [SerializeField] private Image imageBeingDragged;
     public Canvas canvas;
     
     private void Awake()
@@ -25,6 +27,7 @@ public class DraggingIconHandler : MonoBehaviour
 
     private void Start()
     {
+        imageBeingDragged.raycastTarget = false;
         StopObjectDrag();
     }
 
@@ -33,26 +36,54 @@ public class DraggingIconHandler : MonoBehaviour
         dragObjectCanvasGroup.GetComponent<RectTransform>().sizeDelta = referenceEl.sizeDelta;
     }
 
+    //Start dragging item InventoryListElement
     public void StartDraggingObject(InventoryListElement iLElement)
     {
         StartDraggingObject(iLElement.itemObject.item, iLElement.GetComponent<RectTransform>());
     }
 
+    //Start dragging item EquipmentWeaponSlot
     public void StartDraggingObject(EquipmentWeaponSlot wSlot)
     {
         StartDraggingObject(wSlot.weaponSlotItem.item, wSlot.GetComponent<RectTransform>());
     }
 
+    //Start dragging item EquipmentArmorSlot
     public void StartDraggingObject(EquipmentArmorSlot aSlot)
     {
         StartDraggingObject(aSlot.armorSlotItem.item, aSlot.GetComponent<RectTransform>());
     }
 
+    //Main function for start dragging item
     private void StartDraggingObject(Item item, RectTransform rectTransform)
     {
+        SetIconSize(rectTransform);
+        imageBeingDragged.enabled = false;
         iconBeingDragged.InitItemIconHandler(item);
         iconBeingDragged.IconSetActive(true);
-        iconBeingDragged.GetComponent<RectTransform>().position = rectTransform.position;
+
+        dragObjectCanvasGroup.GetComponent<RectTransform>().position = rectTransform.position;
+        GlobalFuncs.SetActiveCanvasGroup(dragObjectCanvasGroup, true);
+    }
+
+    public void StartDraggingObject(SingleSpellDisplay ssDisplay)
+    {
+        StartDraggingObject(ssDisplay.linkedSpell.spellIcon, ssDisplay.GetComponent<RectTransform>());
+    }
+
+    public void StartDraggingObject(SingleChosenSpellDisplay scsDisplay)
+    {
+        StartDraggingObject(scsDisplay.spellIcon.sprite, scsDisplay.GetComponent<RectTransform>());
+    }
+
+    private void StartDraggingObject(Sprite imageIcon, RectTransform rectTransform)
+    {
+        SetIconSize(rectTransform);
+        iconBeingDragged.IconSetActive(false);
+        imageBeingDragged.sprite = imageIcon;
+        imageBeingDragged.enabled = true;
+
+        dragObjectCanvasGroup.GetComponent<RectTransform>().position = rectTransform.position;
         GlobalFuncs.SetActiveCanvasGroup(dragObjectCanvasGroup, true);
     }
 
@@ -65,6 +96,7 @@ public class DraggingIconHandler : MonoBehaviour
     {
         iconBeingDragged.InitItemIconHandler(null);
         iconBeingDragged.IconSetActive(false);
+        imageBeingDragged.enabled = false;
         GlobalFuncs.SetActiveCanvasGroup(dragObjectCanvasGroup, false);
     }
 }

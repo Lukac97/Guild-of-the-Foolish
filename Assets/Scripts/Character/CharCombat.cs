@@ -8,6 +8,21 @@ public class CharCombat : CombatHandler
     private CharStats charStats;
     private CharEquipment charEquipment;
 
+    private void Awake()
+    {
+        if (combatSpells.Count <= GlobalRules.maxCombatSpells)
+        {
+            for (int i = combatSpells.Count; i < GlobalRules.maxCombatSpells; i++)
+            {
+                combatSpells.Add(new EquippedCombatSpell());
+            }
+        }
+        else
+        {
+            combatSpells = combatSpells.GetRange(0, GlobalRules.maxCombatSpells);
+        }
+    }
+
     private void Start()
     {
         charEquipment = GetComponent<CharEquipment>();
@@ -36,16 +51,19 @@ public class CharCombat : CombatHandler
 
     public bool AddCombatSpell(CombatSpell newCombatSpell)
     {
-        //if (IndexOfEquippedCombatSpell(newCombatSpell) >= 0)
-        //    return false;
-        //if (combatSpells.Count >= GlobalRules.maxCombatSpells)
-        //{
-        //    combatSpells.RemoveAt(0);
-        //}
+        if (IndexOfEquippedCombatSpell(newCombatSpell) >= 0)
+            return false;
 
-        //combatSpells.Add(new EquippedCombatSpell(newCombatSpell));
-        //CharactersController.ChangedChosenSpells.Invoke();
-        return true;
+        foreach(EquippedCombatSpell eqSpell in combatSpells)
+        {
+            if(eqSpell.combatSpell == null)
+            {
+                eqSpell.AssignSpell(newCombatSpell);
+                CharactersController.ChangedChosenSpells.Invoke();
+                return true;
+            }
+        }
+        return false;
     }
 
     public bool AddCombatSpellToSlot(CombatSpell newCombatSpell, int slotNr)
@@ -74,7 +92,7 @@ public class CharCombat : CombatHandler
     {
         if (slotNr < 0)
             return false;
-        combatSpells.RemoveAt(slotNr);
+        combatSpells[slotNr].AssignSpell(null);
         CharactersController.ChangedChosenSpells.Invoke();
         return true;
     }
@@ -84,7 +102,24 @@ public class CharCombat : CombatHandler
         int idxCS = IndexOfEquippedCombatSpell(remCombatSpell);
         if (idxCS < 0)
             return false;
-        combatSpells.RemoveAt(idxCS);
+        combatSpells[idxCS].AssignSpell(null);
+        CharactersController.ChangedChosenSpells.Invoke();
+        return true;
+    }
+
+    public bool SwapCombatSpellSlots(int firstSlot, int secondSlot)
+    {
+        if (firstSlot >= combatSpells.Count | secondSlot >= combatSpells.Count)
+            return false;
+        if (combatSpells[firstSlot] == null | combatSpells[secondSlot] == null)
+            return false;
+        if (firstSlot == secondSlot)
+            return true;
+        CombatSpell tmpFirstSpell = combatSpells[firstSlot].combatSpell;
+        CombatSpell tmpSecondSpell = combatSpells[secondSlot].combatSpell;
+        combatSpells[firstSlot].AssignSpell(null);
+        combatSpells[secondSlot].AssignSpell(tmpFirstSpell);
+        combatSpells[firstSlot].AssignSpell(tmpSecondSpell);
         CharactersController.ChangedChosenSpells.Invoke();
         return true;
     }
