@@ -14,14 +14,11 @@ public class EquipmentSlotController : MonoBehaviour
     [SerializeField] private GameObject mainArmorGO;
     [SerializeField] private GameObject mainAccsGO;
 
-    private void Awake()
-    {
-        CharactersController.CharactersUpdated += OnEntityChanged;
-        CharTabMain.CharTabChangedChar += OnEntityChanged;
-    }
 
     void Start()
     {
+        CharactersController.CharactersUpdated += OnEntityChanged;
+        GlobalInput.Instance.onChangedSelectedEntity += OnEntityChanged;
         armorSlots = new List<EquipmentArmorSlot>();
         armorSlots.AddRange(equipmentPanel.GetComponentsInChildren<EquipmentArmorSlot>());
         weaponSlots = new List<EquipmentWeaponSlot>();
@@ -41,12 +38,12 @@ public class EquipmentSlotController : MonoBehaviour
 
     private void OnEntityChanged()
     {
-        if (CharTabMain.Instance.currentChar == null)
+        if (!GlobalInput.CheckIfSelectedCharacter())
             return;
         if (!equipmentPanel.activeSelf)
             equipmentPanel.SetActive(true);
 
-        CharEquipment currCharEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
+        CharEquipment currCharEq = GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>();
 
         List <EquipmentArmorSlot> leftArmorSlots = new List<EquipmentArmorSlot>(armorSlots);
         foreach(CharEquipment.ArmorSlotItem armorSlotItem in currCharEq.armorSlots)

@@ -14,23 +14,36 @@ public class HoveringInfoDisplay : MonoBehaviour
         }
     }
 
-    [SerializeField] private List<RectTransform> hoveringInfoRectTransform;
+    [SerializeField] private List<RectTransform> hoveringItemInfoRectTransform;
+    [SerializeField] private List<RectTransform> hoveringSpellInfoRectTransform;
     private List<ItemDescriptionController> itemDescController;
+    private List<SpellDescriptionController> spellDescController;
 
     private void Awake()
     {
         if (Instance == null)
             _instance = this;
         itemDescController = new List<ItemDescriptionController>();
-        foreach(RectTransform hoverDisp in hoveringInfoRectTransform)
+        spellDescController = new List<SpellDescriptionController>();
+        foreach(RectTransform hoverDisp in hoveringItemInfoRectTransform)
         {
-            itemDescController.Add(hoverDisp.GetComponentInChildren<ItemDescriptionController>());
+            ItemDescriptionController potentialItemDesc = hoverDisp.GetComponentInChildren<ItemDescriptionController>();
+            if(potentialItemDesc != null)
+                itemDescController.Add(potentialItemDesc);
+
+        }
+        foreach(RectTransform hoverDisp in hoveringSpellInfoRectTransform)
+        {
+            SpellDescriptionController potentialSpellDesc = hoverDisp.GetComponentInChildren<SpellDescriptionController>();
+            if (potentialSpellDesc != null)
+                spellDescController.Add(potentialSpellDesc);
         }
     }
 
     private void Start()
     {
         HideItemDetailsDisplay();
+        HideSpellDetailsDisplay();
     }
 
     public void ShowItemDetailsDisplay(EquipmentArmorSlot eqSlot, bool toTheRight)
@@ -66,7 +79,7 @@ public class HoveringInfoDisplay : MonoBehaviour
     private void ShowItemDetailsDisplay(RectTransform hoveredObject, Item item, bool toTheRight, bool fromInventory)
     {
         // Regular item details showing
-        hoveringInfoRectTransform[0].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
+        hoveringItemInfoRectTransform[0].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
             GetComponent<RectTransform>().rect.height * 0.3f);
 
         Vector2 idealPosition = new Vector2(
@@ -78,12 +91,12 @@ public class HoveringInfoDisplay : MonoBehaviour
         itemDescController[0].ShowItemDescription(item);
 
         //Set position after full creation
-        hoveringInfoRectTransform[0].position = idealPosition;
+        hoveringItemInfoRectTransform[0].position = idealPosition;
         Vector2 newPosition = new Vector2(
-                hoveringInfoRectTransform[0].localPosition.x + hoveringInfoRectTransform[0].rect.width / 2 * (toTheRight ? 1 : -1),
-                hoveringInfoRectTransform[0].localPosition.y + hoveringInfoRectTransform[0].rect.height / 2);
+                hoveringItemInfoRectTransform[0].localPosition.x + hoveringItemInfoRectTransform[0].rect.width / 2 * (toTheRight ? 1 : -1),
+                hoveringItemInfoRectTransform[0].localPosition.y + hoveringItemInfoRectTransform[0].rect.height / 2);
 
-        hoveringInfoRectTransform[0].localPosition = newPosition;
+        hoveringItemInfoRectTransform[0].localPosition = newPosition;
 
         //Additional descriptions
 
@@ -99,13 +112,13 @@ public class HoveringInfoDisplay : MonoBehaviour
                 List<CharEquipment.ArmorSlotItem> itemSlots = charEquipment.FindBestSlotToEquipItem((ArmorItem)item);
                 for (int i = 0; i < Mathf.Min(itemSlots.Count, 2); i++)
                 {
-                    hoveringInfoRectTransform[i + 1].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
+                    hoveringItemInfoRectTransform[i + 1].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
                         GetComponent<RectTransform>().rect.height * 0.3f);
                     newPosition = new Vector2(
-                        hoveringInfoRectTransform[0].localPosition.x +
-                            (hoveringInfoRectTransform[0].rect.width / 2 + hoveringInfoRectTransform[i + 1].rect.width / 2) * (toTheRight ? 1 : -1),
-                        hoveringInfoRectTransform[0].localPosition.y);
-                    hoveringInfoRectTransform[i + 1].localPosition = newPosition;
+                        hoveringItemInfoRectTransform[0].localPosition.x +
+                            (hoveringItemInfoRectTransform[0].rect.width / 2 + hoveringItemInfoRectTransform[i + 1].rect.width / 2) * (toTheRight ? 1 : -1),
+                        hoveringItemInfoRectTransform[0].localPosition.y);
+                    hoveringItemInfoRectTransform[i + 1].localPosition = newPosition;
                     itemDescController[i + 1].ShowItemDescription(itemSlots[i].item);
                 }
                 hideCounter = Mathf.Min(itemSlots.Count, 2);
@@ -115,13 +128,13 @@ public class HoveringInfoDisplay : MonoBehaviour
                 List<CharEquipment.WeaponSlotItem> itemSlots = charEquipment.FindBestSlotToEquipItem((WeaponItem)item);
                 for (int i = 0; i < Mathf.Min(itemSlots.Count, 2); i++)
                 {
-                    hoveringInfoRectTransform[i + 1].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
+                    hoveringItemInfoRectTransform[i + 1].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
                         GetComponent<RectTransform>().rect.height * 0.3f);
                     newPosition = new Vector2(
-                        hoveringInfoRectTransform[0].localPosition.x +
-                            (hoveringInfoRectTransform[0].sizeDelta.x / 2 + hoveringInfoRectTransform[i + 1].sizeDelta.x * (1 + 2 * i) / 2) * (toTheRight ? 1 : -1),
-                        hoveringInfoRectTransform[0].localPosition.y);
-                    hoveringInfoRectTransform[i + 1].localPosition = newPosition;
+                        hoveringItemInfoRectTransform[0].localPosition.x +
+                            (hoveringItemInfoRectTransform[0].sizeDelta.x / 2 + hoveringItemInfoRectTransform[i + 1].sizeDelta.x * (1 + 2 * i) / 2) * (toTheRight ? 1 : -1),
+                        hoveringItemInfoRectTransform[0].localPosition.y);
+                    hoveringItemInfoRectTransform[i + 1].localPosition = newPosition;
                     itemDescController[i + 1].ShowItemDescription(itemSlots[i].item);
                 }
                 hideCounter = Mathf.Min(itemSlots.Count, 2);
@@ -134,11 +147,63 @@ public class HoveringInfoDisplay : MonoBehaviour
         }
     }
 
+    public void ShowSpellDetailsDisplay(SingleSpellDisplay ssDisplay, bool toTheRight)
+    {
+        if (ssDisplay.linkedSpell == null)
+        {
+            HideItemDetailsDisplay();
+            return;
+        }
+        ShowSpellDetailsDisplay(ssDisplay.GetComponent<RectTransform>(), ssDisplay.linkedSpell, toTheRight);
+    }
+
+    public void ShowSpellDetailsDisplay(SingleChosenSpellDisplay scsDisplay, bool toTheRight)
+    {
+        CombatSpell chosenSpell = scsDisplay.GetCombatSpell();
+        if (chosenSpell == null)
+        {
+            HideItemDetailsDisplay();
+            return;
+        }
+        ShowSpellDetailsDisplay(scsDisplay.GetComponent<RectTransform>(), chosenSpell, toTheRight);
+    }
+
+    private void ShowSpellDetailsDisplay(RectTransform hoveredObject, CombatSpell combatSpell, bool toTheRight)
+    {
+        hoveringSpellInfoRectTransform[0].sizeDelta = new Vector2(GetComponent<RectTransform>().rect.width * 0.2f,
+            GetComponent<RectTransform>().rect.height * 0.3f);
+        Vector2 idealPosition = new Vector2(
+                hoveredObject.localPosition.x + hoveredObject.rect.width / 2 * (toTheRight ? 1 : -1),
+                hoveredObject.localPosition.y + hoveredObject.rect.height / 2);
+
+        //Transform to world space
+        idealPosition = hoveredObject.parent.TransformPoint(idealPosition);
+
+        //Show Spell Description here
+        spellDescController[0].ShowSpellDescription(combatSpell);
+
+        //Set position after full creation
+        hoveringSpellInfoRectTransform[0].position = idealPosition;
+        Vector2 newPosition = new Vector2(
+                hoveringSpellInfoRectTransform[0].localPosition.x + hoveringSpellInfoRectTransform[0].rect.width / 2 * (toTheRight ? 1 : -1),
+                hoveringSpellInfoRectTransform[0].localPosition.y + hoveringSpellInfoRectTransform[0].rect.height / 2);
+
+        hoveringSpellInfoRectTransform[0].localPosition = newPosition;
+    }
+
     public void HideItemDetailsDisplay()
     {
         foreach (ItemDescriptionController itemDesc in itemDescController)
         {
             itemDesc.HideItemDescription();
+        }
+    }
+
+    public void HideSpellDetailsDisplay()
+    {
+        foreach (SpellDescriptionController spellDesc in spellDescController)
+        {
+            spellDesc.HideSpellDescription();
         }
     }
 }

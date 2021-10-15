@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler,
+public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,
     IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     public CanvasGroup canvasGroup;
@@ -22,6 +22,16 @@ public class SingleSpellDisplay : MonoBehaviour, IPointerClickHandler,
     private void Start()
     {
         spellsDisplay = GetComponentInParent<SpellsDisplay>();
+    }
+
+    public virtual void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.ShowSpellDetailsDisplay(this, true);
+    }
+
+    public virtual void OnPointerExit(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.HideSpellDetailsDisplay();
     }
 
     public void OnBeginDrag(PointerEventData eventData)

@@ -195,3 +195,21 @@ public enum HarmfulConsumableEffectType
 }
 
 #endregion Consumables
+
+#region Professions
+
+public enum IngredientType
+{
+    WOOD,
+    WOOD_PLANKS,
+    HERB,
+    HERB_EXTRACT,
+    LEATHER,
+    CURED_LEATHER,
+    ORE,
+    INGOT,
+}
+
+
+
+#endregion Professions

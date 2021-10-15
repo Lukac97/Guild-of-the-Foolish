@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler,
+public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,
     IDropHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
 
@@ -38,6 +38,17 @@ public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler,
         spellCost.text = chosenCharCombat.combatSpells[chosenSpellIdx].combatSpell.spellCost.ToString();
         spellIcon.sprite = chosenCharCombat.combatSpells[chosenSpellIdx].combatSpell.spellIcon;
     }
+
+    public virtual void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.ShowSpellDetailsDisplay(this, true);
+    }
+
+    public virtual void OnPointerExit(PointerEventData pointerEventData)
+    {
+        HoveringInfoDisplay.Instance.HideSpellDetailsDisplay();
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (!SpellSlotOccupied())
@@ -127,5 +138,10 @@ public class SingleChosenSpellDisplay : MonoBehaviour, IPointerClickHandler,
     {
         Color clr = spellIcon.color;
         spellIcon.color = new Color(clr.r, clr.g, clr.b, tVal);
+    }
+
+    public CombatSpell GetCombatSpell()
+    {
+        return chosenCharCombat != null ? chosenCharCombat.combatSpells[chosenSpellIdx].combatSpell : null;
     }
 }

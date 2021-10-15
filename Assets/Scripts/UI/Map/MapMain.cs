@@ -47,6 +47,7 @@ public class MapMain : MonoBehaviour
         Vector2 scrollsize = transform.parent.GetComponent<RectTransform>().rect.size;
         portraitIconSize = Mathf.Min(scrollsize.x / 8, scrollsize.y / 8);
         InitNodePortraits();
+        CharactersController.NrOfCharsChanged += InitNodePortraits;
     }
 
     private void Update()

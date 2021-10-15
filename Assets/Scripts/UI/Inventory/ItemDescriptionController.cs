@@ -5,8 +5,6 @@ using TMPro;
 
 public class ItemDescriptionController : MonoBehaviour
 {
-    public GameObject itemNamePanel;
-    public GameObject itemDescriptionPanel;
     public GameObject itemStatsPanel;
     public GameObject singleItemStatPrefab;
     [Header("Item info")]
@@ -41,12 +39,9 @@ public class ItemDescriptionController : MonoBehaviour
     {
         if(currentItem == null)
         {
-            itemNamePanel.SetActive(false);
-            itemDescriptionPanel.SetActive(false);
+            HideItemDescription();
             return;
         }
-        itemNamePanel.SetActive(true);
-        itemDescriptionPanel.SetActive(true);
         itemName.text = currentItem.itemName;
         itemLevel.text = currentItem.level.ToString();
         itemDescription.text = currentItem.itemDescription;

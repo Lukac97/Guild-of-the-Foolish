@@ -33,7 +33,7 @@ public class CharTabMain : MonoBehaviour
             _instance = this;
         }
 
-        CharactersController.NrOfCharsChanged += UpdateCharDropdown;
+        //CharactersController.NrOfCharsChanged += UpdateCharDropdown;
     }
 
     void Start()

@@ -42,7 +42,8 @@ public class CharactersController : MonoBehaviour
         GameObject newChar = Instantiate(newCharPrefab, gameObject.transform);
         newChar.GetComponent<CharStats>().InitCharStats(newCharClass, charName);
         characters.Add(newChar);
-        NrOfCharsChanged.Invoke();
+        if(NrOfCharsChanged != null)
+            NrOfCharsChanged.Invoke();
         CharactersUpdated.Invoke();
     }
 }

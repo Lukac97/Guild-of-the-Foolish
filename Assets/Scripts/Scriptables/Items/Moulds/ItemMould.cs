@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemMould : ScriptableObject
+public class ItemMould : ScriptableObject, MouldedItemsInterface
 {
     [System.Serializable]
     public class ColorCustomization
