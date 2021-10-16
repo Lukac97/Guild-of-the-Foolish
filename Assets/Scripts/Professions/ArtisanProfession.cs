@@ -7,7 +7,7 @@ public class ArtisanProfession
 {
     public string professionName;
     public int level;
-    [SerializeField] List<Recipe> availableRecipes;
+    public List<Recipe> availableRecipes;
 
     private ArtisanProfessionMould artisanProfessionMould;
 

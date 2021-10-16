@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c06179ed550584ba055c95e0b50b5f, type: 3}
   m_Name: LeatherStrips
   m_EditorClassIdentifier: 
+  recipeName: Leather strips
   neededIngredients:
   - ingredientPredef: {fileID: 11400000, guid: 7e8b65096a6751945be67003b6b7c582, type: 2}
     quantity: 1

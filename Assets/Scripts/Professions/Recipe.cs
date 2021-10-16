@@ -20,7 +20,8 @@ public class Recipe : ScriptableObject
         public int quantity;
     }
 
-    [SerializeField] private List<IngredientNeeded> neededIngredients;
-    [SerializeField] private int recipeLevel;
-    [SerializeField] private List<ResultingItem> resultingItems;
+    public string recipeName;
+    public List<IngredientNeeded> neededIngredients;
+    public int recipeLevel;
+    public List<ResultingItem> resultingItems;
 }

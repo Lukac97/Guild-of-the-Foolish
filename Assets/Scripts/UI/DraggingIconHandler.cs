@@ -59,8 +59,8 @@ public class DraggingIconHandler : MonoBehaviour
     {
         SetIconSize(rectTransform);
         imageBeingDragged.enabled = false;
-        iconBeingDragged.InitItemIconHandler(item);
         iconBeingDragged.IconSetActive(true);
+        iconBeingDragged.InitItemIconHandler(item);
 
         dragObjectCanvasGroup.GetComponent<RectTransform>().position = rectTransform.position;
         GlobalFuncs.SetActiveCanvasGroup(dragObjectCanvasGroup, true);
