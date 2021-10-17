@@ -60,9 +60,6 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointer
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!ItemExistsCheck())
-            return;
-
         itemIcon.SetIconTransparency(1f);
         DraggingIconHandler.Instance.StopObjectDrag();
     }
@@ -108,15 +105,14 @@ public class EquipmentWeaponSlot : MonoBehaviour, IPointerClickHandler, IPointer
 
     public void OnItemClick()
     {
-        //if (weaponSlotItem != null)
-        //{
-        //    EquipmentSlotPopUp.Instance.OpenEquipmentSlot(CharTabMain.Instance.currentChar, weaponSlotItem);
-        //}
+
     }
 
     public void OnItemDoubleClick()
     {
-        CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
+        if (!GlobalInput.CheckIfSelectedCharacter())
+            return;
+        CharEquipment charEq = GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>();
         if (charEq != null)
             charEq.UnequipSlot(weaponSlotItem);
     }

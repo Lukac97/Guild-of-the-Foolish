@@ -85,6 +85,21 @@ public class GuildInventory : MonoBehaviour
         return null;
     }
 
+    ///<summary>
+    /// Returns ItemObject which originates from Item parsed as argument.
+    ///</summary>
+    public ItemObject FindItemByOrigin(Item item)
+    {
+        if (item == null)
+            return null;
+        foreach (ItemObject child in itemObjects)
+        {
+            if (item == child.item.originItem)
+                return child;
+        }
+        return null;
+    }
+
     public List<ItemObject> GetAllItemObjects()
     {
         return itemObjects;

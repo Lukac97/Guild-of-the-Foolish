@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-public class RecipeUIElement : MonoBehaviour
+public class RecipeUIElement : MonoBehaviour, IPointerClickHandler
 {
     public TextMeshProUGUI recipeName;
     public TextMeshProUGUI canCreateAmount;
 
-    private Recipe linkedRecipe;
+    public List<Recipe.IngredientAvailability> availablePerIngredient;
+
+    public Recipe linkedRecipe;
 
     public void InitRecipeUIElement(Recipe recipe)
     {
@@ -17,28 +20,37 @@ public class RecipeUIElement : MonoBehaviour
         {
             GetComponentInParent<ProfessionTabMain>().RemoveExistingRecipeElement(this);
         }
-        linkedRecipe = recipe;
 
+        linkedRecipe = recipe;
         recipeName.text = recipe.recipeName;
         UpdateCanMake();
+    }
+    public virtual void OnPointerClick(PointerEventData eventData)
+    {
+        ProfessionTabMain.Instance.SelectRecipe(this);
     }
 
     public void UpdateCanMake()
     {
-        List<int> availablePerIngredient = new List<int>();
-        foreach (Recipe.IngredientNeeded ingrNeed in linkedRecipe.neededIngredients)
+        int recipeCount = GetRecipeAvailableCount();
+        canCreateAmount.text = (recipeCount == 0 ? "" : recipeCount.ToString());
+    }
+
+    public int GetRecipeAvailableCount()
+    {
+        return linkedRecipe.GetRecipeAvailableCount(out availablePerIngredient);
+    }
+
+    public Recipe.IngredientAvailability GetIngredientAvailability(Item item)
+    {
+        foreach(Recipe.IngredientAvailability ingA in availablePerIngredient)
         {
-            ItemObject itemObject = GuildInventory.Instance.FindItem(ingrNeed.ingredientPredef.ingredientItem);
-            if (itemObject == null)
+            if(ingA.itemNeeded == item)
             {
-                availablePerIngredient.Add(0);
-                continue;
+                return ingA;
             }
-            availablePerIngredient.Add(itemObject.quantity / ingrNeed.quantity);
         }
 
-        int minAmount = Mathf.Min(availablePerIngredient.ToArray());
-
-        canCreateAmount.text = minAmount == 0 ? "" : minAmount.ToString();
+        return null;
     }
 }

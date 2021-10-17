@@ -76,6 +76,16 @@ public class HoveringInfoDisplay : MonoBehaviour
         ShowItemDetailsDisplay(iListEl.GetComponent<RectTransform>(), iListEl.itemObject.item, toTheRight, true);
     }
 
+    public void ShowItemDetailsDisplay(ProfessionItemElement piEl, bool toTheRight)
+    {
+        if (piEl.item == null)
+        {
+            HideItemDetailsDisplay();
+            return;
+        }
+        ShowItemDetailsDisplay(piEl.GetComponent<RectTransform>(), piEl.item, toTheRight, true);
+    }
+
     private void ShowItemDetailsDisplay(RectTransform hoveredObject, Item item, bool toTheRight, bool fromInventory)
     {
         // Regular item details showing
@@ -94,7 +104,7 @@ public class HoveringInfoDisplay : MonoBehaviour
         hoveringItemInfoRectTransform[0].position = idealPosition;
         Vector2 newPosition = new Vector2(
                 hoveringItemInfoRectTransform[0].localPosition.x + hoveringItemInfoRectTransform[0].rect.width / 2 * (toTheRight ? 1 : -1),
-                hoveringItemInfoRectTransform[0].localPosition.y + hoveringItemInfoRectTransform[0].rect.height / 2);
+                hoveringItemInfoRectTransform[0].localPosition.y + hoveringItemInfoRectTransform[0].rect.height / 2 );
 
         hoveringItemInfoRectTransform[0].localPosition = newPosition;
 

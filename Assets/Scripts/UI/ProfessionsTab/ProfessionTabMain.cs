@@ -6,20 +6,51 @@ using TMPro;
 
 public class ProfessionTabMain : MonoBehaviour
 {
+
+    private static ProfessionTabMain _instance;
+    public static ProfessionTabMain Instance { get { return _instance; } }
+
     public GameObject recipeUIPrefab;
     public GameObject recipesPanel;
+    public CanvasGroup recipeDetailsCG;
+
+    [Header("Recipe details")]
+    [SerializeField] private GameObject recipeResultScrollGO;
+    [SerializeField] private GameObject recipeResultPanelGO;
+    [SerializeField] private GameObject recipeIngredientsScrollGO;
+    [SerializeField] private GameObject recipeIngredientsPanelGO;
+
+    [SerializeField] private GameObject recipeResultItemPrefab;
+    [SerializeField] private GameObject recipeIngredientItemPrefab;
 
     [Header("Dropdown")]
     public TMP_Dropdown professionDropdown;
 
     public ArtisanProfession currentProfession;
+    public RecipeUIElement currentRecipeUISelected;
     private List<ArtisanProfession> availableProfessions = new List<ArtisanProfession>();
     private List<RecipeUIElement> displayedRecipes = new List<RecipeUIElement>();
+
+    private void Awake()
+    {
+        if (Instance == null)
+            _instance = this;
+    }
 
     private void Start()
     {
         GuildInventory.Instance.InventoryChanged += UpdateExistingRecipes;
         currentProfession = null;
+        foreach(Transform child in recipeIngredientsPanelGO.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach(Transform child in recipeResultPanelGO.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        GlobalFuncs.PackGridLayoutWithScroll(recipeResultScrollGO, recipeResultPanelGO, 1, 0.1f);
+        GlobalFuncs.PackGridLayoutWithScroll(recipeIngredientsScrollGO, recipeIngredientsPanelGO, 1, 0.1f);
         UpdateProfessionDropdown();
     }
 
@@ -52,6 +83,56 @@ public class ProfessionTabMain : MonoBehaviour
     {
         currentProfession = newProfession;
         RedrawRecipes();
+        SelectRecipe(null);
+    }
+
+    public void SelectRecipe(RecipeUIElement recipeUIElement)
+    {
+        bool sameRecipeSelected = false;
+        if (currentRecipeUISelected == recipeUIElement & recipeUIElement != null)
+            sameRecipeSelected = true;
+        currentRecipeUISelected = recipeUIElement;
+        //Logic for displaying/undisplaying details about recipe
+        if (recipeUIElement == null)
+        {
+            GlobalFuncs.SetActiveCanvasGroup(recipeDetailsCG, false);
+        }
+        else
+        {
+            GlobalFuncs.SetActiveCanvasGroup(recipeDetailsCG, true);
+            if (!sameRecipeSelected)
+            {
+                DisplaySelectedRecipeDetails();
+            }
+        }
+    }
+
+    private void DisplaySelectedRecipeDetails()
+    {
+        foreach(Transform child in recipeResultPanelGO.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach(Transform child in recipeIngredientsPanelGO.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach(Recipe.ResultingItem resItem in currentRecipeUISelected.linkedRecipe.resultingItems)
+        {
+            GameObject gO = Instantiate(recipeResultItemPrefab, recipeResultPanelGO.transform);
+            ProfessionItemElement profItem = gO.GetComponent<ProfessionItemElement>();
+            profItem.AssignPredefinedItem(GlobalFuncs.GetItemFromScriptableObject(resItem.predefinedItem));
+        }
+
+        foreach(Recipe.IngredientNeeded ingNeed in currentRecipeUISelected.linkedRecipe.neededIngredients)
+        {
+            GameObject gO = Instantiate(recipeIngredientItemPrefab, recipeIngredientsPanelGO.transform);
+            ProfessionItemElement profItem = gO.GetComponent<ProfessionItemElement>();
+            profItem.AssignPredefinedItem(GlobalFuncs.GetItemFromScriptableObject(ingNeed.ingredientPredef));
+        }
+
     }
 
     private void RedrawRecipes()
@@ -72,6 +153,11 @@ public class ProfessionTabMain : MonoBehaviour
         {
             recipeEl.UpdateCanMake();
         }
+
+        foreach(ProfessionItemElement iEl in recipeIngredientsPanelGO.GetComponentsInChildren<ProfessionItemElement>())
+        {
+            iEl.UpdateProfessionItemDetails();
+        }
     }
 
     public void RemoveExistingRecipeElement(RecipeUIElement recipeUIElement)
@@ -87,5 +173,13 @@ public class ProfessionTabMain : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+
+    public void OnClickCraft()
+    {
+        if (currentRecipeUISelected == null)
+            return;
+
+        bool isSuccessful = currentRecipeUISelected.linkedRecipe.CraftThisRecipe();
     }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3071041033061047127}
   - component: {fileID: 4071604114471256562}
   m_Layer: 5
-  m_Name: ItemIconPrefabWithAspect 1
+  m_Name: DraggedItemIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -122,8 +122,8 @@ CanvasGroup:
   m_GameObject: {fileID: 6418236980105952667}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1001 &805689313265436545
 PrefabInstance:

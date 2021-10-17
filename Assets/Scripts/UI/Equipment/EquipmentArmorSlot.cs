@@ -64,9 +64,6 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler, IPointerE
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!ItemExistsCheck())
-            return;
-
         itemIcon.SetIconTransparency(1f);
         DraggingIconHandler.Instance.StopObjectDrag();
     }

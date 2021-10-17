@@ -84,7 +84,9 @@ public class DraggingIconHandler : MonoBehaviour
         imageBeingDragged.enabled = true;
 
         dragObjectCanvasGroup.GetComponent<RectTransform>().position = rectTransform.position;
-        GlobalFuncs.SetActiveCanvasGroup(dragObjectCanvasGroup, true);
+        dragObjectCanvasGroup.alpha = 1;
+        dragObjectCanvasGroup.interactable = false;
+        dragObjectCanvasGroup.blocksRaycasts = false;
     }
 
     public void UpdateObjectDrag(Vector3 newPos)

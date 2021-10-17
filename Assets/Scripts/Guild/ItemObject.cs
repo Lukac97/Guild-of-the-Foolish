@@ -10,6 +10,6 @@ public class ItemObject : MonoBehaviour
     public void InitItemObject(Item newItem, int quant = 1)
     {
         item = newItem;
-        quantity = 1;
+        quantity = quant;
     }
 }

@@ -219,6 +219,46 @@ public class GlobalFuncs : MonoBehaviour
         return finalColor;
     }
 
+    /// <summary>
+    /// Gets item from scriptable object which implements PredefinedItemsInterface.
+    /// </summary>
+    /// <param name="predefinedItem">ScriptableObject which implements PredefinedItemsInterface</param>
+    /// <returns></returns>
+    public static Item GetItemFromScriptableObject(ScriptableObject predefinedItem)
+    {
+        if (predefinedItem == null)
+            return null;
+        if (predefinedItem is PredefinedItemsInterface)
+        {
+            if (predefinedItem.GetType() == typeof(ArmorItemPredefined))
+            {
+                return ((ArmorItemPredefined)predefinedItem).armorItem;
+            }
+            else if (predefinedItem.GetType() == typeof(WeaponItemPredefined))
+            {
+                return ((WeaponItemPredefined)predefinedItem).weaponItem;
+            }
+            else if (predefinedItem.GetType() == typeof(ConsumableItemPredefined))
+            {
+                return ((ConsumableItemPredefined)predefinedItem).consumableItem;
+            }
+            else if (predefinedItem.GetType() == typeof(IngredientItemPredefined))
+            {
+                return ((IngredientItemPredefined)predefinedItem).ingredientItem;
+            }
+            else
+            {
+                Debug.Log("Scriptable is of PredefinedItemsInterface, but not of any specific predefined items type.");
+                return null;
+            }
+        }
+        else
+        {
+            Debug.Log("Scriptable is not of PredefinedItemsInterface.");
+            return null;
+        }
+    }
+
     #endregion Item_Helper
 
     #region UI_Helper

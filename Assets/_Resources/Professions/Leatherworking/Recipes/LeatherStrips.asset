@@ -18,4 +18,5 @@ MonoBehaviour:
     quantity: 1
   recipeLevel: 1
   resultingItems:
-  - quantity: 10
+  - predefinedItem: {fileID: 11400000, guid: 0363b0e520bd5cc44b4029d964b1ba29, type: 2}
+    quantity: 10

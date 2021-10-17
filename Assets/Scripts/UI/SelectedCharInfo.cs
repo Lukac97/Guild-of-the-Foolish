@@ -9,6 +9,7 @@ public class SelectedCharInfo : MonoBehaviour
     [SerializeField] private GameObject moveButtonHolder;
     [SerializeField] private GameObject characterInfoHolder;
     [SerializeField] private TextMeshProUGUI characterName;
+    [SerializeField] private Image characterIcon;
 
     [Header("Sliders")]
     [SerializeField] private Slider hpSlider;
@@ -43,10 +44,16 @@ public class SelectedCharInfo : MonoBehaviour
             selectedCharStats = GlobalInput.Instance.selectedEntity.GetComponent<CharStats>();
         }
 
-        if(selectedCharStats != null)
+        if (selectedCharStats != null)
+        {
             characterName.text = selectedCharStats.characterName;
+            characterIcon.sprite = selectedCharStats.characterClass.classIcon;
+        }
         else
+        {
             characterName.text = "";
+            characterIcon.sprite = null;
+        }
 
         EnableMoveButton();
         UpdateSelectedCharSliders();
