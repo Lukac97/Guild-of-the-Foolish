@@ -14,6 +14,7 @@ public class RecipeUIElement : MonoBehaviour, IPointerClickHandler
 
     public Recipe linkedRecipe;
 
+    public bool availableForCrafting = false;
     public void InitRecipeUIElement(Recipe recipe)
     {
         if (recipe == null)
@@ -33,7 +34,16 @@ public class RecipeUIElement : MonoBehaviour, IPointerClickHandler
     public void UpdateCanMake()
     {
         int recipeCount = GetRecipeAvailableCount();
-        canCreateAmount.text = (recipeCount == 0 ? "" : recipeCount.ToString());
+        if(recipeCount == 0)
+        {
+            canCreateAmount.text = "";
+            availableForCrafting = false;
+        }
+        else
+        {
+            canCreateAmount.text = recipeCount.ToString();
+            availableForCrafting = true;
+        }
     }
 
     public int GetRecipeAvailableCount()

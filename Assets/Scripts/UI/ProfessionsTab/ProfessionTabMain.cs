@@ -13,6 +13,7 @@ public class ProfessionTabMain : MonoBehaviour
     public GameObject recipeUIPrefab;
     public GameObject recipesPanel;
     public CanvasGroup recipeDetailsCG;
+    [SerializeField] private Button craftButton;
 
     [Header("Recipe details")]
     [SerializeField] private GameObject recipeResultScrollGO;
@@ -71,7 +72,7 @@ public class ProfessionTabMain : MonoBehaviour
         }
         else
         {
-            RedrawRecipes();
+            RedrawRecipesList();
         }
     }
     public void OnDropdownChoice(int professionNr)
@@ -82,7 +83,7 @@ public class ProfessionTabMain : MonoBehaviour
     public void SetCurrentProfession(ArtisanProfession newProfession)
     {
         currentProfession = newProfession;
-        RedrawRecipes();
+        RedrawRecipesList();
         SelectRecipe(null);
     }
 
@@ -103,6 +104,14 @@ public class ProfessionTabMain : MonoBehaviour
             if (!sameRecipeSelected)
             {
                 DisplaySelectedRecipeDetails();
+                if(recipeUIElement.availableForCrafting)
+                {
+                    craftButton.interactable = true;
+                }
+                else
+                {
+                    craftButton.interactable = false;
+                }
             }
         }
     }
@@ -135,7 +144,7 @@ public class ProfessionTabMain : MonoBehaviour
 
     }
 
-    private void RedrawRecipes()
+    private void RedrawRecipesList()
     {
         CleanAllRecipes();
         foreach(Recipe recipe in currentProfession.availableRecipes)
@@ -157,6 +166,18 @@ public class ProfessionTabMain : MonoBehaviour
         foreach(ProfessionItemElement iEl in recipeIngredientsPanelGO.GetComponentsInChildren<ProfessionItemElement>())
         {
             iEl.UpdateProfessionItemDetails();
+        }
+
+        if (currentRecipeUISelected != null)
+        {
+            if (currentRecipeUISelected.availableForCrafting)
+            {
+                craftButton.interactable = true;
+            }
+            else
+            {
+                craftButton.interactable = false;
+            }
         }
     }
 

@@ -102,9 +102,12 @@ public class HoveringInfoDisplay : MonoBehaviour
 
         //Set position after full creation
         hoveringItemInfoRectTransform[0].position = idealPosition;
+        //Vector2 newPosition = new Vector2(
+        //        hoveringItemInfoRectTransform[0].localPosition.x + hoveringItemInfoRectTransform[0].rect.width / 2 * (toTheRight ? 1 : -1),
+        //        hoveringItemInfoRectTransform[0].localPosition.y + hoveringItemInfoRectTransform[0].rect.height / 2 );
         Vector2 newPosition = new Vector2(
                 hoveringItemInfoRectTransform[0].localPosition.x + hoveringItemInfoRectTransform[0].rect.width / 2 * (toTheRight ? 1 : -1),
-                hoveringItemInfoRectTransform[0].localPosition.y + hoveringItemInfoRectTransform[0].rect.height / 2 );
+                hoveringItemInfoRectTransform[0].localPosition.y + hoveringItemInfoRectTransform[0].GetComponentInChildren<ItemDescriptionController>().GetRealHeight()/2);
 
         hoveringItemInfoRectTransform[0].localPosition = newPosition;
 

@@ -13,6 +13,7 @@ public class ItemDescriptionController : MonoBehaviour
     public TextMeshProUGUI itemDescription;
     public ItemIconHandler icon;
 
+
     private Item currentItem = null;
     private void Start()
     {
@@ -33,6 +34,15 @@ public class ItemDescriptionController : MonoBehaviour
         GetComponent<CanvasGroup>().alpha = 0;
         GetComponent<CanvasGroup>().interactable = false;
         GetComponent<CanvasGroup>().blocksRaycasts = false;
+    }
+
+    public float GetRealHeight()
+    {
+        float topPointY = GetComponent<RectTransform>().anchoredPosition.y + GetComponent<RectTransform>().sizeDelta.y / 2;
+        float bottomPointY = itemStatsPanel.GetComponent<RectTransform>().anchoredPosition.y
+            + itemStatsPanel.GetComponent<RectTransform>().sizeDelta.y / 2;
+
+        return topPointY - bottomPointY;
     }
 
     private void UpdateSelectedItem()
