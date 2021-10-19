@@ -33,6 +33,8 @@ public class Recipe : ScriptableObject
     public int recipeLevel;
     public List<ResultingItem> resultingItems;
 
+    public float experienceMultiplier = 1;
+
     public ResultingItem GetResultingItem(Item item)
     {
         foreach(ResultingItem resItem in resultingItems)

@@ -16,7 +16,6 @@ public class SortingObject : MonoBehaviour
         buttonText.text = sortBy.ToString();
     }
 
-
     public void OnPressSort()
     {
         sortingController.TurnOffAllOrder();

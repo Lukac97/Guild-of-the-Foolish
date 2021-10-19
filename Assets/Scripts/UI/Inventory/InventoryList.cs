@@ -23,6 +23,7 @@ public class InventoryList : MonoBehaviour
     public GameObject sortingPanel;
     public InventorySortBy sortBy = InventorySortBy.NAME;
     public InventorySortOrder sortOrder = InventorySortOrder.ASCENDING;
+    public InventoryFilterBy filterBy = InventoryFilterBy.NO_FILTER;
 
     [Space(3)]
     public UnityEvent<ItemObject> SingleClickEvent;
@@ -33,9 +34,6 @@ public class InventoryList : MonoBehaviour
     private int itemsPerPage;
     private List<InventoryListElement> listElements;
 
-    private CharEquipment equippableForChar;
-    private ArmorSlot? filterByArmorSlot;
-    private WeaponSlot? filterByWeaponSlot;
 
     private bool markedForUpdate;
 
@@ -157,96 +155,75 @@ public class InventoryList : MonoBehaviour
         markedForUpdate = true;
     }
 
-    #region Filter Functions
-    public void EnableFilterByEquippableForChar(CharEquipment charForFilter)
+    public void ChangeFilters(InventoryFilterBy newFilterBy)
     {
-        equippableForChar = charForFilter;
+        if(filterBy == newFilterBy)
+        {
+            filterBy = InventoryFilterBy.NO_FILTER;
+        }
+        else
+        {
+            filterBy = newFilterBy;
+        }
         markedForUpdate = true;
     }
-
-    public void DisableFilterByEquippableForChar()
-    {
-        equippableForChar = null;
-        markedForUpdate = true;
-    }
-
-    public void EnableFilterByItemSlot(WeaponSlot weaponSlot)
-    {
-        filterByWeaponSlot = weaponSlot;
-        filterByArmorSlot = null;
-        markedForUpdate = true;
-    }
-
-    public void EnableFilterByItemSlot(ArmorSlot armorSlot)
-    {
-        filterByWeaponSlot = null;
-        filterByArmorSlot = armorSlot;
-        markedForUpdate = true;
-    }
-
-    public void DisableFilterByItemSlot()
-    {
-        filterByWeaponSlot = null;
-        filterByArmorSlot = null;
-        markedForUpdate = true;
-    }
-
-    public void EnableFilterByEquipmentSlotPreset(CharEquipment charForFilter, ArmorSlot? armorSlot, WeaponSlot? weaponSlot)
-    {
-        equippableForChar = charForFilter;
-        filterByWeaponSlot = weaponSlot;
-        filterByArmorSlot = armorSlot;
-        markedForUpdate = true;
-    }
-    #endregion Filter Functions
 
     private void ApplyFilters()
     {
-        List<ItemObject> newItemList = new List<ItemObject>(itemObjects);
-        foreach (ItemObject itemObj in itemObjects)
+        List<ItemObject> newItemList = GuildInventory.Instance.GetAllItemObjects();
+
+        if(filterBy == InventoryFilterBy.NO_FILTER)
         {
-            if(equippableForChar != null)
-            { 
-                if (!equippableForChar.CanEquipItem(itemObj.item))
-                {
-                    newItemList.Remove(itemObj);
-                }
-            }
-            if(filterByArmorSlot != null)
+            itemObjects = newItemList;
+        }
+        else if(filterBy == InventoryFilterBy.EQUIPMENT)
+        {
+            itemObjects = new List<ItemObject>();
+            foreach(ItemObject itemObj in newItemList)
             {
-                if (!(itemObj.item is ArmorItem))
+                if (itemObj == null)
+                    continue;
+                if (itemObj.item == null)
+                    continue;
+                Type itemType = itemObj.item.GetType();
+                if ((itemType == typeof(ArmorItem)) | (itemType == typeof(WeaponItem)))
                 {
-                    newItemList.Remove(itemObj);
-                }
-                else
-                {
-                    ArmorSlot aSlot = (filterByArmorSlot ?? default(ArmorSlot));
-                    if (((ArmorItem)itemObj.item).itemSlot != aSlot)
-                    {
-                        newItemList.Remove(itemObj);
-                    }
-                }
-            }
-            if(filterByWeaponSlot != null)
-            {
-                if (!(itemObj.item is WeaponItem))
-                {
-                    newItemList.Remove(itemObj);
-                }
-                else
-                {
-                    WeaponSlot wSlot = (filterByWeaponSlot ?? default(WeaponSlot));
-                    if ((wSlot == WeaponSlot.MAIN_HAND &
-                        ((WeaponItem)itemObj.item).weaponWielding == WeaponWielding.OFF_HAND) |
-                        (wSlot == WeaponSlot.OFF_HAND &
-                        ((WeaponItem)itemObj.item).weaponWielding == WeaponWielding.MAIN_HAND))
-                    {
-                        newItemList.Remove(itemObj);
-                    }
+                    itemObjects.Add(itemObj);
                 }
             }
         }
-        itemObjects = newItemList;
+        else if(filterBy == InventoryFilterBy.CONSUMABLES)
+        {
+            itemObjects = new List<ItemObject>();
+            foreach(ItemObject itemObj in newItemList)
+            {
+                if (itemObj == null)
+                    continue;
+                if (itemObj.item == null)
+                    continue;
+                Type itemType = itemObj.item.GetType();
+                if (itemType == typeof(ConsumableItem))
+                {
+                    itemObjects.Add(itemObj);
+                }
+            }
+        }
+        else if(filterBy == InventoryFilterBy.INGREDIENTS)
+        {
+            itemObjects = new List<ItemObject>();
+            foreach(ItemObject itemObj in newItemList)
+            {
+                if (itemObj == null)
+                    continue;
+                if (itemObj.item == null)
+                    continue;
+                Type itemType = itemObj.item.GetType();
+                if (itemType == typeof(IngredientItem))
+                {
+                    itemObjects.Add(itemObj);
+                }
+            }
+        }
     }
 
     private void InsertionSort()
@@ -292,6 +269,8 @@ public class InventoryList : MonoBehaviour
 
     public void UseClickedItemObject(ItemObject itemObject)
     {
+        if (itemObject == null)
+            return;
         if(itemObject.item.GetType() == typeof(ConsumableItem))
         {
             if (GlobalInput.CheckIfSelectedCharacter())

@@ -116,9 +116,10 @@ public class EquipmentArmorSlot : MonoBehaviour, IPointerClickHandler, IPointerE
 
     public void OnItemDoubleClick()
     {
-        CharEquipment charEq = CharTabMain.Instance.currentChar.GetComponent<CharEquipment>();
-        if (charEq != null)
-            charEq.UnequipSlot(armorSlotItem);
+        if (!GlobalInput.CheckIfSelectedCharacter())
+            return;
+        CharEquipment charEq = GlobalInput.Instance.selectedEntity.GetComponent<CharEquipment>();
+        charEq.UnequipSlot(armorSlotItem);
     }
 
 

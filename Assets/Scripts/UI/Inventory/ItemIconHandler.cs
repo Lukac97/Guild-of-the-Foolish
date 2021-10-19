@@ -8,7 +8,7 @@ public class ItemIconHandler : MonoBehaviour
     [SerializeField] private GameObject iconPartPrefab;
     [SerializeField] private GameObject iconHolder;
     private Item currentItem;
-    private List<GameObject> iconParts;
+    private List<GameObject> iconParts = new List<GameObject>();
 
     public void InitItemIconHandler(Item item)
     {

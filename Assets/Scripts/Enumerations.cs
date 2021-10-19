@@ -38,6 +38,14 @@ public enum InventorySortBy
     LEVEL
 }
 
+public enum InventoryFilterBy
+{
+    NO_FILTER,
+    EQUIPMENT,
+    INGREDIENTS,
+    CONSUMABLES
+}
+
 public enum InventorySortOrder
 {
     ASCENDING,

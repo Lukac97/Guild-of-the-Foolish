@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GlobalRules : MonoBehaviour
@@ -14,6 +12,8 @@ public class GlobalRules : MonoBehaviour
     public static float equipmentAttackMultiplierRangeMin = 1.0f;
     public static float equipmentAttackMultiplierRangeMax = 1.25f;
     private static float levelOneExp = 100.0f;
+    private static float levelOneProfessionExp = 50.0f;
+    private static float levelOneRecipeExp = 5.0f;
 
     private void Start()
     {
@@ -24,6 +24,16 @@ public class GlobalRules : MonoBehaviour
     public static float maxExperienceForLevel(int level)
     {
         return levelOneExp * Mathf.Pow(1.25f, level - 1);
+    }
+
+    public static float MaxExperienceForProfessionLevel(int level)
+    {
+        return levelOneProfessionExp * Mathf.Pow(1.5f, level - 1);
+    }
+
+    public static float GetRecipeExp(int recipeLevel)
+    {
+        return levelOneRecipeExp * Mathf.Pow(1.25f, recipeLevel - 1);
     }
 
     public static int GetEquipmentAttributePointsForLevel(int level)

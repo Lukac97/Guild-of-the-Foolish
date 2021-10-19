@@ -28,8 +28,4 @@ public class GuildProfessions : MonoBehaviour
             artisanProfessions.Add(new ArtisanProfession(apMould));
         }
     }
-
-    private void Start()
-    {
-    }
 }

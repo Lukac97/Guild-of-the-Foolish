@@ -14,6 +14,10 @@ public class ProfessionTabMain : MonoBehaviour
     public GameObject recipesPanel;
     public CanvasGroup recipeDetailsCG;
     [SerializeField] private Button craftButton;
+    [SerializeField] private TextMeshProUGUI professionLevel;
+    [SerializeField] private Slider expSlider;
+    [SerializeField] private TextMeshProUGUI currentExp;
+    [SerializeField] private TextMeshProUGUI neededExp;
 
     [Header("Recipe details")]
     [SerializeField] private GameObject recipeResultScrollGO;
@@ -83,8 +87,23 @@ public class ProfessionTabMain : MonoBehaviour
     public void SetCurrentProfession(ArtisanProfession newProfession)
     {
         currentProfession = newProfession;
+        UpdateProfessionDetails();
         RedrawRecipesList();
         SelectRecipe(null);
+    }
+
+    public void UpdateProfessionDetails()
+    {
+        if (currentProfession == null)
+            return;
+        professionLevel.text = currentProfession.level.ToString();
+        if (currentProfession.neededExperienceForNextLevel > 0)
+            expSlider.value = currentProfession.currentExperience / currentProfession.neededExperienceForNextLevel;
+        else
+            expSlider.value = 0;
+
+        currentExp.text = currentProfession.currentExperience.ToString("0");
+        neededExp.text = currentProfession.neededExperienceForNextLevel.ToString("0");
     }
 
     public void SelectRecipe(RecipeUIElement recipeUIElement)
@@ -104,14 +123,6 @@ public class ProfessionTabMain : MonoBehaviour
             if (!sameRecipeSelected)
             {
                 DisplaySelectedRecipeDetails();
-                if(recipeUIElement.availableForCrafting)
-                {
-                    craftButton.interactable = true;
-                }
-                else
-                {
-                    craftButton.interactable = false;
-                }
             }
         }
     }
@@ -142,6 +153,15 @@ public class ProfessionTabMain : MonoBehaviour
             profItem.AssignPredefinedItem(GlobalFuncs.GetItemFromScriptableObject(ingNeed.ingredientPredef));
         }
 
+        if (currentRecipeUISelected.availableForCrafting)
+        {
+            craftButton.interactable = true;
+        }
+        else
+        {
+            craftButton.interactable = false;
+        }
+
     }
 
     private void RedrawRecipesList()
@@ -153,6 +173,18 @@ public class ProfessionTabMain : MonoBehaviour
             RecipeUIElement recipeUIElement = newGO.GetComponent<RecipeUIElement>();
             recipeUIElement.InitRecipeUIElement(recipe);
             displayedRecipes.Add(recipeUIElement);
+        }
+
+        if (currentRecipeUISelected != null)
+        {
+            if (currentRecipeUISelected.availableForCrafting)
+            {
+                craftButton.interactable = true;
+            }
+            else
+            {
+                craftButton.interactable = false;
+            }
         }
     }
 
@@ -201,6 +233,6 @@ public class ProfessionTabMain : MonoBehaviour
         if (currentRecipeUISelected == null)
             return;
 
-        bool isSuccessful = currentRecipeUISelected.linkedRecipe.CraftThisRecipe();
+        bool isSuccessful = currentProfession.CraftRecipe(currentRecipeUISelected.linkedRecipe);
     }
 }
