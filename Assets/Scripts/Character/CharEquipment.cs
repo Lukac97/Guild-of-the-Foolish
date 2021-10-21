@@ -166,6 +166,8 @@ public class CharEquipment : MonoBehaviour
         List<ArmorSlotItem> bestSlots = new List<ArmorSlotItem>();
         foreach(ArmorSlotItem armorSlotItem in armorSlots)
         {
+            if (armorSlotItem.slot != armorItem.itemSlot)
+                continue;
             if (GlobalFuncs.CheckIfWorse(armorSlotItem.item, armorItem))
             {
                 bestSlots.Add(armorSlotItem);

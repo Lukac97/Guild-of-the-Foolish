@@ -58,7 +58,7 @@ public class Recipe : ScriptableObject
             {
                 continue;
             }
-            ItemObject itemObject = GuildInventory.Instance.FindItemByOrigin(itemNeeded);
+            ItemObject itemObject = GuildInventory.Instance.FindItemByID(itemNeeded.itemID);
             Recipe.IngredientAvailability ingA = new Recipe.IngredientAvailability();
             ingA.itemNeeded = itemNeeded;
             ingA.amountNeeded = ingrNeed.quantity;
@@ -84,8 +84,8 @@ public class Recipe : ScriptableObject
         {
             foreach(Recipe.IngredientNeeded ingrNeed in neededIngredients)
             {
-                ItemObject itemObject = GuildInventory.Instance.FindItemByOrigin(
-                    GlobalFuncs.GetItemFromScriptableObject(ingrNeed.ingredientPredef));
+                ItemObject itemObject = GuildInventory.Instance.FindItemByID(
+                    GlobalFuncs.GetItemFromScriptableObject(ingrNeed.ingredientPredef).itemID);
                 GuildInventory.Instance.RemoveItemFromInventory(itemObject.item, ingrNeed.quantity);
             }
 

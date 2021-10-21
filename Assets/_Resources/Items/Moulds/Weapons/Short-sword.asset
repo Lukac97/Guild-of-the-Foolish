@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac23d05f1eb4c0d42b0f8fa832c9cf9c, type: 3}
   m_Name: Short-sword
   m_EditorClassIdentifier: 
+  itemID: short_sword
   itemNamePrefix:
   - Broken
   - Crooked

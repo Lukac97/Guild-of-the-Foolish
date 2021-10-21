@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Wolf_Pelt
   m_EditorClassIdentifier: 
   ingredientItem:
+    itemID: wolf_pelt
     itemName: Pelt of a Wolf
     itemDescription: This pelt kept a wolf warm throughout the winter. Maybe it will
       serve you the same purpose.

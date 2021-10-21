@@ -58,7 +58,7 @@ public class GlobalFuncs : MonoBehaviour
     {
         ArmorItem itemRes = new ArmorItem(itemPredef.armorItem);
 
-        itemRes.originItem = itemPredef.armorItem;
+        itemRes.itemID = itemPredef.armorItem.itemID;
 
         return itemRes;
     }
@@ -67,7 +67,7 @@ public class GlobalFuncs : MonoBehaviour
     {
         WeaponItem itemRes = new WeaponItem(itemPredef.weaponItem);
 
-        itemRes.originItem = itemPredef.weaponItem;
+        itemRes.itemID = itemPredef.weaponItem.itemID;
 
         return itemRes;
     }
@@ -76,7 +76,7 @@ public class GlobalFuncs : MonoBehaviour
     {
         ConsumableItem itemRes = new ConsumableItem(itemPredef.consumableItem);
 
-        itemRes.originItem = itemPredef.consumableItem;
+        itemRes.itemID = itemPredef.consumableItem.itemID;
 
         return itemRes;
     }
@@ -85,7 +85,7 @@ public class GlobalFuncs : MonoBehaviour
     {
         IngredientItem itemRes = new IngredientItem(itemPredef.ingredientItem);
 
-        itemRes.originItem = itemPredef.ingredientItem;
+        itemRes.itemID = itemPredef.ingredientItem.itemID;
 
         return itemRes;
     }
@@ -97,6 +97,8 @@ public class GlobalFuncs : MonoBehaviour
             newItem = GenerateItemFromMould((ArmorItemMould)itemMould, level);
         else if (itemMould.GetType() == typeof(WeaponItemMould))
             newItem = GenerateItemFromMould((WeaponItemMould)itemMould, level);
+
+        newItem.itemID = GlobalRules.CreateIDForMouldedItem(itemMould);
 
         return newItem;
     }
@@ -116,8 +118,6 @@ public class GlobalFuncs : MonoBehaviour
         itemRes.itemName = GenerateItemName(itemMould);
         itemRes.itemIcon = new List<IconPartWithShadow>(GenerateSpriteIcon(itemMould));
 
-        itemRes.originItem = itemRes;
-
         return itemRes;
     }
 
@@ -136,8 +136,6 @@ public class GlobalFuncs : MonoBehaviour
 
         itemRes.itemName = GenerateItemName(itemMould);
         itemRes.itemIcon = new List<IconPartWithShadow>(GenerateSpriteIcon(itemMould));
-
-        itemRes.originItem = itemRes;
 
         return itemRes;
     }

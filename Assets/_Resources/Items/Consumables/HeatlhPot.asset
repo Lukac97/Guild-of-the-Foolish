@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: HeatlhPot
   m_EditorClassIdentifier: 
   consumableItem:
+    itemID: health_potion
     itemName: Health potion
     itemDescription: 
     itemIcon:

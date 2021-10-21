@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Leather_Strips
   m_EditorClassIdentifier: 
   ingredientItem:
+    itemID: leather_strips
     itemName: Leather strips
     itemDescription: 
     itemIcon: []

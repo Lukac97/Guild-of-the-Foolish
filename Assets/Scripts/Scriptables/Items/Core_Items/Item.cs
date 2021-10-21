@@ -5,6 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class Item
 {
+    public string itemID;
+    [Space(15)]
     public string itemName;
     public string itemDescription;
     public List<IconPartWithShadow> itemIcon;
@@ -12,5 +14,4 @@ public class Item
 
     public bool isMoulded = false;
 
-    public Item originItem;
 }

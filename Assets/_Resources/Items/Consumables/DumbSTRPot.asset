@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DumbSTRPot
   m_EditorClassIdentifier: 
   consumableItem:
+    itemID: dmb_str_potion
     itemName: Dumb strength potion
     itemDescription: 
     itemIcon: []

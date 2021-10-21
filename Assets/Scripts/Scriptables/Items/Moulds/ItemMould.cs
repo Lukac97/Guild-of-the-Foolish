@@ -29,6 +29,8 @@ public class ItemMould : ScriptableObject, MouldedItemsInterface
         public ColorCustomization colorCustomization;
     }
 
+    public string itemID = "id_of_moulded_item";
+
     [Header("Name generation")]
     [Tooltip("'Elven' Sword of..., 'Enchanted' Axe of ...")]
     public List<string> itemNamePrefix;

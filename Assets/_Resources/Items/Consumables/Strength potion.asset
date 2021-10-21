@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Strength potion
   m_EditorClassIdentifier: 
   consumableItem:
+    itemID: strength_potion
     itemName: Strength potion
     itemDescription: 
     itemIcon: []

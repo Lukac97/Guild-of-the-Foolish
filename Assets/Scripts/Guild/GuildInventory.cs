@@ -79,7 +79,7 @@ public class GuildInventory : MonoBehaviour
             return null;
         foreach(ItemObject child in itemObjects)
         {
-            if (item.originItem == child.item.originItem)
+            if (item.itemID == child.item.itemID)
                 return child;
         }
         return null;
@@ -88,13 +88,13 @@ public class GuildInventory : MonoBehaviour
     ///<summary>
     /// Returns ItemObject which originates from Item parsed as argument.
     ///</summary>
-    public ItemObject FindItemByOrigin(Item item)
+    public ItemObject FindItemByID(string itemID)
     {
-        if (item == null)
+        if (itemID == null)
             return null;
         foreach (ItemObject child in itemObjects)
         {
-            if (item == child.item.originItem)
+            if (itemID == child.item.itemID)
                 return child;
         }
         return null;

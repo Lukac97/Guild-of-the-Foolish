@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9b0cfe1e6cc4fa4f9a1b7ed99d06a7d, type: 3}
   m_Name: breastplate1
   m_EditorClassIdentifier: 
+  itemID: breastplate
   itemNamePrefix:
   - Strong
   - Reinforced
